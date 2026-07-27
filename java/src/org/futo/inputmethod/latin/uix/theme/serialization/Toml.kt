@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.drawable.toDrawable
 import com.akuleshov7.ktoml.Toml
+import com.akuleshov7.ktoml.TomlInputConfig
 import com.akuleshov7.ktoml.exceptions.TomlDecodingException
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -178,7 +179,9 @@ private data class SerializedTomlFile(
             val foreground_tint: String = "#777777",
             val padding: List<LFloat> = listOf(0.0f, 0.0f, 0.0f, 0.0f),
             val slicing: List<LFloat> = listOf(0.0f, 0.0f, 1.0f, 1.0f),
-            val gap: List<LFloat> = listOf(1.0f, 1.0f, 1.0f, 1.0f)
+            val gap: List<LFloat> = listOf(1.0f, 1.0f, 1.0f, 1.0f),
+            val outline_tint: String? = null,
+            val outline_width: LFloat = 3.0f,
         )
     }
 
@@ -393,6 +396,7 @@ private data class SerializedTomlFile(
                         createNinePatchDrawable(bitmap, scale, ctx.context.resources,
                             meta.foreground_tint.toColor().toArgb(),
                             meta.background_tint.toColor().toArgb(),
+                            meta.outline_tint?.toColor()?.toArgb(), meta.outline_width,
                             xRegions, yRegions, padding, gap)
                     },
                     keyIcons = decodeKeyedBitmaps(ctx, matchrules.icon, keyFn={it.selector}, valFn={it.asset}) { cfg, img ->

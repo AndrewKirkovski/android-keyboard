@@ -12,6 +12,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.NinePatchDrawable
 import android.util.Log
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import org.futo.inputmethod.latin.uix.theme.KeyBackground
@@ -155,6 +156,7 @@ fun createNinePatchDrawable(
     res: Resources,
     foregroundColor: Int?,
     backgroundTint: Int,
+    outlineColor: Int?, outlineWidth: Float,
     xRegions: List<Pair<Int, Int>>,
     yRegions: List<Pair<Int, Int>>,
     padding: Rect = Rect(0, 0, 0, 0),
@@ -184,7 +186,9 @@ fun createNinePatchDrawable(
             padding = builder.padding,
             gap = gap,
             foregroundColor = foregroundColor,
-            background = it
+            outlineColor = outlineColor,
+            outlineWidth = outlineWidth.dp,
+            background = it,
         )
     }
 }

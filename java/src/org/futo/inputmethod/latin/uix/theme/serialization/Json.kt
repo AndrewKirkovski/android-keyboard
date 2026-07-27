@@ -141,7 +141,7 @@ internal fun Bitmap.toNinePatchDrawable(res: Resources): KeyBackground? {
 
     val fgColor = this[0, 0].argbNotInvisible()
 
-    return createNinePatchDrawable(this, scale, res, fgColor, android.graphics.Color.WHITE, xRegions, yRegions, padding,
+    return createNinePatchDrawable(this, scale, res, fgColor, android.graphics.Color.WHITE, null, 3.0f, xRegions, yRegions, padding,
         removeMargin = 1)
 }
 
