@@ -57,6 +57,11 @@ object ZipThemes {
     val themeCache: MutableMap<ThemeFileName, KeyboardColorScheme> = mutableMapOf()
     val thumbThemeCache: MutableMap<ThemeFileName, KeyboardColorScheme> = mutableMapOf()
 
+    private fun invalidateCache(name: ThemeFileName) {
+        themeCache.remove(name)
+        thumbThemeCache.remove(name)
+    }
+
     private val json = themeJson
 
     fun customThemesDir(context: Context) = File(context.filesDir, "themes").also { it.mkdirs() }
@@ -115,7 +120,7 @@ object ZipThemes {
         theme.keyIcons.values.forEach(putFile)
 
         zos.close()
-        themeCache.remove(name)
+        invalidateCache(name)
         updateCount.intValue += 1
     }
 
@@ -197,7 +202,7 @@ object ZipThemes {
             inputStream.copyTo(outputStream)
         }
 
-        themeCache.remove(custom(id))
+        invalidateCache(custom(id))
 
         val setting = custom(id).toSetting()
         val currTheme = context.getSetting(THEME_KEY)
@@ -332,7 +337,7 @@ object ZipThemes {
         }
 
         file.delete()
-        themeCache.remove(name)
+        invalidateCache(name)
         updateCount.intValue += 1
     }
 }
