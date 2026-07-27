@@ -309,7 +309,7 @@ fun VisitThemeStoreButton(short: Boolean = false) {
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Icon(
-                painterResource(R.drawable.globe),
+                painterResource(R.drawable.compass),
                 contentDescription = stringResource(R.string.theme_settings_visit_theme_store),
                 modifier = Modifier
                     .size(if(short) 32.dp else 48.dp)
