@@ -417,10 +417,20 @@ fun findFormatVersion(v: String): Int? =
         ?.firstOrNull()
         ?.toIntOrNull()
 
+internal val Toml1 = Toml(inputConfig = TomlInputConfig(ignoreUnknownNames = false))
+internal val Toml2 = Toml(inputConfig = TomlInputConfig(ignoreUnknownNames = true))
+
 class TomlZipTheme(string: String) : SerializableTheme {
     val formatVersion = findFormatVersion(string)
 
-    private val parsed = Toml.decodeFromString<SerializedTomlFile>(string)
+    private var parseErrors = ""
+
+    private val parsed = try {
+        Toml1.decodeFromString<SerializedTomlFile>(string)
+    } catch(e: Exception) {
+        parseErrors += e.toString()
+        Toml2.decodeFromString<SerializedTomlFile>(string)
+    }
     override fun toKeyboardScheme(ctx: ThemeDecodingContext): KeyboardColorScheme {
         return parsed.toKeyboardScheme(ctx)
     }
@@ -433,4 +443,6 @@ class TomlZipTheme(string: String) : SerializableTheme {
 
     override val name: String get() = parsed.name
     override val author: String get() = parsed.author
+
+    override val errors: String get() = parseErrors
 }

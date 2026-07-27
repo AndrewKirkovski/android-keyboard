@@ -329,6 +329,8 @@ class JsonZipTheme(val json: String) : SerializableTheme {
 
     override val name: String get() = parsed.name ?: "Unknown name"
     override val author: String get() = parsed.author ?: "Unknown author"
+
+    override val errors: String get() = ""
 }
 
 
