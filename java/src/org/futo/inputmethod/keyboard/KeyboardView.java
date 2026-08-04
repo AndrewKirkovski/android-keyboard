@@ -568,6 +568,7 @@ public class KeyboardView extends View {
 
                 if(kdc.getCenteredHint()) {
                     hintX = centerX;
+                    hintBaseline += paint.ascent() / 3.0f;
                 }
                 paint.setTextAlign(Align.CENTER);
             }
