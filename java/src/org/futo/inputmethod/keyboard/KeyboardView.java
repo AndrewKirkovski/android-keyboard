@@ -566,7 +566,7 @@ public class KeyboardView extends View {
                 hintX = keyWidth - keyHintPaddingX - Math.max(hintDigitWidth, hintLabelWidth) / 2.0f;
                 hintBaseline = -paint.ascent() + keyHintPaddingY;
 
-                if(kdc.getCenteredHint()) {
+                if (kdc.getCenteredHint()) {
                     hintX = centerX;
                     hintBaseline += paint.ascent() / 3.0f;
                 }
