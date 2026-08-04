@@ -351,6 +351,7 @@ private data class SerializedTomlFile(
                     keyBorders = options.auto_borders,
                     backgroundShader = null,
 
+                    actionBarOpacity = options.background?.action_bar_opacity ?: 0.5f,
                     thumbnailImage = backgroundImage,
                     thumbnailScale = 1.0f,
                     backgroundImage = backgroundImage,
