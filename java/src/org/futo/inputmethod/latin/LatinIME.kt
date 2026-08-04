@@ -461,6 +461,12 @@ class LatinIME : InputMethodServiceCompose(), LatinIMELegacy.SuggestionStripCont
         }
 
         launchJob {
+            getSettingFlow(SubtypesSetting).collect {
+                Subtypes.updateLanguageOnSpaceBarVisibility(this@LatinIME)
+            }
+        }
+
+        launchJob {
             dataStore.data.collect {
                 CrashLoggingApplication.logPreferences(it)
             }
