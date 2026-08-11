@@ -23,6 +23,8 @@ import org.futo.inputmethod.latin.uix.actions.throwIfDebug
 import org.futo.inputmethod.latin.uix.getSetting
 import org.futo.inputmethod.latin.uix.getSettingFlow
 
+val SupportsAddingScreenshots = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+
 interface ScreenshotListener {
     fun onScreenshotAdded(mime: String, uri: Uri)
     fun onScreenshotChange(uri: Uri, checkTrashed: suspend () -> Boolean)
@@ -128,8 +130,8 @@ class ScreenshotHelper(
     }
 
     internal suspend fun handleNewScreenshot(dry: Boolean = false) = withContext(Dispatchers.IO) {
+        if(!SupportsAddingScreenshots) return@withContext null
         if(!context.getSetting(ClipboardSaveScreenshots)) return@withContext null
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return@withContext null
 
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
