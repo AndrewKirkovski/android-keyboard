@@ -81,6 +81,13 @@ final def translationsWithoutEngValues = { final String path ->
 
     final def destDir = file("$buildDir/generated/res-translations-filtered/${taskNameSuffix}")
 
+    // Two product flavours can legitimately reference the same translations
+    // directory. tasks.register() throws on a duplicate task name, so reuse the
+    // task that already exists and hand back the same destDir.
+    if (tasks.names.contains("prepareResFilter${taskNameSuffix}")) {
+        return destDir
+    }
+
     tasks.register("prepareResFilter${taskNameSuffix}", Copy) {
         from(sourceDir) {
             include 'values-*/**'
