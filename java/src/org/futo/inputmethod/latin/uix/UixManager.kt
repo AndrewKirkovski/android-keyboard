@@ -26,7 +26,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -46,6 +48,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -86,6 +89,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
@@ -132,6 +136,7 @@ import org.futo.inputmethod.latin.uix.actions.keyCodeAlt
 import org.futo.inputmethod.latin.uix.resizing.KeyboardResizers
 import org.futo.inputmethod.latin.uix.settings.DataStoreCacheProvider
 import org.futo.inputmethod.latin.uix.settings.pages.ActionBarDisplayedSetting
+import org.futo.inputmethod.latin.uix.settings.pages.HideOneHandedExitButtonSetting
 import org.futo.inputmethod.latin.uix.settings.pages.InlineAutofillSetting
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.theme.KeyboardSurfaceShaderBackground
@@ -1150,8 +1155,11 @@ class UixManager(private val latinIME: LatinIME) {
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun BoxScope.OneHandedOptions(size: OneHandedKeyboardSize) = with(LocalDensity.current) {
+        val hideExitButton = useDataStore(HideOneHandedExitButtonSetting)
+
         Box(Modifier.matchParentSize()) {
             Column(modifier = Modifier
                 .matchParentSize()
@@ -1162,11 +1170,31 @@ class UixManager(private val latinIME: LatinIME) {
                 OneHandedDirection.Left -> Alignment.End
                 OneHandedDirection.Right -> Alignment.Start
             }) {
-                IconButton(onClick = {
-                    latinIME.sizingCalculator.editSavedSettings {
-                        it.copy(oneHandedDirection = it.oneHandedDirection.opposite)
-                    }
-                }) {
+                // Switching hands on tap, leaving one-handed mode on long press. The
+                // long press matters when the exit button below is hidden: it keeps a
+                // one-gesture way out, so hiding the button costs convenience rather
+                // than capability.
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .combinedClickable(
+                            // IconButton sets these itself; combinedClickable does not,
+                            // so without them the control stops announcing as a button
+                            // and the long press is an unlabelled custom action.
+                            role = Role.Button,
+                            onLongClickLabel = stringResource(R.string.one_handed_mode_exit),
+                            onClick = {
+                                latinIME.sizingCalculator.editSavedSettings {
+                                    it.copy(oneHandedDirection = it.oneHandedDirection.opposite)
+                                }
+                            },
+                            onLongClick = {
+                                latinIME.sizingCalculator.exitOneHandedMode()
+                            }
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
                     Icon(painterResource(when(size.direction) {
                         // Show opposite icon
                         OneHandedDirection.Left -> R.drawable.chevron_right
@@ -1177,10 +1205,14 @@ class UixManager(private val latinIME: LatinIME) {
 
                 Spacer(Modifier.weight(1.0f))
 
-                IconButton(onClick = {
-                    latinIME.sizingCalculator.exitOneHandedMode()
-                }) {
-                    Icon(painterResource(R.drawable.maximize), contentDescription = stringResource(R.string.one_handed_mode_exit))
+                // Sits low on the keyboard's inner edge, which is exactly where a thumb
+                // travels while typing one-handed, so it is easy to hit by accident.
+                if(!hideExitButton.value) {
+                    IconButton(onClick = {
+                        latinIME.sizingCalculator.exitOneHandedMode()
+                    }) {
+                        Icon(painterResource(R.drawable.maximize), contentDescription = stringResource(R.string.one_handed_mode_exit))
+                    }
                 }
 
                 Spacer(Modifier.height(navBarHeight()))

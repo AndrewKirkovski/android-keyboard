@@ -155,6 +155,16 @@ val InlineAutofillSetting = SettingsKey(
     true
 )
 
+// The exit button sits on the inner edge of the one-handed gutter, low, which is
+// the part of the screen a thumb sweeps through constantly while typing
+// one-handed. Hiding it does not strand anyone: the "Keyboard modes" Standard
+// tile leaves one-handed mode independently, and long-pressing the switch-hands
+// chevron does too, so the gesture survives the button.
+val HideOneHandedExitButtonSetting = SettingsKey(
+    booleanPreferencesKey("hide_one_handed_exit_button"),
+    false
+)
+
 val ResizeMenuLite = UserSettingsMenu(
     title = R.string.size_settings_title,
     navPath = "resize", registerNavPath = false,
@@ -169,6 +179,11 @@ val ResizeMenuLite = UserSettingsMenu(
                     nav.context.setSettingBlocking(it.key, it.default)
                 }
             }
+        ),
+        userSettingToggleDataStore(
+            title = R.string.size_settings_hide_one_handed_exit,
+            subtitle = R.string.size_settings_hide_one_handed_exit_subtitle,
+            setting = HideOneHandedExitButtonSetting
         )
     )
 )
