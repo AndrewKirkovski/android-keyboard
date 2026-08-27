@@ -404,6 +404,8 @@
     <string name="size_settings_keyboard_modes_portrait_landscape_tip">Size and mode is stored separately for portrait and landscape.</string>
     <string name="size_settings_reset">Reset size settings</string>
     <string name="size_settings_reset_subtitle">Tap to reset all sizes and modes for both portrait and landscape to default</string>
+    <string name="size_settings_hide_one_handed_exit">Hide one-handed exit button</string>
+    <string name="size_settings_hide_one_handed_exit_subtitle">Removes the button that leaves one-handed mode. You can still leave by long-pressing the button that switches hands, or from Keyboard modes.</string>
 
     <!-- Long-press keys, or otherwise called secondary keys, more keys, additional keys -->
     <string name="morekey_settings_title">Long-Press Keys &amp; Spacebar</string>
