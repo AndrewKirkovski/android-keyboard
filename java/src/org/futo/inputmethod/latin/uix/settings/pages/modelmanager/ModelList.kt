@@ -70,7 +70,15 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
 
         modelsByLanguage.forEach { item ->
             Spacer(modifier = Modifier.height(32.dp))
-            ScreenTitle(Locale(item.key).displayLanguage)
+            // The key is `model.languages.joinToString(" ")`, so a model covering more
+            // than one language arrives here as "en pl". Locale("en pl") is not a
+            // locale, and its displayLanguage is the raw string, which then appears as
+            // the section heading. Resolve each language separately.
+            ScreenTitle(
+                item.key.split(" ")
+                    .filter { it.isNotEmpty() }
+                    .joinToString(" + ") { Locale(it).displayLanguage }
+            )
 
             item.value.forEach { model ->
                 val name = if (model.finetune_count > 0) {
