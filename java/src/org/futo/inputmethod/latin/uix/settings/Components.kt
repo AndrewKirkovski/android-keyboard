@@ -94,6 +94,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -118,14 +119,40 @@ fun ScreenTitle(title: String, showBack: Boolean = false, navController: NavHost
     } else {
         Modifier.fillMaxWidth()
     }
+    // showBack splits this in two: with a back arrow it is the screen's title, and
+    // without one it is an in-page section header. They were rendering identically,
+    // which is why a section header looked like just another row of text. The header
+    // now gets an accent rail and an uppercase tracked label -- structure a reader can
+    // see at a glance, without a fill or a divider.
+    if (!showBack) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 28.dp, bottom = 8.dp),
+            verticalAlignment = CenterVertically
+        ) {
+            Box(
+                Modifier
+                    .width(3.dp)
+                    .height(14.dp)
+                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(2.dp))
+            )
+            Spacer(Modifier.width(10.dp))
+            Text(
+                title.uppercase(),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        return
+    }
+
     Row(modifier = rowModifier) {
         Spacer(modifier = Modifier.width(16.dp))
 
-        if(showBack) {
-            Icon(Icons.Default.ArrowBack, contentDescription = null, modifier = Modifier.align(CenterVertically))
-            Spacer(modifier = Modifier.width(18.dp))
-        }
-        Text(title, style = Typography.Heading.Medium, modifier = Modifier
+        Icon(Icons.Default.ArrowBack, contentDescription = null, modifier = Modifier.align(CenterVertically))
+        Spacer(modifier = Modifier.width(18.dp))
+        Text(title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier
             .align(CenterVertically)
             .padding(0.dp, 16.dp))
     }
@@ -257,19 +284,23 @@ fun SettingItem(
         Row(Modifier.weight(1.0f).fillMaxHeight().padding(0.dp, 4.dp)) {
             Spacer(Modifier.width(4.dp))
             Spacer(Modifier.width(16.dp))
-            Column(
-                modifier = Modifier
-                    .width(48.dp)
-                    .align(Alignment.CenterVertically)
-            ) {
-                Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    if (icon != null) {
+            if (icon != null) {
+                Column(
+                    modifier = Modifier
+                        .width(48.dp)
+                        .padding(top = if (subtitle != null || subcontent != null) 10.dp else 0.dp)
+                        .then(
+                            if (subtitle != null || subcontent != null) Modifier
+                            else Modifier.align(Alignment.CenterVertically)
+                        )
+                ) {
+                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                         icon()
                     }
                 }
-            }
 
-            Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(12.dp))
+            }
 
             Row(
                 modifier = Modifier
@@ -286,7 +317,7 @@ fun SettingItem(
                 SpacedColumn(4.dp) {
                     Text(
                         title,
-                        style = Typography.Heading.RegularMl,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = textColor,
                         modifier = Modifier.heightIn(min = 24.dp)
                     )
@@ -294,8 +325,12 @@ fun SettingItem(
                     if (subtitle != null) {
                         Text(
                             subtitle,
-                            style = Typography.SmallMl,
-                            color = subTextColor
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = subTextColor,
+                            // F2: an unbounded subtitle made row height vary about
+                            // threefold down a list, which destroys the vertical rhythm.
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     } else if (subcontent != null) {
                         subcontent()
@@ -305,14 +340,7 @@ fun SettingItem(
             if(onSubmenuNavigate != null) { Spacer(Modifier.width(8.dp)) }
         }
 
-        if(onSubmenuNavigate != null) {
-            VerticalDivider(
-                Modifier.height(64.dp),
-                color = MaterialTheme.colorScheme.outline
-            )
-        } else {
-            Spacer(Modifier.width(4.dp))
-        }
+        Spacer(Modifier.width(4.dp))
 
         Row(Modifier.let {
             if(onSubmenuNavigate != null && onClick != null) {
@@ -922,7 +950,7 @@ fun<T> DropDownPicker(
                         Box(
                             Modifier.fillMaxWidth().heightIn(min = 44.dp).background(
                                 if(selection == it) {
-                                    LocalKeyboardScheme.current.onSurfaceTransparent
+                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                                 } else {
                                     Color.Transparent
                                 }

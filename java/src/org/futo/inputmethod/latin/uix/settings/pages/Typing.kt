@@ -98,7 +98,7 @@ import org.futo.inputmethod.latin.settings.toLongPressKeyLayoutItems
 import org.futo.inputmethod.latin.uix.AndroidTextInput
 import org.futo.inputmethod.latin.uix.BasicThemeProvider
 import org.futo.inputmethod.latin.uix.KeyHintsSetting
-import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
+import org.futo.inputmethod.latin.uix.theme.currentKeyboardScheme
 import org.futo.inputmethod.latin.uix.SHOW_EMOJI_SUGGESTIONS
 import org.futo.inputmethod.latin.uix.SettingsKey
 import org.futo.inputmethod.latin.uix.getSettingBlocking
@@ -400,7 +400,7 @@ private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPr
             .let { modifier ->
                 if (!dragging.value) {
                     modifier
-                        .background(LocalKeyboardScheme.current.surfaceTint.copy(alpha = if(idx % 2 == 0) 0.02f else 0.06f))
+                        .background(MaterialTheme.colorScheme.surfaceTint.copy(alpha = if(idx % 2 == 0) 0.02f else 0.06f))
                 } else {
                     modifier
                         .zIndex(10.0f)
@@ -414,8 +414,8 @@ private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPr
                             }
                         }
                         .background(
-                            LocalKeyboardScheme.current.surfaceTint.copy(alpha = 0.2f)
-                                .compositeOver(LocalKeyboardScheme.current.background)
+                            MaterialTheme.colorScheme.surfaceTint.copy(alpha = 0.2f)
+                                .compositeOver(MaterialTheme.colorScheme.background)
                         )
                 }
             }
@@ -729,7 +729,10 @@ val NumberRowSettingMenu = UserSettingsMenu(
             useSharedPrefsBool(Settings.PREF_ENABLE_NUMBER_ROW, false).value
         }) {
             val context = LocalContext.current
-            val scheme = LocalKeyboardScheme.current
+            // A picture of a real key, so it uses the keyboard's theme rather than the
+            // app's. LocalKeyboardScheme is not provided off the keyboard -- its static
+            // default is a light scheme -- so resolve the user's choice directly.
+            val scheme = currentKeyboardScheme()
             val provider = remember(scheme) {
                 BasicThemeProvider(context, scheme)
             }
@@ -746,7 +749,7 @@ val NumberRowSettingMenu = UserSettingsMenu(
             val measurer = rememberTextMeasurer()
             val textSizePx = background.height / 2f
             val textSizeSp = with(LocalDensity.current) { textSizePx.toSp() }
-            val color = LocalKeyboardScheme.current.onKeyboardContainer
+            val color = scheme.onKeyboardContainer
 
             val textLayoutResult = measurer.measure(
                 text = "1",

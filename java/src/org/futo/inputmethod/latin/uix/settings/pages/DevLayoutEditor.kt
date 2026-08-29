@@ -157,18 +157,18 @@ fun LayoutEditor(layout: CustomLayout, onSave: (CustomLayout) -> Unit, onDelete:
     val textFieldModifier = Modifier
         .fillMaxWidth()
         .padding(top = 4.dp, bottom = 12.dp)
-        .background(LocalKeyboardScheme.current.surfaceVariant, RoundedCornerShape(8.dp))
-        .border(1.dp, LocalKeyboardScheme.current.outlineVariant, RoundedCornerShape(8.dp))
+        .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
+        .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
         .padding(4.dp)
 
-    val style = TextStyle.Default.copy(fontFamily = FontFamily.Monospace, color = LocalKeyboardScheme.current.onSurfaceVariant)
+    val style = TextStyle.Default.copy(fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
     val options = KeyboardOptions.Default.copy(
         keyboardType = KeyboardType.Password,
         autoCorrectEnabled = false
     )
 
-    val cursorBrush = SolidColor(LocalKeyboardScheme.current.onSurfaceVariant)
+    val cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant)
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Edit Layout", style = MaterialTheme.typography.titleLarge)

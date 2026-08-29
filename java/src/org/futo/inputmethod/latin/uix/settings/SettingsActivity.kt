@@ -45,7 +45,7 @@ import org.futo.inputmethod.latin.uix.THEME_KEY
 import org.futo.inputmethod.latin.uix.getSettingBlocking
 import org.futo.inputmethod.latin.uix.getSettingFlow
 import org.futo.inputmethod.latin.uix.theme.ThemeOption
-import org.futo.inputmethod.latin.uix.theme.UixThemeAuto
+import org.futo.inputmethod.latin.uix.theme.app.AppTheme
 import org.futo.inputmethod.latin.uix.theme.getThemeOption
 import org.futo.inputmethod.latin.uix.theme.orDefault
 import org.futo.inputmethod.latin.xlm.ModelPaths
@@ -167,7 +167,7 @@ class SettingsActivity : ComponentActivity(), DynamicThemeProviderOwner {
         setContent {
             DataStoreCacheProvider {
                 SharedPrefsCacheProvider {
-                    UixThemeAuto {
+                    AppTheme {
                         Surface(
                             modifier = Modifier
                                 .fillMaxSize(),

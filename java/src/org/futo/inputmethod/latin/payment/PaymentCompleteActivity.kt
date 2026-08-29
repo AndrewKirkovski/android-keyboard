@@ -31,14 +31,14 @@ import org.futo.inputmethod.latin.uix.settings.pages.IS_ALREADY_PAID
 import org.futo.inputmethod.latin.uix.settings.pages.IS_PAYMENT_PENDING
 import org.futo.inputmethod.latin.uix.settings.pages.PaymentThankYouScreen
 import org.futo.inputmethod.latin.uix.settings.pages.startAppActivity
-import org.futo.inputmethod.latin.uix.theme.UixThemeAuto
+import org.futo.inputmethod.latin.uix.theme.app.AppTheme
 import org.futo.inputmethod.updates.openURI
 
 class PaymentCompleteActivity : ComponentActivity() {
     private fun updateContent() {
         setContent {
             DataStoreCacheProvider {
-                UixThemeAuto {
+                AppTheme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
@@ -76,7 +76,7 @@ class PaymentCompleteActivity : ComponentActivity() {
             } else {
                 setContent {
                     DataStoreCacheProvider {
-                        UixThemeAuto {
+                        AppTheme {
                             Surface(
                                 modifier = Modifier.fillMaxSize(),
                                 color = MaterialTheme.colorScheme.background

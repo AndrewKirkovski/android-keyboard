@@ -39,6 +39,7 @@ import org.futo.inputmethod.latin.settings.Settings
 import org.futo.inputmethod.latin.uix.AutoFitText
 import org.futo.inputmethod.latin.uix.KeyboardLayoutPreview
 import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
+import org.futo.inputmethod.latin.uix.theme.UixThemeAuto
 import org.futo.inputmethod.latin.uix.LocalNavController
 import org.futo.inputmethod.latin.uix.SettingsTextEdit
 import org.futo.inputmethod.latin.uix.SuggestionSeparator
@@ -90,8 +91,13 @@ private fun RowScope.PreviewSuggestionItem(word: String, isAutocorrect: Boolean)
     }
 }
 
+// This draws the keyboard's own suggestion strip, so it keeps the keyboard's colours
+// while the settings page around it follows the system. UixThemeAuto provides the
+// scheme the user picked; without it these reads would fall back to the static light
+// default in LocalKeyboardScheme and the strip would render light on a dark page.
 @Composable
 private fun PreviewSuggestions(word1: String, word2: String, word3: String, isAlt: Boolean) {
+    UixThemeAuto {
     Row(Modifier.fillMaxWidth().background(
         LocalKeyboardScheme.current.keyboardSurfaceDim, RoundedCornerShape(4.dp)
     ).border(
@@ -102,6 +108,7 @@ private fun PreviewSuggestions(word1: String, word2: String, word3: String, isAl
         PreviewSuggestionItem(word2, !isAlt)
         SuggestionSeparator()
         PreviewSuggestionItem(word3, false)
+    }
     }
 }
 

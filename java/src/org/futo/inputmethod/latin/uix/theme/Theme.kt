@@ -111,15 +111,23 @@ fun ThemeOption?.ensureAvailable(context: Context): ThemeOption? {
     }
 }
 
+/**
+ * The keyboard scheme the user has selected, resolved without providing it.
+ *
+ * For settings screens that draw a picture of the keyboard. Those run under the app's
+ * own theme, where [LocalKeyboardScheme] is not provided at all and its static default
+ * is a light scheme -- so reading the composition local there silently renders a light
+ * keyboard on a dark page. Ask for the scheme instead.
+ */
+@Composable
+fun currentKeyboardScheme(): KeyboardColorScheme {
+    val context = LocalContext.current
+    val themeIdx = useDataStoreValue(THEME_KEY)
+    val theme: ThemeOption = getThemeOption(context, themeIdx).orDefault(context)
+    return remember(theme.key) { theme.obtainColors(context) }
+}
+
 @Composable
 fun UixThemeAuto(content: @Composable () -> Unit) {
-    val context = LocalContext.current
-
-    val themeIdx = useDataStoreValue(THEME_KEY)
-
-    val theme: ThemeOption = getThemeOption(context, themeIdx).orDefault(context)
-
-    val colors = remember(theme.key) { theme.obtainColors(context) }
-
-    UixThemeWrapper(colorScheme = colors, content)
+    UixThemeWrapper(colorScheme = currentKeyboardScheme(), content)
 }

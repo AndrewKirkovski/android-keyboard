@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 import org.futo.inputmethod.latin.uix.settings.DataStoreCacheProvider
 import org.futo.inputmethod.latin.uix.settings.NavigationItem
 import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
-import org.futo.inputmethod.latin.uix.theme.UixThemeAuto
+import org.futo.inputmethod.latin.uix.theme.app.AppTheme
 
 @Composable
 private fun MicPermissionRequester(onExit: () -> Unit) {
@@ -100,7 +100,7 @@ class MicPermissionActivity : ComponentActivity() {
     private fun updateContent() {
         setContent {
             DataStoreCacheProvider {
-                UixThemeAuto {
+                AppTheme {
                     MicPermissionRequester {
                         this@MicPermissionActivity.finish()
                     }
