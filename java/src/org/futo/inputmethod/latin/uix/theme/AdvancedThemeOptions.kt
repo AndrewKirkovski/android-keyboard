@@ -21,6 +21,21 @@ data class KeyIcon(
     val drawable: Drawable
 )
 
+/**
+ * A drop shadow cast by every key. Opt-in: a theme that leaves
+ * [AdvancedThemeOptions.keyShadow] null renders exactly as it did before.
+ *
+ * The shadow is drawn into the gap that already exists between keys rather than widening it,
+ * because that gap (KeyboardLayoutSet: 4dp horizontal, 8dp vertical) also feeds hit testing,
+ * KeyDetector and gesture typing. Keeping radius + offsetY within roughly 3dp stays inside
+ * that budget and leaves hit targets untouched.
+ */
+data class KeyShadow(
+    val radius: Dp = 3.dp,
+    val offsetY: Dp = 1.dp,
+    val color: Int = 0x33000000
+)
+
 data class AdvancedThemeOptions(
     val backgroundShader: String? = null,
     val backgroundImage: ImageBitmap? = null,
@@ -42,4 +57,6 @@ data class AdvancedThemeOptions(
     val hintWeight: Float? = null,
 
     val centerHints: Boolean = false,
+
+    val keyShadow: KeyShadow? = null,
 )

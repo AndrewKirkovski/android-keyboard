@@ -10,6 +10,8 @@ import org.futo.inputmethod.latin.uix.theme.presets.AMOLEDDarkPurple
 import org.futo.inputmethod.latin.uix.theme.presets.CatppuccinMocha
 import org.futo.inputmethod.latin.uix.theme.presets.ClassicMaterialDark
 import org.futo.inputmethod.latin.uix.theme.presets.ClassicMaterialLight
+import org.futo.inputmethod.latin.uix.theme.presets.SamsungDarkScheme
+import org.futo.inputmethod.latin.uix.theme.presets.SamsungLightScheme
 import org.futo.inputmethod.latin.uix.theme.presets.CottonCandy
 import org.futo.inputmethod.latin.uix.theme.presets.DeepSeaDark
 import org.futo.inputmethod.latin.uix.theme.presets.DeepSeaLight
@@ -46,6 +48,9 @@ val ThemeOptions = mapOf(
 
     ClassicMaterialDark.key to ClassicMaterialDark,
     ClassicMaterialLight.key to ClassicMaterialLight,
+
+    SamsungLightScheme.key to SamsungLightScheme,
+    SamsungDarkScheme.key to SamsungDarkScheme,
     AMOLEDDarkPurple.key to AMOLEDDarkPurple,
 
     Sunflower.key to Sunflower,

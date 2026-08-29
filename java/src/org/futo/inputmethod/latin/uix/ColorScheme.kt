@@ -189,7 +189,8 @@ fun extendedDarkColorScheme(
     keyboardContainerPressed: Color = outline.copy(alpha = 0.33f),
     onKeyboardContainerPressed: Color = Color.Transparent,
     hintColor: Color? = null,
-    keyboardBackgroundShader: String? = null
+    keyboardBackgroundShader: String? = null,
+    advanced: AdvancedThemeOptions = AdvancedThemeOptions()
 ): KeyboardColorScheme =
     KeyboardColorScheme(
         darkColorScheme(
@@ -234,7 +235,7 @@ fun extendedDarkColorScheme(
             onKeyboardContainerPressed = onKeyboardContainerPressed,
             hintColor = hintColor,
             navigationBarColorForTransparency = navigationBarColorForTransparency,
-            advancedThemeOptions = AdvancedThemeOptions()
+            advancedThemeOptions = advanced
         )
     )
 
@@ -279,7 +280,8 @@ fun extendedLightColorScheme(
     keyboardContainerPressed: Color = outline.copy(alpha = 0.33f),
     onKeyboardContainerPressed: Color = Color.Transparent,
     hintColor: Color? = null,
-    keyboardBackgroundShader: String? = null
+    keyboardBackgroundShader: String? = null,
+    advanced: AdvancedThemeOptions = AdvancedThemeOptions()
 ): KeyboardColorScheme =
     KeyboardColorScheme(
         lightColorScheme(
@@ -324,7 +326,7 @@ fun extendedLightColorScheme(
             onKeyboardContainerPressed = onKeyboardContainerPressed,
             hintColor = hintColor,
             navigationBarColorForTransparency = navigationBarColorForTransparency,
-            advancedThemeOptions = AdvancedThemeOptions()
+            advancedThemeOptions = advanced
         )
     )
 

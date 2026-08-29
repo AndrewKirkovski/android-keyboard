@@ -1,11 +1,14 @@
 package org.futo.inputmethod.latin.uix
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.ColorFilter
+import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PixelFormat
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -31,9 +34,11 @@ import org.futo.inputmethod.latin.R
 import org.futo.inputmethod.latin.uix.actions.AllActions
 import org.futo.inputmethod.latin.uix.actions.AllActionsMap
 import org.futo.inputmethod.latin.uix.theme.AdvancedThemeMatcher
+import org.futo.inputmethod.latin.uix.theme.KeyShadow
 import org.futo.inputmethod.latin.uix.theme.KeyBackground
 import org.futo.inputmethod.v2keyboard.Direction
 import org.futo.inputmethod.v2keyboard.KeyVisualStyle
+import kotlin.math.ceil
 
 val KeyBordersSetting = SettingsKey(booleanPreferencesKey("keyBorders"), true)
 val HiddenKeysSetting = SettingsKey(booleanPreferencesKey("hiddenKeys1"), false)
@@ -232,6 +237,85 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
         }
     }
 
+    /**
+     * A rounded rectangle that casts a drop shadow.
+     *
+     * KeyboardView runs on a hardware layer, where setShadowLayer and BlurMaskFilter are
+     * ignored on many API levels, so the shadow cannot be painted straight onto the target
+     * canvas. It is rendered once into a software bitmap and blitted instead, which a hardware
+     * layer handles fine. The bitmap is rebuilt only when the bounds change, so every key of a
+     * given size reuses one render.
+     *
+     * getPadding reports the shadow inset. KeyboardView.onDrawKeyBackground already expands
+     * bgWidth/bgHeight by that padding and offsets by -padding, which is what lets the shadow
+     * paint outside the nominal key rect.
+     */
+    private class ShadowedRoundRectDrawable(
+        @ColorInt private val fillColor: Int,
+        private val cornerRadius: Float,
+        private val shadowRadius: Float,
+        private val shadowOffsetY: Float,
+        @ColorInt private val shadowColor: Int
+    ) : Drawable() {
+        private val inset = ceil(shadowRadius.toDouble()).toInt()
+        private val offsetPx = ceil(shadowOffsetY.toDouble()).toInt()
+        private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private var cache: Bitmap? = null
+        private var cachedW = -1
+        private var cachedH = -1
+
+        override fun getPadding(padding: Rect): Boolean {
+            padding.set(inset, inset, inset, inset + offsetPx)
+            return true
+        }
+
+        private fun render(w: Int, h: Int): Bitmap? {
+            if (w <= 0 || h <= 0) return null
+            val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+            val body = RectF(
+                inset.toFloat(),
+                inset.toFloat(),
+                (w - inset).toFloat(),
+                (h - inset - offsetPx).toFloat()
+            )
+            fillPaint.color = fillColor
+            // Software canvas, so the shadow layer is honoured here.
+            fillPaint.setShadowLayer(shadowRadius, 0f, shadowOffsetY, shadowColor)
+            Canvas(bmp).drawRoundRect(body, cornerRadius, cornerRadius, fillPaint)
+            fillPaint.clearShadowLayer()
+            return bmp
+        }
+
+        override fun draw(canvas: Canvas) {
+            val b = bounds
+            if (b.width() != cachedW || b.height() != cachedH || cache == null) {
+                cache = render(b.width(), b.height())
+                cachedW = b.width()
+                cachedH = b.height()
+            }
+            cache?.let { canvas.drawBitmap(it, b.left.toFloat(), b.top.toFloat(), null) }
+        }
+
+        override fun setAlpha(alpha: Int) = Unit
+        override fun setColorFilter(colorFilter: ColorFilter?) = Unit
+        @Deprecated("Deprecated in Java")
+        override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
+    }
+
+    /** A key background, with a shadow when the theme asks for one. */
+    private fun shadowedKeyBackground(@ColorInt color: Int, radius: Float, shadow: KeyShadow?): Drawable =
+        if (shadow == null) {
+            coloredRoundedRectangle(color, radius)
+        } else {
+            ShadowedRoundRectDrawable(
+                fillColor = color,
+                cornerRadius = radius,
+                shadowRadius = dp(shadow.radius),
+                shadowOffsetY = dp(shadow.offsetY),
+                shadowColor = shadow.color
+            )
+        }
+
     private fun coloredOval(@ColorInt color: Int): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
@@ -251,8 +335,9 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
         addState(stateSet, drawable)
     }
 
-    private fun makeVisualStyle(background: Int, foreground: Int, highlight: Int, foregroundPressed: Int, roundedness: Dp): VisualStyleDescriptor {
-        val bg = coloredRoundedRectangle(background, dp(roundedness))
+    private fun makeVisualStyle(background: Int, foreground: Int, highlight: Int, foregroundPressed: Int, roundedness: Dp, shadow: KeyShadow? = null): VisualStyleDescriptor {
+        // Resting state only. A pressed key reads as depressed, so it drops its shadow.
+        val bg = shadowedKeyBackground(background, dp(roundedness), shadow)
         val bgPressed = coloredRoundedRectangle(Color(highlight).compositeOver(Color(background)).toArgb(), dp(roundedness))
         val fgPressed = Color(foregroundPressed).compositeOver(Color(foreground)).toArgb()
 
@@ -422,6 +507,8 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
 
         val roundness = advanced.keyRoundness
         val keyCornerRadius = 9.dp * roundness
+        // Only a key that draws a background can cast a shadow.
+        val keyShadow = if(keyBorders) advanced.keyShadow else null
 
         val spaceCornerRadius = if(keyBorders) {
             keyCornerRadius
@@ -456,6 +543,7 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
                     if(expertMode) transparent else onKeyColor,
                     highlight, highlightForeground,
                     keyCornerRadius,
+                    keyShadow,
                 )
             } else {
                 makeVisualStyle(
@@ -481,7 +569,8 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
                     functionalKeyColor,
                     if(expertMode) Color(onKeyColor).copy(alpha = 0.2f).toArgb() else onKeyColor,
                     highlight, highlightForeground,
-                    keyCornerRadius
+                    keyCornerRadius,
+                    keyShadow
                 )
             } else {
                 makeVisualStyle(
@@ -497,7 +586,8 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
                     keyColor,
                     if(expertMode) Color(onKeyColor).copy(alpha = 0.2f).toArgb() else onKeyColor,
                     highlight, highlightForeground,
-                    keyCornerRadius
+                    keyCornerRadius,
+                    keyShadow
                 )
             } else {
                 makeVisualStyle(
@@ -518,7 +608,7 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
             ),
 
             KeyVisualStyle.Spacebar to when {
-                keyBorders -> makeVisualStyle(keyColor, onKeyColor, highlight, highlightForeground, spaceCornerRadius)
+                keyBorders -> makeVisualStyle(keyColor, onKeyColor, highlight, highlightForeground, spaceCornerRadius, keyShadow)
                 expertMode -> makeVisualStyle(
                     colorScheme.outline.copy(alpha = 0.1f).toArgb(),
                     onKeyColor,
