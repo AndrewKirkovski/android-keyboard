@@ -12,9 +12,13 @@ import org.futo.inputmethod.latin.uix.theme.ThemeOption
 // Sampled from a Samsung keyboard screenshot, 1080px across a 10 column row:
 // backdrop #E4E4E6, letter key #FCFCFE, functional key #C9C9CB, label #202020.
 //
-// The letter/functional split is the part that matters. Stock light is #FFFFFF against
-// #F7F7F7, which is barely a split at all; here the functional keys are visibly greyer,
-// which is what makes shift, delete and the symbols key read as a separate class.
+// The functional keys deliberately do NOT use Samsung's #C9C9CB. That grey is heavy
+// enough to read as a different material rather than a different key class. They sit
+// at the midpoint between the backdrop and the letter key face instead -- lighter than
+// the gap they sit in, darker than the keys beside them -- which keeps shift, delete
+// and the symbols key a separate class without the weight. Same construction in dark.
+//
+// Stock light, for contrast, is #FFFFFF against #F7F7F7, which is barely a split at all.
 
 private val lightShadow = KeyShadow(radius = 3.dp, offsetY = 1.dp, color = 0x33000000)
 
@@ -48,7 +52,7 @@ private val lightScheme = extendedLightColorScheme(
     keyboardSurface = Color(0xFFE4E4E6),
     keyboardSurfaceDim = Color(0xFFD9D9DC),
     keyboardContainer = Color(0xFFFCFCFE),
-    keyboardContainerVariant = Color(0xFFC9C9CB),
+    keyboardContainerVariant = Color(0xFFF0F0F2),
     onKeyboardContainer = Color(0xFF202020),
     keyboardPress = Color(0xFFBFC0C4),
     primaryTransparent = Color(0xFF2A6DF4).copy(alpha = 0.3f),
@@ -87,7 +91,7 @@ private val darkScheme = extendedDarkColorScheme(
     keyboardSurface = Color(0xFF1B1C1E),
     keyboardSurfaceDim = Color(0xFF141517),
     keyboardContainer = Color(0xFF35373C),
-    keyboardContainerVariant = Color(0xFF232427),
+    keyboardContainerVariant = Color(0xFF28292D),
     onKeyboardContainer = Color(0xFFECECEE),
     keyboardPress = Color(0xFF4A4D53),
     primaryTransparent = Color(0xFF8FB4FF).copy(alpha = 0.3f),
