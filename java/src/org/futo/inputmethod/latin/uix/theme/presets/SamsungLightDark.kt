@@ -53,11 +53,12 @@ private val lightScheme = extendedLightColorScheme(
     keyboardPress = Color(0xFFBFC0C4),
     primaryTransparent = Color(0xFF2A6DF4).copy(alpha = 0.3f),
     onSurfaceTransparent = Color(0xFF202020).copy(alpha = 0.1f),
-    advanced = AdvancedThemeOptions(
-        keyShadow = lightShadow,
-        // Samsung's keycaps sit a little heavier than stock's.
-        textWeight = 500.0f
-    )
+    // No textWeight. An earlier version set 500 on the assumption that Samsung's
+    // keycaps are heavier than stock's; they are not, they are regular weight,
+    // and 500 read as bold against the reference. Leaving it null keeps the
+    // default, which is what every other preset does -- this was the only preset
+    // in the app setting the field at all.
+    advanced = AdvancedThemeOptions(keyShadow = lightShadow)
 )
 
 private val darkScheme = extendedDarkColorScheme(
@@ -91,10 +92,7 @@ private val darkScheme = extendedDarkColorScheme(
     keyboardPress = Color(0xFF4A4D53),
     primaryTransparent = Color(0xFF8FB4FF).copy(alpha = 0.3f),
     onSurfaceTransparent = Color(0xFFECECEE).copy(alpha = 0.1f),
-    advanced = AdvancedThemeOptions(
-        keyShadow = darkShadow,
-        textWeight = 500.0f
-    )
+    advanced = AdvancedThemeOptions(keyShadow = darkShadow)
 )
 
 val SamsungLightScheme = ThemeOption(
