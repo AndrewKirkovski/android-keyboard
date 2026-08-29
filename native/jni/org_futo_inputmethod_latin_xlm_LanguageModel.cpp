@@ -1019,7 +1019,49 @@ namespace latinime {
             partialWordString = jstring2string(env, partialWord);
         }
 
-        if(partialWordString.size() < inputSize) inputSize = partialWordString.size();
+        // inComposeX/inComposeY hold one entry per keypress, while partialWordString is
+        // UTF-8, so size() counts bytes. Indexing the coordinate arrays with a byte
+        // offset desynchronises the two at the first non-ASCII character: in Polish
+        // "ćwiczenie" the two bytes of ć push every following letter onto the wrong tap.
+        // Walk the string one character at a time instead.
+        //
+        // Deliberately not codepoints_from_utf8: it throws std::invalid_argument on a
+        // malformed sequence, and an exception escaping a JNI frame terminates the
+        // process. jstring2string emits modified UTF-8, which is structurally decodable,
+        // so that should not happen -- but a helper here should not be able to take the
+        // keyboard down at all. This one resynchronises instead, and only has to tell
+        // "ASCII, and which" from "not ASCII": LETTERS_TO_IDS covers a-z, so nothing
+        // else carries a token either way.
+        //
+        // This gets one entry per keypress for ordinary typing, which is what the
+        // coordinate arrays are indexed by. Two cases still do not line up exactly, both
+        // far smaller than counting bytes and neither introduced here:
+        //   - a supplementary character counts as two, because modified UTF-8 encodes it
+        //     as a surrogate pair;
+        //   - a dead-key composition is two keypresses but one character.
+        // Both involve characters with no entry in LETTERS_TO_IDS, so they cost
+        // alignment for the rest of the word rather than a wrong token.
+        std::vector<uint32_t> partialWordChars;
+        partialWordChars.reserve(partialWordString.size());
+        for(size_t b = 0; b < partialWordString.size(); ) {
+            const unsigned char lead = static_cast<unsigned char>(partialWordString[b]);
+            if(lead < 0x80) {
+                partialWordChars.push_back(lead);
+                b += 1;
+            } else {
+                // Lead byte plus any continuation bytes (0b10xxxxxx) after it. A stray
+                // continuation byte consumes only itself, so a corrupt string costs
+                // alignment rather than correctness.
+                size_t len = 1;
+                while(b + len < partialWordString.size()
+                      && (static_cast<unsigned char>(partialWordString[b + len]) & 0xC0) == 0x80) {
+                    len += 1;
+                }
+                partialWordChars.push_back(0xFFFD); // any non-ASCII marker will do
+                b += len;
+            }
+        }
+        if(partialWordChars.size() < inputSize) inputSize = partialWordChars.size();
 
         WordCapitalizeMode capitals = WordCapitalizeMode::IgnoredCapitals;
 
@@ -1052,7 +1094,17 @@ namespace latinime {
         std::vector<TokenMix> mixes;
         int numSkippedDueToNoCoordinate = 0;
         for(size_t i=0; i<inputSize; i++) {
-            char wc = partialWordString[i];
+            // A non-ASCII codepoint has no entry in LETTERS_TO_IDS, which covers a-z
+            // only, so it contributes no token either way. It still has to consume its
+            // tap index here rather than be skipped byte by byte, or every later letter
+            // reads the wrong coordinate. Tested on the codepoint rather than on the
+            // narrowed char so the result does not depend on whether plain char is
+            // signed, which it is on x86 and is not on ARM.
+            const uint32_t cp = partialWordChars[i];
+            if (cp > 0x7F) {
+                continue;
+            }
+            char wc = (char) cp;
             if (!(wc >= 'a' && wc <= 'z') && !(wc >= 'A' && wc <= 'Z') && !(wc >= '0' && wc <= '9')) {
                 //AKLOGI("%d | Char %c skipped due to not within range", i, wc);
                 continue;
@@ -1156,7 +1208,11 @@ namespace latinime {
         if(mixes.empty() && numSkippedDueToNoCoordinate > 0) {
             AKLOGI("BUG: Mixes is empty due to lacking input coordinates. Falling back to non-mixing");
             for(size_t i=0; i<inputSize; i++) {
-                char wc = partialWordString[i];
+                const uint32_t cp = partialWordChars[i];
+                if (cp > 0x7F) {
+                    continue;
+                }
+                char wc = (char) cp;
                 if (!(wc >= 'a' && wc <= 'z') && !(wc >= 'A' && wc <= 'Z')) {
                     continue;
                 }
