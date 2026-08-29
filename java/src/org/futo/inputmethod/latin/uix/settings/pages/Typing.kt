@@ -855,17 +855,26 @@ val KeyboardSettingsMenu = UserSettingsMenu(
         userSettingToggleDataStore(
             title = R.string.keyboard_settings_inline_autofill,
             subtitle = R.string.keyboard_settings_inline_autofill_subtitle,
-            setting = InlineAutofillSetting
+            setting = InlineAutofillSetting,
+            icon = {
+                Icon(painterResource(id = R.drawable.edit_text), contentDescription = null)
+            }
         ),
         userSettingToggleSharedPrefs(
             title = R.string.keyboard_settings_period_key,
             subtitle = R.string.keyboard_settings_period_key_subtitle2,
             key = Settings.PREF_ENABLE_ALT_PERIOD_KEY,
             default = {false},
+            icon = {
+                Icon(painterResource(id = R.drawable.type), contentDescription = null)
+            }
         ),
         userSettingToggleDataStore(
             title = R.string.keyboard_settings_hide_when_hardware_keyboard_is_connected,
-            setting = HideKeyboardWhenHardKeyboardConnected
+            setting = HideKeyboardWhenHardKeyboardConnected,
+            icon = {
+                Icon(painterResource(id = R.drawable.eye), contentDescription = null)
+            }
         )
     )
 )
