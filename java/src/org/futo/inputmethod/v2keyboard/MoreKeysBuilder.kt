@@ -54,8 +54,21 @@ private fun symsForCoord(keyCoordinate: KeyCoordinate): String {
 private fun actionForCoord(keyCoordinate: KeyCoordinate): String {
     if(!keyCoordinate.element.kind.isAlphabet) return ""
 
-    val row = QwertySymbols.getOrNull(keyCoordinate.regularRow)
-    val letter = row?.getOrNull(keyCoordinate.regularColumn)
+    val row = QwertySymbols.getOrNull(keyCoordinate.regularRow) ?: return ""
+
+    // QwertySymbols rows are 10/10/7 wide (row 1 is "asdfghjkl" plus the "r2_e1"
+    // marker), so a row of a different width has to be centred against them before its
+    // column can be used as an index, the same way symsForCoord does. Without it a
+    // layout whose rows are not qwerty-width gets its quick actions shifted: a 12/11/9
+    // Cyrillic layout offsets rows 0 and 2 by one, so each key in them long-presses to
+    // the action belonging to its neighbour, and the two columns past the end of the
+    // reference row offer nothing at all.
+    // Row 1 lands correctly only because integer division of 1/2 is 0.
+    val colOffset = (keyCoordinate.measurement.numColumnsByRow[keyCoordinate.regularRow] - row.size) / 2
+    val centeredCol = keyCoordinate.regularColumn - colOffset.coerceAtLeast(0)
+    if(centeredCol < 0) return ""
+
+    val letter = row.getOrNull(centeredCol)
     return if(letter != null) {
         "!text/actions_$letter"
     } else {
