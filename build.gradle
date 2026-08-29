@@ -81,6 +81,14 @@ final def translationsWithoutEngValues = { final String path ->
 
     final def destDir = file("$buildDir/generated/res-translations-filtered/${taskNameSuffix}")
 
+    // Two product flavours can legitimately reference the same translations
+    // directory -- `unstable` and `kirkouski` both use translations/devbuild.
+    // tasks.register() throws on a duplicate name, so reuse the existing task
+    // and just hand back the same destDir.
+    if (tasks.names.contains("prepareResFilter${taskNameSuffix}")) {
+        return destDir
+    }
+
     tasks.register("prepareResFilter${taskNameSuffix}", Copy) {
         from(sourceDir) {
             include 'values-*/**'
@@ -296,6 +304,21 @@ android {
             buildConfigField "String", "PAYMENT_PRICE", "FUTOPAY_PRICE"
         }
 
+        kirkouski {
+            dimension "buildType"
+            applicationIdSuffix ".kirkouski"
+            versionNameSuffix "-kirkouski"
+
+            buildConfigField "boolean", "IS_PLAYSTORE_BUILD", "false"
+            // Never prompt to "update" to an upstream release: that would
+            // replace this build and drop the patches it carries.
+            buildConfigField "boolean", "UPDATE_CHECKING", "false"
+            buildConfigField "boolean", "UPDATE_CHECKING_NETWORK", "false"
+            buildConfigField "String", "BRANCH", "\"${getBranch()}\""
+
+            buildConfigField "String", "PAYMENT_PRICE", "FUTOPAY_PRICE"
+        }
+
         stable {
             dimension "buildType"
             buildConfigField "boolean", "IS_PLAYSTORE_BUILD", "false"
@@ -351,6 +374,15 @@ android {
         }
 
         unstable {
+            java.srcDirs = ['common/src', 'java/src', 'java/stable/java']
+            manifest.srcFile 'java/stable/AndroidManifest.xml'
+            res.srcDirs = ['java/unstable/res', translationsWithoutEngValues('translations/devbuild')]
+        }
+
+        // A product flavour needs BOTH a productFlavors entry and a matching
+        // sourceSet, or its Kotlin compile fails on classes that live only in a
+        // per-flavour source dir (CrashLoggingApplication). Mirrors `unstable`.
+        kirkouski {
             java.srcDirs = ['common/src', 'java/src', 'java/stable/java']
             manifest.srcFile 'java/stable/AndroidManifest.xml'
             res.srcDirs = ['java/unstable/res', translationsWithoutEngValues('translations/devbuild')]
@@ -428,6 +460,10 @@ dependencies {
     stableImplementation 'ch.acra:acra-dialog:5.11.1'
     unstableImplementation 'ch.acra:acra-mail:5.11.1'
     unstableImplementation 'ch.acra:acra-dialog:5.11.1'
+    // Our flavour reuses java/stable/java, which imports ACRA, so it needs the
+    // same dependencies as the flavour it mirrors.
+    kirkouskiImplementation 'ch.acra:acra-mail:5.11.1'
+    kirkouskiImplementation 'ch.acra:acra-dialog:5.11.1'
 
     implementation 'sh.calvin.reorderable:reorderable:3.0.0'
 
