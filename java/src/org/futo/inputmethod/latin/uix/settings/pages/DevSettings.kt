@@ -72,7 +72,6 @@ import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.theme.TonalPalette
 import org.futo.inputmethod.latin.uix.theme.Tones
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.uix.theme.dynamicTonalPalette
 import org.futo.inputmethod.latin.uix.theme.serialization.AlphaOrder
 import org.futo.inputmethod.latin.uix.theme.serialization.argbLongToHexColorString

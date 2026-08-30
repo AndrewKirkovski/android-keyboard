@@ -38,7 +38,6 @@ import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.Route
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.ScrollableList
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.v2keyboard.LayoutManager
 import java.text.Normalizer
 import java.util.Locale
@@ -131,7 +130,7 @@ fun LayoutPreview(name: String, locale: Locale, onClick: () -> Unit) {
 
             Text(
                 layoutName,
-                style = Typography.SmallMl,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(4.dp),
                 textAlign = TextAlign.Center
             )

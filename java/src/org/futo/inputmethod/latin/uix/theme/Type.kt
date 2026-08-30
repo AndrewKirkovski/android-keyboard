@@ -5,6 +5,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+/**
+ * Superseded by [org.futo.inputmethod.latin.uix.theme.app.AppTypography], which is now
+ * supplied to MaterialTheme on both sides of the app. Nothing under settings/ reads this
+ * any more; what remains are the in-keyboard panels, which are out of scope for the
+ * settings redesign and are migrated with the keyboard work rather than ahead of it.
+ *
+ * Do not add uses. Five of the ten styles below set lineHeight equal to fontSize, which
+ * crushes any string that wraps -- the reason it is being retired.
+ */
 data object Typography {
     data object Heading {
         val MediumMl = TextStyle(

@@ -38,7 +38,6 @@ import org.futo.inputmethod.latin.BuildConfig
 import org.futo.inputmethod.latin.R
 import org.futo.inputmethod.latin.uix.SettingsKey
 import org.futo.inputmethod.latin.uix.setSetting
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.updates.openURI
 
 @Composable
@@ -88,7 +87,7 @@ fun Step(fraction: Float, text: String) {
             this.text = AnnotatedString(text)
         }
     ) {
-        Text(text, style = Typography.SmallMl)
+        Text(text, style = MaterialTheme.typography.bodyMedium)
         LinearProgressIndicator(progress = fraction, modifier = Modifier.fillMaxWidth())
     }
 }

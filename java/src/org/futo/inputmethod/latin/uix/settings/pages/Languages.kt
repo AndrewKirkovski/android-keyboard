@@ -68,7 +68,6 @@ import org.futo.inputmethod.latin.uix.settings.pages.modelmanager.openModelImpor
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.uix.theme.UixThemeWrapper
 import org.futo.inputmethod.latin.uix.theme.presets.DynamicDarkTheme
 import org.futo.inputmethod.latin.uix.urlEncode
@@ -119,7 +118,7 @@ fun LanguageConfigurable(
                 Text(
                     kind.kindTitle(LocalResources.current),
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    style = Typography.Small,
+                    style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                 )
             }
@@ -128,7 +127,7 @@ fun LanguageConfigurable(
 
             Text(
                 selection,
-                style = Typography.Body.RegularMl
+                style = MaterialTheme.typography.bodyLarge
             )
 
         }
@@ -157,7 +156,7 @@ fun LayoutConfigurable(
     ) {
         Text(
             name,
-            style = Typography.Body.RegularMl,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.align(Alignment.CenterVertically)
         )
 
@@ -202,7 +201,7 @@ fun ActionableItem(
             Text(
                 text,
                 modifier = Modifier.align(Alignment.CenterVertically),
-                style = Typography.Body.Medium
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }
@@ -238,7 +237,7 @@ fun LanguageSurface(
                 Text(
                     item.languageName,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    style = Typography.Heading.MediumMl
+                    style = MaterialTheme.typography.titleMedium
                 )
 
                 if (item.options.dictionary == null) {
@@ -269,7 +268,7 @@ fun LanguageSurface(
                     stringResource(R.string.language_settings_layouts_of_this_language),
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp),
-                    style = Typography.SmallMl,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                 )
 
@@ -293,7 +292,7 @@ fun LanguageSurface(
                         modifier = Modifier
                             .weight(1.0f)
                             .align(Alignment.CenterVertically),
-                        style = Typography.SmallMl,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                     )
                     Checkbox(

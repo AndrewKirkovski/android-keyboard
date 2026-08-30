@@ -20,6 +20,8 @@ import org.futo.inputmethod.latin.uix.KeyboardColorScheme
 import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
 import org.futo.inputmethod.latin.uix.THEME_KEY
 import org.futo.inputmethod.latin.uix.actions.compatEmojiTypeface
+import org.futo.inputmethod.latin.uix.theme.app.AppShapes
+import org.futo.inputmethod.latin.uix.theme.app.AppTypography
 import org.futo.inputmethod.latin.uix.findActivity
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import kotlin.math.sqrt
@@ -92,8 +94,14 @@ fun UixThemeWrapper(colorScheme: KeyboardColorScheme, content: @Composable () ->
         LocalCompatEmojiFamily provides emojiFamily,
         LocalCompatEmojiTypeface provides emojiTypeface
     ) {
+        // Type and shape are the same on both sides of the app; only colour differs.
+        // Settings and the in-keyboard panels share Components.kt, so without this a
+        // shared row read AppTypography on a settings screen and Material's untouched
+        // defaults over the keyboard -- the same composable, two sizes.
         MaterialTheme(
             colorScheme = colorScheme.base,
+            typography = AppTypography,
+            shapes = AppShapes,
             content = content,
         )
     }

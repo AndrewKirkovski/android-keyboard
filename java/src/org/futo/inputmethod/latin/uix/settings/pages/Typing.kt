@@ -130,7 +130,6 @@ import org.futo.inputmethod.latin.uix.settings.userSettingDecorationOnly
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleDataStore
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleSharedPrefs
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.v2keyboard.KeyboardSettings
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
@@ -235,7 +234,7 @@ fun ResizeScreen(navController: NavHostController = rememberNavController()) {
                         appendLine()
                         append(stringResource(R.string.size_settings_resize_tip))
                     },
-                    style = Typography.Body.MediumMl,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = LocalContentColor.current,
                     inlineContent = mapOf(
                         "icon" to InlineTextContent(
@@ -435,7 +434,7 @@ private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPr
 private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<String>) {
     val resources = LocalResources.current
     Row(Modifier.padding(16.dp)) {
-        Text(stringResource(R.string.morekey_settings_layout), style = Typography.Heading.Medium, modifier = Modifier
+        Text(stringResource(R.string.morekey_settings_layout), style = MaterialTheme.typography.titleMedium, modifier = Modifier
             .align(CenterVertically)
             .weight(1.0f))
 

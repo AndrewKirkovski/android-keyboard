@@ -137,38 +137,48 @@ private val AppDarkColors = darkColorScheme(
 // --------------------------------------------------------------------------------- //
 
 /**
- * Weight and opacity carry the hierarchy here, not size.
+ * Size and opacity carry the hierarchy, not weight: a row title and its subtitle differ
+ * by three points and by 30% opacity, and both are regular. The old pairing was 16sp/400
+ * over 14sp/400 -- two points of size and nothing else -- so a three-line subtitle
+ * visually outweighed the row it belonged to.
  *
- * The old rows were 16sp/400 title over 14sp/400 subtitle -- two points of size and
- * nothing else -- so a three-line subtitle visually outweighed the row it belonged to.
- * A row title now differs from its subtitle on three axes at once: 16/500/100% against
- * 13/400/70%.
+ * This replaces the parallel scale in theme/Type.kt, which defined ten styles of which
+ * five set lineHeight equal to fontSize. 100% leading crushes any string that wraps, and
+ * with 541 UIX strings across 91 locales most of them wrap somewhere.
  *
- * The family stays the platform sans deliberately. There are 541 UIX strings across 91
- * locales, including Devanagari, Arabic, Thai, Khmer, CJK and Cyrillic; a display face
- * without full coverage falls back per glyph and looks broken in exactly the locales
- * nobody here would test.
+ * The family stays the platform sans deliberately. Those same locales include
+ * Devanagari, Arabic, Thai, Khmer, CJK and Cyrillic; a display face without full
+ * coverage falls back per glyph and looks broken in exactly the locales nobody here
+ * would test.
  *
  * Every line height sits inside the 120-145% band.
  */
 val AppTypography = Typography(
-    // screen title
+    // screen title, in the large app bar
     headlineMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontSize = 28.sp, lineHeight = 34.sp,
         fontWeight = FontWeight.SemiBold, letterSpacing = (-0.02).em,
     ),
-    // section header: uppercase and letterspaced, at one short line
+    // card title: a language's name, a dialog's question
+    titleMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontSize = 20.sp, lineHeight = 26.sp,
+        fontWeight = FontWeight.Medium, letterSpacing = (-0.01).em,
+    ),
+    // section header. Sentence case, not uppercase: One UI colours these with the accent
+    // rather than shouting them, and caps buy nothing in the many locales whose scripts
+    // have no case to shout with.
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontSize = 13.sp, lineHeight = 16.sp,
-        fontWeight = FontWeight.Bold, letterSpacing = 0.08.em,
+        fontWeight = FontWeight.Bold, letterSpacing = 0.01.em,
     ),
     // row title
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontSize = 16.sp, lineHeight = 20.sp,
-        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp, lineHeight = 22.sp,
+        fontWeight = FontWeight.Normal,
     ),
     // row subtitle
     bodyMedium = TextStyle(
@@ -176,16 +186,16 @@ val AppTypography = Typography(
         fontSize = 13.sp, lineHeight = 18.sp,
         fontWeight = FontWeight.Normal,
     ),
-    // control value
+    // control value: a slider's reading, a resource filename
     labelLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontSize = 14.sp, lineHeight = 18.sp,
+        fontSize = 15.sp, lineHeight = 20.sp,
         fontWeight = FontWeight.Medium,
     ),
-    // caption
+    // caption, and the label under an action tile
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,
-        fontSize = 12.sp, lineHeight = 16.sp,
+        fontSize = 12.sp, lineHeight = 15.sp,
         fontWeight = FontWeight.Normal,
     ),
 )
@@ -195,16 +205,60 @@ val AppTypography = Typography(
 // --------------------------------------------------------------------------------- //
 
 /**
- * Three steps, replacing the sixteen ad-hoc RoundedCornerShape values under settings/.
+ * Five steps, replacing the 26 ad-hoc RoundedCornerShape values under settings/.
  * MaterialTheme.shapes was previously supplied to nothing and used zero times.
+ *
+ * [Shapes.large] is the one that matters: it is the grouped card every settings row
+ * lives in, and at 22dp it is deliberately rounder than Material's own 16dp, because
+ * that roundness is most of what makes a One UI card read as a card.
  */
 val AppShapes = Shapes(
-    extraSmall = RoundedCornerShape(6.dp),
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(12.dp),
-    large = RoundedCornerShape(16.dp),
-    extraLarge = RoundedCornerShape(24.dp),
+    extraSmall = RoundedCornerShape(8.dp),    // chip
+    small = RoundedCornerShape(12.dp),        // dropdown, inline field
+    medium = RoundedCornerShape(16.dp),       // tip, notice
+    large = RoundedCornerShape(22.dp),        // the grouped card
+    extraLarge = RoundedCornerShape(26.dp),   // dialog
 )
+
+// --------------------------------------------------------------------------------- //
+// space
+// --------------------------------------------------------------------------------- //
+
+/**
+ * One 4dp scale, replacing 259 dp literals across 27 files under settings/ -- among them
+ * 9, 19, 21, 25, 51 and 55dp, which no scale explains.
+ *
+ * Measured over 1020 elements, the app used 44 distinct element heights, 66 distinct gap
+ * values and 14 different left edges, and not one screen held a single row height. The
+ * named values below are the ones the design fixes; [xs] through [xxl] cover the rest.
+ */
+object Spacing {
+    val xs = 4.dp
+    val s = 8.dp
+    val m = 12.dp
+    val l = 16.dp
+    val xl = 24.dp
+    val xxl = 32.dp
+
+    /** Side inset of a grouped card from the screen edge, and the gap between cards. */
+    val cardInset = 12.dp
+    val cardGap = 8.dp
+
+    /** Side padding inside a row, measured from the card's edge to the text. */
+    val rowInset = 20.dp
+
+    /** The two row heights. Everything is one of these; there is no third. */
+    val rowHeight = 56.dp
+    val rowHeightTwoLine = 72.dp
+
+    /**
+     * The leading slot is the icon itself at 24dp, not a 40dp circle inside a 48dp
+     * column. The circle pushed every title 48dp from the edge whether the row had an
+     * icon or not, which is where most of the 14 left edges came from.
+     */
+    val iconSlot = 24.dp
+    val iconGap = 16.dp
+}
 
 // --------------------------------------------------------------------------------- //
 // wrapper

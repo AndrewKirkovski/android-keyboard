@@ -47,7 +47,6 @@ import org.futo.inputmethod.latin.uix.settings.Route
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.theme.ZipThemes
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.uix.theme.selector.ThemePicker
 import org.futo.inputmethod.latin.uix.theme.selector.ZipThemePreview
 import org.futo.inputmethod.latin.uix.urlEncode
@@ -61,7 +60,7 @@ fun DeleteCustomThemeDialog(name: String, navController: NavHostController) {
         icon = {
         },
         title = {
-            Text(stringResource(R.string.theme_settings_custom_theme_delete_title), style = Typography.Body.MediumMl, color = MaterialTheme.colorScheme.onPrimaryContainer)
+            Text(stringResource(R.string.theme_settings_custom_theme_delete_title), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onPrimaryContainer)
         },
         text = {
             ZipThemePreview(ZipThemes.custom(name), true, Modifier, null) { }
@@ -74,14 +73,14 @@ fun DeleteCustomThemeDialog(name: String, navController: NavHostController) {
                 ZipThemes.delete(context, ZipThemes.custom(name))
                 navController.navigateUp()
             }) {
-                Text(stringResource(R.string.theme_settings_custom_theme_delete_confirm), color = MaterialTheme.colorScheme.primary, style = Typography.Body.Medium)
+                Text(stringResource(R.string.theme_settings_custom_theme_delete_confirm), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
             }
         },
         dismissButton = {
             TextButton(onClick = {
                 navController.navigateUp()
             }) {
-                Text(stringResource(R.string.theme_settings_custom_theme_delete_cancel), color = MaterialTheme.colorScheme.primary, style = Typography.Body.Medium)
+                Text(stringResource(R.string.theme_settings_custom_theme_delete_cancel), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
             }
         }
     )
@@ -104,7 +103,7 @@ fun CustomThemeDialog(navController: NavHostController = rememberNavController()
         icon = {
         },
         title = {
-            Text(stringResource(R.string.theme_settings_add_new_theme), style = Typography.Body.MediumMl, color = MaterialTheme.colorScheme.onPrimaryContainer)
+            Text(stringResource(R.string.theme_settings_add_new_theme), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onPrimaryContainer)
         },
         text = {
             Text(stringResource(R.string.theme_settings_add_new_theme_question))
@@ -117,7 +116,7 @@ fun CustomThemeDialog(navController: NavHostController = rememberNavController()
                 pickLauncher.launch("image/*")
                 //navController.navigateUp()
             }) {
-                Text(stringResource(R.string.theme_customizer_select_background_image_button), color = MaterialTheme.colorScheme.primary, style = Typography.Body.Medium)
+                Text(stringResource(R.string.theme_customizer_select_background_image_button), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
             }
         },
         dismissButton = {
@@ -130,7 +129,7 @@ fun CustomThemeDialog(navController: NavHostController = rememberNavController()
 
                 navController.navigateUp()
             }) {
-                Text(stringResource(R.string.theme_customizer_load_custom_theme_file), color = MaterialTheme.colorScheme.primary, style = Typography.Body.Medium)
+                Text(stringResource(R.string.theme_customizer_load_custom_theme_file), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
             }
         }
     )

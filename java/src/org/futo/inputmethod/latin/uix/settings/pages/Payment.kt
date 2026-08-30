@@ -79,7 +79,6 @@ import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.latin.uix.settings.SpacedColumn
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.uix.theme.UixThemeWrapper
 import org.futo.inputmethod.latin.uix.theme.presets.DynamicDarkTheme
 import org.futo.inputmethod.updates.dismissedMigrateUpdateNotice
@@ -135,7 +134,7 @@ fun useNumberOfDaysInstalled(): MutableIntState {
 
 @Composable
 fun ParagraphText(it: String, modifier: Modifier = Modifier, color: Color = LocalContentColor.current.copy(alpha=0.9f)) {
-    Text(it, modifier = modifier, style = Typography.SmallMl, color = color)
+    Text(it, modifier = modifier, style = MaterialTheme.typography.bodyMedium, color = color)
 }
 
 @Composable
@@ -144,11 +143,11 @@ fun IconText(icon: Painter, title: String, body: String) {
         Icon(icon, contentDescription = null, modifier = Modifier
             .align(Alignment.Top)
             .padding(8.dp, 10.dp)
-            .size(with(LocalDensity.current) { Typography.Heading.Medium.fontSize.toDp() }))
+            .size(with(LocalDensity.current) { MaterialTheme.typography.titleMedium.fontSize.toDp() }))
         Column(modifier = Modifier.padding(6.dp)) {
-            Text(title, style = Typography.Body.Regular, color = LocalContentColor.current)
+            Text(title, style = MaterialTheme.typography.bodyLarge, color = LocalContentColor.current)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(body, style = Typography.SmallMl, color = LocalContentColor.current.copy(alpha = 0.9f))
+            Text(body, style = MaterialTheme.typography.bodyMedium, color = LocalContentColor.current.copy(alpha = 0.9f))
         }
     }
 }
@@ -372,7 +371,7 @@ fun PaymentFailedScreen(onExit: () -> Unit = { }) {
 fun PaymentSurfaceHeading(title: String) {
     Text(
         title,
-        style = Typography.Body.MediumMl,
+        style = MaterialTheme.typography.bodyLarge,
         color = LocalContentColor.current
     )
 }
@@ -489,7 +488,7 @@ fun PaymentScreen(
                             stringResource(
                                 R.string.payment_screen_pay_via_google,
                                 BuildConfig.GOOGLEPAY_PRICE
-                            ), style = Typography.Body.Medium
+                            ), style = MaterialTheme.typography.labelLarge
                         )
                     }
 
@@ -504,7 +503,7 @@ fun PaymentScreen(
                             stringResource(
                                 R.string.payment_screen_pay_via_futopay2,
                                 BuildConfig.FUTOPAY_PRICE
-                            ), style = Typography.Body.Medium
+                            ), style = MaterialTheme.typography.labelLarge
                         )
                     }*/
                 } else {
@@ -519,7 +518,7 @@ fun PaymentScreen(
                             stringResource(
                                 R.string.payment_screen_pay_via_futopay,
                                 BuildConfig.FUTOPAY_PRICE
-                            ), style = Typography.Body.Medium
+                            ), style = MaterialTheme.typography.labelLarge
                         )
                     }
                 }
@@ -545,7 +544,7 @@ fun PaymentScreen(
                             R.string.payment_screen_already_paid_button
                         ),
                         color = MaterialTheme.colorScheme.primary,
-                        style = Typography.Body.Medium
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
             }
@@ -600,7 +599,7 @@ fun PaymentScreen(
                                 Text(
                                     stringResource(R.string.payment_screen_set_reminder_setter_confirm),
                                     color = MaterialTheme.colorScheme.primary,
-                                    style = Typography.Body.Medium
+                                    style = MaterialTheme.typography.labelLarge
                                 )
                             }
                         }
@@ -681,12 +680,12 @@ fun AlreadyPaidDialog(navController: NavHostController) {
         icon = {
         },
         title = {
-            Text(stringResource(R.string.payment_screen_already_paid_confirmation), style = Typography.Body.MediumMl, color = MaterialTheme.colorScheme.onPrimaryContainer)
+            Text(stringResource(R.string.payment_screen_already_paid_confirmation), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onPrimaryContainer)
         },
         text = {
             Text(
                 stringResource(R.string.payment_screen_already_paid_confirmation_body),
-                style = Typography.SmallMl,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         },
@@ -700,14 +699,14 @@ fun AlreadyPaidDialog(navController: NavHostController) {
                 navController.navigateUp()
                 navController.navigate("paid", NavOptions.Builder().setLaunchSingleTop(true).build())
             }) {
-                Text(stringResource(R.string.payment_screen_already_paid_confirmation_confirm), color = MaterialTheme.colorScheme.primary, style = Typography.Body.Medium)
+                Text(stringResource(R.string.payment_screen_already_paid_confirmation_confirm), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
             }
         },
         dismissButton = {
             TextButton(onClick = {
                 navController.navigateUp()
             }) {
-                Text(stringResource(R.string.payment_screen_already_paid_confirmation_cancel), color = MaterialTheme.colorScheme.primary, style = Typography.Body.Medium)
+                Text(stringResource(R.string.payment_screen_already_paid_confirmation_cancel), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
             }
         }
     )

@@ -47,7 +47,6 @@ import org.futo.inputmethod.latin.uix.settings.pages.credits.layoutContribs
 import org.futo.inputmethod.latin.uix.settings.pages.credits.text
 import org.futo.inputmethod.latin.uix.settings.render
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.updates.openURI
 
 @Composable
@@ -67,7 +66,7 @@ fun ProjectInfoView(
         Text(
             info.description,
             modifier = Modifier.fillMaxWidth().padding(8.dp),
-            style = Typography.Body.Regular,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
 
@@ -85,12 +84,12 @@ fun ProjectInfoView(
         Text(
             info.copyright,
             modifier = Modifier.padding(8.dp),
-            style = Typography.Small
+            style = MaterialTheme.typography.labelSmall
         )
         Text(
             info.license.text(context),
             modifier = Modifier.padding(8.dp),
-            style = Typography.Small
+            style = MaterialTheme.typography.labelSmall
         )
     }
 }
@@ -160,7 +159,7 @@ fun CreditCategorySection(
                         title,
                         color = Color.White,
                         modifier = Modifier.align(Alignment.BottomCenter),
-                        style = Typography.Body.Medium
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
             }
@@ -186,16 +185,16 @@ fun CreditCategorySection(
                     ) {
                         Text(
                             thirdPartyInfo.description,
-                            color = foregroundColor, style = Typography.Body.Regular
+                            color = foregroundColor, style = MaterialTheme.typography.bodyLarge
                         )
                         Text(
                             thirdPartyInfo.copyright,
                             color = foregroundColor.copy(alpha = 0.7f),
-                            style = Typography.Small
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                 } else {
-                    Text(name, color = foregroundColor, style = Typography.Body.Regular)
+                    Text(name, color = foregroundColor, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
@@ -244,7 +243,7 @@ fun CreditsScreen(navController: NavHostController = rememberNavController()) {
         ) {
             Text(
                 stringResource(R.string.credits_menu_header_text),
-                style = Typography.Body.RegularMl
+                style = MaterialTheme.typography.bodyLarge
             )
 
             CreditCategorySection(

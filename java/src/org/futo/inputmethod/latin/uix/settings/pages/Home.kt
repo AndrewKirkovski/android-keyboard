@@ -41,7 +41,6 @@ import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.render
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.updates.ConditionalMigrateUpdateNotice
 import org.futo.inputmethod.updates.openManualUpdateCheck
 
@@ -185,7 +184,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             Row(Modifier.padding(16.dp)) {
-                Text(stringResource(R.string.english_ime_settings), style = Typography.Heading.Medium, modifier = Modifier
+                Text(stringResource(R.string.english_ime_settings), style = MaterialTheme.typography.titleMedium, modifier = Modifier
                     .align(CenterVertically)
                     .weight(1.0f))
 
@@ -211,7 +210,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
             if(isPaid || LocalInspectionMode.current) {
                 Text(
                     stringResource(R.string.payment_paid_version_indicator),
-                    style = Typography.SmallMl,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
@@ -220,7 +219,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
 
             Text(
                 "v${BuildConfig.VERSION_NAME}",
-                style = Typography.Small,
+                style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )

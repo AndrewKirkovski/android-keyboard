@@ -43,7 +43,6 @@ import org.futo.inputmethod.latin.uix.settings.SettingsMenus
 import org.futo.inputmethod.latin.uix.settings.UserSetting
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.userSettingDecorationOnly
-import org.futo.inputmethod.latin.uix.theme.Typography
 
 private val LATIN_ASCII = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
     Transliterator.getInstance("Latin-ASCII")
@@ -142,7 +141,7 @@ fun SearchScreen(navController: NavHostController = rememberNavController()) {
             item {
                 Text(
                     stringResource(R.string.settings_search_enter_your_search),
-                    style = Typography.Heading.Medium.copy(fontStyle = FontStyle.Italic),
+                    style = MaterialTheme.typography.titleMedium.copy(fontStyle = FontStyle.Italic),
                     color = MaterialTheme.colorScheme.outline,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -154,7 +153,7 @@ fun SearchScreen(navController: NavHostController = rememberNavController()) {
             item {
                 Text(
                     stringResource(R.string.settings_search_no_options_found),
-                    style = Typography.Heading.Medium.copy(fontStyle = FontStyle.Italic),
+                    style = MaterialTheme.typography.titleMedium.copy(fontStyle = FontStyle.Italic),
                     color = MaterialTheme.colorScheme.outline,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -175,7 +174,7 @@ fun SearchScreen(navController: NavHostController = rememberNavController()) {
                         .padding(16.dp)) {
                         Text(
                             stringResource(menu.title),
-                            style = Typography.Heading.Medium,
+                            style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier
                                 .align(CenterVertically)
                                 .weight(1.0f)

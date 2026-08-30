@@ -111,7 +111,6 @@ import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
 import org.futo.inputmethod.latin.uix.LocalNavController
 import org.futo.inputmethod.latin.uix.SettingsKey
 import org.futo.inputmethod.latin.uix.getSettingBlocking
-import org.futo.inputmethod.latin.uix.theme.Typography
 import kotlin.math.pow
 
 /**
@@ -240,7 +239,7 @@ fun ScreenTitleWithIcon(title: String, painter: Painter) {
 
         Icon(painter, contentDescription = null, modifier = Modifier.align(CenterVertically))
         Spacer(modifier = Modifier.width(18.dp))
-        Text(title, style = Typography.Heading.Medium, modifier = Modifier
+        Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier
             .align(CenterVertically)
             .padding(0.dp, 16.dp))
     }
@@ -257,7 +256,7 @@ fun Tip(text: String = "This is an example tip") {
         Text(
             text,
             modifier = Modifier.padding(8.dp),
-            style = Typography.Body.RegularMl,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
@@ -279,7 +278,7 @@ fun WarningTip(text: String = "This is an example tip") {
                 append(text)
             },
             modifier = Modifier.padding(8.dp),
-            style = Typography.Body.RegularMl,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onErrorContainer,
             inlineContent = mapOf(
                 "icon" to InlineTextContent(
@@ -657,7 +656,7 @@ fun<T: Number> SettingSliderForDataStoreItem(
     Column {
         ScreenTitle(title, showBack = false)
         if(subtitle != null) {
-            Text(subtitle, style = Typography.Body.MediumMl, modifier = Modifier.padding(12.dp, 0.dp))
+            Text(subtitle, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(12.dp, 0.dp))
         }
         Row(modifier = Modifier.padding(16.dp, 0.dp)) {
             if (isTextFieldVisible) {
@@ -696,7 +695,7 @@ fun<T: Number> SettingSliderForDataStoreItem(
                         }
                     ),
                     singleLine = true,
-                    textStyle = Typography.SmallMl.copy(color = MaterialTheme.colorScheme.onBackground),
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
                 )
             } else {
@@ -709,7 +708,7 @@ fun<T: Number> SettingSliderForDataStoreItem(
                             hasTextFieldFocusedYet = false
                             isTextFieldVisible = true
                         },
-                    style = Typography.SmallMl
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
             Slider(
@@ -1020,7 +1019,7 @@ fun CollapsibleSection(title: String, modifier: Modifier = Modifier, section: @C
 
             Text(
                 text = title,
-                style = Typography.Body.Regular,
+                style = MaterialTheme.typography.bodyLarge,
                 color = LocalContentColor.current,
                 modifier = Modifier.weight(1.0f)
             )
@@ -1073,7 +1072,7 @@ fun<T> DropDownPicker(
             if(selection != null) {
                 Text(
                     text = getDisplayName(selection),
-                    style = Typography.Body.Regular,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1.0f)
                 )
@@ -1121,7 +1120,7 @@ fun<T> DropDownPicker(
                         ) {
                             Text(
                                 getDisplayName(it),
-                                style = Typography.Body.Regular,
+                                style = MaterialTheme.typography.bodyLarge,
                                 color = if(selection == it) {
                                     MaterialTheme.colorScheme.onSurface
                                 } else {
@@ -1196,7 +1195,7 @@ fun PrimarySettingToggleDataStoreItem(
             Row(Modifier.padding(24.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     title,
-                    style = Typography.Heading.RegularMl,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.heightIn(min = 24.dp)
                 )
                 Spacer(Modifier.weight(1.0f))

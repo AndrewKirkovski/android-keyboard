@@ -26,7 +26,6 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.runBlocking
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.ScrollableList
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.xlm.ModelInfoLoader
 import org.futo.inputmethod.latin.xlm.ModelPaths
 import org.futo.inputmethod.latin.xlm.TrainingState
@@ -50,7 +49,7 @@ fun FinetuningStateDisplay(navController: NavHostController, trainingState: Trai
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    Text("TRAINING IN PROGRESS", style = Typography.Heading.MediumMl, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+    Text("TRAINING IN PROGRESS", style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
 
 
     Column(modifier = Modifier.padding(16.dp, 16.dp)) {

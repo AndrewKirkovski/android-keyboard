@@ -30,7 +30,6 @@ import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.latin.uix.settings.Tip
 import org.futo.inputmethod.latin.uix.settings.useDataStore
-import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.uix.urlEncode
 import org.futo.inputmethod.latin.xlm.MODEL_OPTION_KEY
 import org.futo.inputmethod.latin.xlm.ModelInfo
@@ -137,7 +136,7 @@ fun ManageModelScreen(model: ModelInfo = PreviewModels[0], navController: NavHos
                             .weight(1f)
                             .align(Alignment.CenterVertically),
                         textAlign = TextAlign.Center,
-                        style = Typography.Body.MediumMl
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
