@@ -19,7 +19,7 @@ import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleDataStore
 
-private val visibilityCheckNotSystemVoiceInput = @Composable {
+internal val visibilityCheckNotSystemVoiceInput = @Composable {
     useDataStoreValue(USE_SYSTEM_VOICE_INPUT) == false
 }
 
@@ -34,11 +34,6 @@ val VoiceInputMenu = UserSettingsMenu(
         ),
 
         //if(!systemVoiceInput.value) {
-        userSettingToggleDataStore(
-            title = R.string.voice_input_settings_indication_sounds,
-            subtitle = R.string.voice_input_settings_indication_sounds_subtitle,
-            setting = ENABLE_SOUND
-        ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
         /*
         userSettingToggleDataStore(

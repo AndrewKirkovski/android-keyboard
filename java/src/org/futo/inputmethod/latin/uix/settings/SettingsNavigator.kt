@@ -41,6 +41,8 @@ import org.futo.inputmethod.latin.uix.settings.pages.HomeScreen
 import org.futo.inputmethod.latin.uix.settings.pages.HomeScreenLite
 import org.futo.inputmethod.latin.uix.settings.pages.KASROZMenu
 import org.futo.inputmethod.latin.uix.settings.pages.KeyboardAndTypingScreen
+import org.futo.inputmethod.latin.uix.settings.pages.AppearanceMenu
+import org.futo.inputmethod.latin.uix.settings.pages.FeedbackMenu
 import org.futo.inputmethod.latin.uix.settings.pages.KeyboardSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.pages.LanguageSettingsLite
 import org.futo.inputmethod.latin.uix.settings.pages.LanguagesScreen
@@ -99,7 +101,9 @@ val SettingsMenus = listOf(
     LanguageSettingsLite,
     KeyboardSettingsMenu,
     NumberRowSettingMenu,
+    AppearanceMenu,
     TypingSettingsMenu,
+    FeedbackMenu,
     ResizeMenuLite,
     LongPressMenu,
     SwipeMenu,

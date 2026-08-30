@@ -557,12 +557,6 @@ val LongPressMenu = UserSettingsMenu(
     title = R.string.morekey_settings_keys,
     navPath = "longPress", registerNavPath = true,
     settings = listOf(
-        userSettingToggleDataStore(
-            title = R.string.morekey_settings_show_hints,
-            subtitle = R.string.morekey_settings_show_hints_subtitle,
-            setting = KeyHintsSetting
-        ).copy(searchTags = R.string.morekey_settings_show_hints_tags),
-
         userSettingDecorationOnly {
             ScreenTitle(stringResource(R.string.morekey_settings_backspace_title))
         },
@@ -846,22 +840,6 @@ val KeyboardSettingsMenu = UserSettingsMenu(
             navigateTo = "longPress",
             icon = R.drawable.arrow_up
         ),
-        userSettingToggleDataStore(
-            title = R.string.keyboard_settings_show_suggestion_row,
-            subtitle = R.string.keyboard_settings_show_suggestion_row_subtitle,
-            setting = ActionBarDisplayedSetting,
-            icon = {
-                Icon(painterResource(id = R.drawable.more_horizontal), contentDescription = null)
-            }
-        ),
-        userSettingToggleDataStore(
-            title = R.string.keyboard_settings_inline_autofill,
-            subtitle = R.string.keyboard_settings_inline_autofill_subtitle,
-            setting = InlineAutofillSetting,
-            icon = {
-                Icon(painterResource(id = R.drawable.edit_text), contentDescription = null)
-            }
-        ),
         userSettingToggleSharedPrefs(
             title = R.string.keyboard_settings_period_key,
             subtitle = R.string.keyboard_settings_period_key_subtitle2,
@@ -921,122 +899,6 @@ val TypingSettingsMenu = UserSettingsMenu(
             title = R.string.typing_settings_revert_correction_on_backspace,
             key = Settings.PREF_BACKSPACE_UNDO_AUTOCORRECT,
             default = {true}
-        ),
-        userSettingToggleSharedPrefs(
-            title = R.string.popup_on_keypress,
-            key = Settings.PREF_POPUP_ON,
-            default = {booleanResource(R.bool.config_default_key_preview_popup)}
-        ),
-        userSettingToggleSharedPrefs(
-            title = R.string.vibrate_on_keypress,
-            key = Settings.PREF_VIBRATE_ON,
-            default = {booleanResource(R.bool.config_default_vibration_enabled)}
-        ),
-        UserSetting(
-            name = R.string.typing_settings_vibration_strength,
-            visibilityCheck = {
-                LocalSharedPrefsCache.current!!.currSharedPrefs.getBoolean(
-                    Settings.PREF_VIBRATE_ON,
-                    booleanResource(R.bool.config_default_vibration_enabled)
-                )
-            },
-            component = {
-                val context = LocalContext.current
-                val resources = LocalResources.current
-                SyncDataStoreToPreferencesInt(vibrationDurationSetting, PREF_VIBRATION_DURATION_SETTINGS)
-
-                SettingSlider(
-                    title = stringResource(R.string.typing_settings_vibration_strength),
-                    setting = vibrationDurationSetting,
-                    range = -1.0f .. 100.0f,
-                    hardRange = -1.0f .. 2000.0f,
-                    transform = { it.roundToInt() },
-                    indicator = {
-                        if(it == -1) {
-                            resources.getString(R.string.typing_settings_vibration_strength_default)
-                        } else {
-                            resources.getString(R.string.abbreviation_unit_milliseconds, "$it")
-                        }
-                    }
-                )
-            }
-        ),
-        userSettingToggleSharedPrefs(
-            title = R.string.sound_on_keypress,
-            key = Settings.PREF_SOUND_ON,
-            default = {booleanResource(R.bool.config_default_sound_enabled)}
-        ),
-        UserSetting(
-            name = R.string.typing_settings_keypress_sound_volume,
-            visibilityCheck = {
-                LocalSharedPrefsCache.current!!.currSharedPrefs.getBoolean(
-                    Settings.PREF_SOUND_ON,
-                    booleanResource(R.bool.config_default_sound_enabled)
-                )
-            },
-            component = {
-                val context = LocalContext.current
-                val resources = LocalResources.current
-                SyncDataStoreToPreferencesFloat(keySoundVolumeSetting, PREF_KEYPRESS_SOUND_VOLUME)
-
-                val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                val value = remember { mutableFloatStateOf(0.0f) }
-                val ringerMode = remember { mutableStateOf(audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) }
-                val firstPlayback = remember { mutableStateOf(false) }
-
-                LaunchedEffect(value.floatValue) {
-                    delay(100L) // debounce
-                    if(firstPlayback.value == false) {
-                        firstPlayback.value = true
-                        return@LaunchedEffect
-                    }
-                    val volume = value.floatValue.let {
-                        if(it == -1.0f) {
-                            Settings.readDefaultKeypressSoundVolume(resources)
-                        } else {
-                            it
-                        }
-                    }
-
-                    val shouldPlay = audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL
-                    ringerMode.value = shouldPlay
-
-                    if(shouldPlay) {
-                        audioManager.playSoundEffect(
-                            AudioManager.FX_KEYPRESS_STANDARD,
-                            volume
-                        )
-                    }
-                }
-
-                if(!ringerMode.value) {
-                    Tip(stringResource(R.string.typing_settings_keypress_sound_volume_ringer_mode_warning))
-                }
-
-                Tip(stringResource(R.string.typing_settings_keypress_sound_volume_vendor_warning))
-
-                SettingSlider(
-                    title = stringResource(R.string.typing_settings_keypress_sound_volume),
-                    setting = keySoundVolumeSetting,
-                    range = 0.0f .. 1.0f,
-                    hardRange = 0.0f .. 1.0f,
-                    transform = {
-                        value.floatValue = it
-                        if(it == 0.0f) {
-                            -1.0f
-                        } else {
-                            it
-                        }
-                    },
-                    indicator = {
-                        if(it <= 0.0f) {
-                            resources.getString(R.string.typing_settings_keypress_sound_volume_default)
-                        } else {
-                            "${(it * 100.0f).roundToInt()}%"
-                        }
-                    }
-                )
-            }
         ),
     )
 )

@@ -41,6 +41,7 @@ import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.render
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
+import org.futo.inputmethod.latin.uix.settings.userSettingSection
 import org.futo.inputmethod.updates.ConditionalMigrateUpdateNotice
 import org.futo.inputmethod.updates.openManualUpdateCheck
 
@@ -48,19 +49,7 @@ val HomeScreenLite = UserSettingsMenu(
     title = R.string.settings_home_title,
     navPath = "home", registerNavPath = false,
     settings = listOf(
-        // The page this opens serves whichever build keyboard.futo.tech has for
-        // the flavor, which on a fork is an upstream release that would replace
-        // it and drop every patch it carries. UPDATE_CHECKING gates the automatic
-        // notice already; it gates the manual route now too.
-        userSettingNavigationItem(
-            title = R.string.settings_check_for_updates_manually,
-            style = NavigationItemStyle.Misc,
-            navigate = { nav -> nav.context.openManualUpdateCheck() },
-            icon = R.drawable.external_link
-        ).copy(
-            visibilityCheck = { BuildConfig.UPDATE_CHECKING },
-            appearInSearchIfVisibilityCheckFailed = false
-        ),
+        userSettingSection(R.string.home_section_typing),
 
         userSettingNavigationItem(
             title = R.string.language_settings_title,
@@ -70,9 +59,16 @@ val HomeScreenLite = UserSettingsMenu(
         ),
 
         userSettingNavigationItem(
-            title = R.string.settings_keyboard_typing_title,
+            title = R.string.prediction_settings_title,
+            style = NavigationItemStyle.HomeTertiary,
+            navigateTo = PredictiveTextMenu.navPath,
+            icon = R.drawable.text_prediction
+        ),
+
+        userSettingNavigationItem(
+            title = TypingSettingsMenu.title,
             style = NavigationItemStyle.HomeSecondary,
-            navigateTo = "keyboardAndTyping",
+            navigateTo = TypingSettingsMenu.navPath,
             icon = R.drawable.keyboard
         ),
 
@@ -81,13 +77,6 @@ val HomeScreenLite = UserSettingsMenu(
             style = NavigationItemStyle.HomePrimary,
             navigateTo = SwipeMenu.navPath,
             icon = R.drawable.swipe_icon
-        ),
-
-        userSettingNavigationItem(
-            title = R.string.prediction_settings_title,
-            style = NavigationItemStyle.HomeTertiary,
-            navigateTo = PredictiveTextMenu.navPath,
-            icon = R.drawable.text_prediction
         ),
 
         UserSetting(
@@ -105,6 +94,30 @@ val HomeScreenLite = UserSettingsMenu(
             )
         },
 
+        userSettingSection(R.string.home_section_keyboard),
+
+        userSettingNavigationItem(
+            title = R.string.keys_layout_settings_title,
+            style = NavigationItemStyle.HomeSecondary,
+            navigateTo = KeyboardSettingsMenu.navPath,
+            icon = R.drawable.keyboard
+        ),
+
+        userSettingNavigationItem(
+            title = AppearanceMenu.title,
+            style = NavigationItemStyle.HomeSecondary,
+            navigateTo = AppearanceMenu.navPath,
+            icon = R.drawable.themes
+        ),
+
+        userSettingNavigationItem(
+            title = FeedbackMenu.title,
+            subtitle = R.string.feedback_settings_subtitle,
+            style = NavigationItemStyle.HomeSecondary,
+            navigateTo = FeedbackMenu.navPath,
+            icon = R.drawable.activity
+        ),
+
         userSettingNavigationItem(
             title = R.string.action_settings_title,
             style = NavigationItemStyle.HomeSecondary,
@@ -112,14 +125,8 @@ val HomeScreenLite = UserSettingsMenu(
             icon = R.drawable.smile
         ),
 
-        userSettingNavigationItem(
-            title = R.string.theme_settings_title,
-            style = NavigationItemStyle.HomeTertiary,
-            navigateTo = "themes",
-            icon = R.drawable.themes
-        ),
+        userSettingSection(R.string.home_section_app),
 
-        //if(!isPaid) {
         userSettingNavigationItem(
             title = R.string.payment_screen_short_title,
             style = NavigationItemStyle.HomePrimary,
@@ -138,19 +145,7 @@ val HomeScreenLite = UserSettingsMenu(
         ),
 
         //if(isDeveloper || LocalInspectionMode.current) {
-        userSettingNavigationItem(
-            title = R.string.dev_settings_title,
-            style = NavigationItemStyle.HomeTertiary,
-            navigateTo = "developer",
-            icon = R.drawable.code
-        ).copy(visibilityCheck = {
-            useDataStoreValue(IS_DEVELOPER) == true || LocalInspectionMode.current
-        }),
-        //}
 
-        // MiscNoArrow draws no circle behind the icon, so these two keep the
-        // quieter weight the style gives them while their titles start on the
-        // same left edge as every row above.
         userSettingNavigationItem(
             title = R.string.misc_settings_title,
             style = NavigationItemStyle.MiscNoArrow,
@@ -164,6 +159,30 @@ val HomeScreenLite = UserSettingsMenu(
             navigateTo = "credits",
             icon = R.drawable.file_text
         ),
+
+        userSettingNavigationItem(
+            title = R.string.settings_check_for_updates_manually,
+            style = NavigationItemStyle.Misc,
+            navigate = { nav -> nav.context.openManualUpdateCheck() },
+            icon = R.drawable.external_link
+        ).copy(
+            visibilityCheck = { BuildConfig.UPDATE_CHECKING },
+            appearInSearchIfVisibilityCheckFailed = false
+        ),
+
+        userSettingNavigationItem(
+            title = R.string.dev_settings_title,
+            style = NavigationItemStyle.HomeTertiary,
+            navigateTo = "developer",
+            icon = R.drawable.code
+        ).copy(visibilityCheck = {
+            useDataStoreValue(IS_DEVELOPER) == true || LocalInspectionMode.current
+        }),
+        //}
+
+        // MiscNoArrow draws no circle behind the icon, so these two keep the
+        // quieter weight the style gives them while their titles start on the
+        // same left edge as every row above.
     )
 )
 

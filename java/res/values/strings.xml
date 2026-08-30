@@ -277,4 +277,19 @@ mobile devices. [CHAR LIMIT=25] -->
          This resource is copied from packages/apps/Settings/res/values/strings.xml -->
     <!-- This resource is corresponding to msgid="5433275485499039199" -->
     <string name="user_dict_fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <!-- Screens introduced by the settings rearrangement. These live here rather than
+         in the translations submodule, which is upstream's; they fall back to English
+         in other locales until they are contributed there. -->
+    <string name="feedback_settings_title">Feedback</string>
+    <string name="feedback_settings_subtitle">Popup, vibration and sound on keypress</string>
+    <string name="feedback_settings_touch_section">Touch</string>
+    <string name="feedback_settings_voice_section">Voice</string>
+    <string name="appearance_settings_title">Appearance</string>
+    <string name="appearance_settings_subtitle">Theme, suggestion bar, key hints</string>
+    <string name="appearance_settings_suggestion_bar_section">Suggestion bar</string>
+    <string name="appearance_settings_keys_section">Keys</string>
+    <string name="home_section_typing">Typing</string>
+    <string name="home_section_keyboard">Keyboard</string>
+    <string name="home_section_app">App</string>
+    <string name="keys_layout_settings_title">Keys &amp; layout</string>
 </resources>
