@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.rememberScrollState
@@ -41,11 +43,13 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -99,6 +103,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.navigation.NavHostController
@@ -608,6 +613,7 @@ fun<T> SettingRadio(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun<T: Number> SettingSliderForDataStoreItem(
     title: String,
@@ -647,75 +653,129 @@ fun<T: Number> SettingSliderForDataStoreItem(
         if(isTextFieldVisible) focusRequester.requestFocus()
     }
 
-    Column {
-        ScreenTitle(title, showBack = false)
-        if(subtitle != null) {
-            Text(subtitle, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(12.dp, 0.dp))
+    val apply = {
+        if(isTextFieldVisible) {
+            val number = textFieldValue.text.trim().toFloatOrNull()
+            val newValue = if (number != null) {
+                transform(number.coerceIn(hardRange))
+            } else {
+                default
+            }
+
+            setValue(newValue)
+            virtualValue = newValue.toFloat().pow(1.0f / power)
+
+            isTextFieldVisible = false
+            textFieldValue = TextFieldValue()
         }
-        Row(modifier = Modifier.padding(16.dp, 0.dp)) {
-            if (isTextFieldVisible) {
-                val apply = {
-                    if(isTextFieldVisible) {
-                        val number = textFieldValue.text.trim().toFloatOrNull()
-                        val newValue = if (number != null) {
-                            transform(number.coerceIn(hardRange))
-                        } else {
-                            default
-                        }
+    }
 
-                        setValue(newValue)
-                        virtualValue = newValue.toFloat().pow(1.0f / power)
-
-                        isTextFieldVisible = false
-                        textFieldValue = TextFieldValue()
-                    }
+    // Title left, reading right, track beneath at full width -- the same shape as a
+    // row, so a slider sits in a list without breaking its rhythm.
+    //
+    // It used to emit its own title through ScreenTitle(showBack = false), which is the
+    // in-page *section header*: every slider announced itself as a new section of the
+    // screen, in caps, with an accent rail. The reading was then pinned to weight(0.33f)
+    // of the row whatever it said, which both starved "Default" and left two thirds of
+    // the row empty for "18"; AdvancedParameters feeds whole sentences into it. And the
+    // whole control had no vertical padding at all, so it collided with the rows above
+    // and below it.
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Spacing.rowInset, vertical = Spacing.m)
+    ) {
+        Row(verticalAlignment = CenterVertically) {
+            Column(Modifier.weight(1.0f)) {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                if (subtitle != null) {
+                    Text(
+                        subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
+            }
 
+            Spacer(Modifier.width(Spacing.l))
+
+            // Tabular figures: the reading changes continuously while a thumb is on the
+            // track, and proportional digits make it jitter sideways as it counts.
+            val readingStyle = MaterialTheme.typography.labelLarge.copy(
+                fontFeatureSettings = "tnum"
+            )
+
+            if (isTextFieldVisible) {
                 BasicTextField(
                     value = textFieldValue,
                     onValueChange = { textFieldValue = it },
                     modifier = Modifier
-                        .weight(0.33f)
-                        .align(CenterVertically)
+                        .widthIn(min = 56.dp)
                         .focusRequester(focusRequester)
                         .onFocusChanged {
                             if (it.isFocused) hasTextFieldFocusedYet = true
                             else if (!it.isFocused && hasTextFieldFocusedYet) apply()
                         },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            apply()
-                        }
-                    ),
+                    keyboardActions = KeyboardActions(onDone = { apply() }),
                     singleLine = true,
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
+                    textStyle = readingStyle.copy(color = MaterialTheme.colorScheme.primary),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
                 )
             } else {
                 Text(
                     text = indicator(value),
-                    modifier = Modifier
-                        .weight(0.33f)
-                        .align(Alignment.CenterVertically)
-                        .clickable {
-                            hasTextFieldFocusedYet = false
-                            isTextFieldVisible = true
-                        },
-                    style = MaterialTheme.typography.bodyMedium
+                    modifier = Modifier.clickable {
+                        hasTextFieldFocusedYet = false
+                        isTextFieldVisible = true
+                    },
+                    style = readingStyle,
+                    color = MaterialTheme.colorScheme.primary,
+                    maxLines = 1
                 )
             }
-            Slider(
-                value = virtualValue,
-                onValueChange = {
-                    virtualValue = it
-                    setValue(transform(it.pow(power))) },
-                valueRange = range.start.pow(1.0f / power) .. range.endInclusive.pow(1.0f / power),
-                enabled = !isTextFieldVisible,
-                modifier = Modifier.weight(1.0f),
-                steps = steps
-            )
         }
+
+        Spacer(Modifier.height(Spacing.s))
+
+        // Material 3.1.3's default slider draws a bar-shaped thumb, a gap on each side
+        // of it, and a stop dot at the far end. Three marks where the control has one
+        // thing to say, and at settings density the gap reads as the track being broken
+        // rather than as a thumb. A round thumb on a continuous track, as designed.
+        val sliderInteraction = remember { MutableInteractionSource() }
+        Slider(
+            value = virtualValue,
+            onValueChange = {
+                virtualValue = it
+                setValue(transform(it.pow(power))) },
+            valueRange = range.start.pow(1.0f / power) .. range.endInclusive.pow(1.0f / power),
+            enabled = !isTextFieldVisible,
+            modifier = Modifier.fillMaxWidth(),
+            steps = steps,
+            interactionSource = sliderInteraction,
+            thumb = {
+                SliderDefaults.Thumb(
+                    interactionSource = sliderInteraction,
+                    enabled = !isTextFieldVisible,
+                    thumbSize = DpSize(20.dp, 20.dp)
+                )
+            },
+            track = { state ->
+                SliderDefaults.Track(
+                    sliderState = state,
+                    enabled = !isTextFieldVisible,
+                    drawStopIndicator = null,
+                    thumbTrackGapSize = 0.dp,
+                    modifier = Modifier.height(4.dp)
+                )
+            }
+        )
     }
 }
 
