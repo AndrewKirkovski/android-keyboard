@@ -679,7 +679,7 @@ val LongPressMenu = UserSettingsMenu(
 )
 
 @Composable
-private fun AutoSpacesSetting() {
+internal fun AutoSpacesSetting() {
     val altSpacesMode = useSharedPrefsInt(Settings.PREF_ALT_SPACES_MODE, Settings.DEFAULT_ALT_SPACES_MODE)
     val autoSpaceModes = mapOf(
         Settings.SPACES_MODE_ALL to stringResource(R.string.typing_settings_auto_space_mode_auto2),
@@ -858,78 +858,3 @@ val KeyboardSettingsMenu = UserSettingsMenu(
         )
     )
 )
-
-val TypingSettingsMenu = UserSettingsMenu(
-    title = R.string.typing_settings_title,
-    navPath = "typing", registerNavPath = true,
-    // No icons in this section. Five of its rows are sliders and radio groups
-    // that render their own body and have no leading slot at all, so "every row
-    // carries one" is not reachable here, and three iconed rows among eleven
-    // left the titles starting at two different left edges.
-    settings = listOf(
-        UserSetting(
-            name = R.string.typing_settings_auto_space_mode,
-            component = {
-                AutoSpacesSetting()
-            }
-        ),
-        userSettingToggleDataStore(
-            title = R.string.typing_settings_suggest_emojis,
-            subtitle = R.string.typing_settings_suggest_emojis_subtitle,
-            setting = SHOW_EMOJI_SUGGESTIONS
-        ),
-        userSettingToggleSharedPrefs(
-            title = R.string.auto_cap,
-            subtitle = R.string.auto_cap_summary,
-            key = Settings.PREF_AUTO_CAP,
-            default = {true}
-        ),
-        userSettingToggleSharedPrefs(
-            title = R.string.use_double_space_period,
-            subtitle = R.string.use_double_space_period_summary,
-            key = Settings.PREF_KEY_USE_DOUBLE_SPACE_PERIOD,
-            default = {true}
-        ),
-        userSettingToggleSharedPrefs(
-            title = R.string.typing_settings_delete_pasted_text_on_backspace,
-            key = Settings.PREF_BACKSPACE_DELETE_INSERTED_TEXT,
-            default = {true}
-        ),
-        userSettingToggleSharedPrefs(
-            title = R.string.typing_settings_revert_correction_on_backspace,
-            key = Settings.PREF_BACKSPACE_UNDO_AUTOCORRECT,
-            default = {true}
-        ),
-    )
-)
-
-@Preview(showBackground = true)
-@Composable
-fun KeyboardAndTypingScreen(navController: NavHostController = rememberNavController()) {
-    ScrollableList {
-        if(IMESettingsMenu.visibilityCheck!!()) {
-            ScreenTitle("", showBack = true, navController)
-            IMESettingsMenu.render(showBack = false)
-            ScreenTitle(
-                stringResource(
-                    KeyboardSettingsMenu.title
-                ),
-                showBack = false,
-                navController
-            )
-        } else {
-            ScreenTitle(
-                stringResource(
-                    KeyboardSettingsMenu.title
-                ),
-                showBack = true,
-                navController
-            )
-        }
-
-        KeyboardSettingsMenu.render(showBack = false, showTitle = false)
-        TypingSettingsMenu.render(showBack = false)
-
-        BottomSpacer()
-    }
-}

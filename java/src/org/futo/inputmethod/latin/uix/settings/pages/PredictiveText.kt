@@ -15,6 +15,9 @@ import org.futo.inputmethod.latin.uix.settings.Tip
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.useSharedPrefsBool
 import org.futo.inputmethod.latin.uix.settings.userSettingDecorationOnly
+import org.futo.inputmethod.latin.uix.SHOW_EMOJI_SUGGESTIONS
+import org.futo.inputmethod.latin.uix.settings.UserSetting
+import org.futo.inputmethod.latin.uix.settings.userSettingSection
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleDataStore
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleSharedPrefs
@@ -24,44 +27,80 @@ private val visibilityCheckLMEnabled = @Composable {
 }
 
 val PredictiveTextMenu = UserSettingsMenu(
-    title = R.string.prediction_settings_title,
+    title = R.string.text_settings_title,
     navPath = "predictiveText", registerNavPath = true,
     settings = listOf(
+        userSettingSection(R.string.text_settings_as_you_type_section),
         userSettingToggleSharedPrefs(
-            title = R.string.prediction_settings_transformer,
-            key = Settings.PREF_KEY_USE_TRANSFORMER_LM,
-            default = { true },
-            icon = {
-                Icon(painterResource(id = R.drawable.activity), contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
+            title = R.string.auto_cap,
+            subtitle = R.string.auto_cap_summary,
+            key = Settings.PREF_AUTO_CAP,
+            default = {true}
+        ),
+        userSettingToggleSharedPrefs(
+            title = R.string.use_double_space_period,
+            subtitle = R.string.use_double_space_period_summary,
+            key = Settings.PREF_KEY_USE_DOUBLE_SPACE_PERIOD,
+            default = {true}
+        ),
+        UserSetting(
+            name = R.string.typing_settings_auto_space_mode,
+            component = {
+                AutoSpacesSetting()
             }
         ),
+        userSettingToggleSharedPrefs(
+            title = R.string.typing_settings_delete_pasted_text_on_backspace,
+            key = Settings.PREF_BACKSPACE_DELETE_INSERTED_TEXT,
+            default = {true}
+        ),
+        userSettingToggleSharedPrefs(
+            title = R.string.typing_settings_revert_correction_on_backspace,
+            key = Settings.PREF_BACKSPACE_UNDO_AUTOCORRECT,
+            default = {true}
+        ),
+        userSettingSection(R.string.text_settings_corrections_section),
+        userSettingToggleSharedPrefs(
+            title = R.string.auto_correction,
+            subtitle = R.string.auto_correction_summary,
+            key = Settings.PREF_AUTO_CORRECTION,
+            default = {true}
+        ).copy(searchTags = R.string.auto_correction_tags),
+        userSettingToggleSharedPrefs(
+            title = R.string.prefs_show_suggestions,
+            subtitle = R.string.prefs_show_suggestions_summary,
+            key = Settings.PREF_SHOW_SUGGESTIONS,
+            default = {true}
+        ),
+        userSettingToggleSharedPrefs(
+            title = R.string.prediction_settings_smart_keyhit_detection,
+            subtitle = R.string.prediction_settings_smart_keyhit_detection_subtitle,
+            key = Settings.PREF_USE_DICT_KEY_BOOSTING,
+            default = {true}
+        ),
+        userSettingToggleSharedPrefs(
+            title = R.string.bigram_prediction,
+            subtitle = R.string.bigram_prediction_summary,
+            key = Settings.PREF_BIGRAM_PREDICTIONS,
+            default = { booleanResource(R.bool.config_default_next_word_prediction) }
+        ).copy(visibilityCheck = {
+            // Opposite of visibilityCheckLMEnabled
+            !useSharedPrefsBool(Settings.PREF_KEY_USE_TRANSFORMER_LM, true).value
+        }),
+        //}
+        userSettingToggleSharedPrefs(
+            title = R.string.use_personalized_dicts,
+            subtitle = R.string.use_personalized_dicts_summary,
+            key = Settings.PREF_KEY_USE_PERSONALIZED_DICTS,
+            default = {true}
+        ),
 
-        // if(transformerLmEnabled) {
-        //userSettingToggleDataStore(
-        //    title = R.string.prediction_settings_transformer_finetuning,
-        //    subtitle = R.string.prediction_settings_transformer_finetuning_subtitle,
-        //    setting = USE_TRANSFORMER_FINETUNING
-        //).copy(visibilityCheck = visibilityCheckLMEnabled),
-
-        userSettingNavigationItem(
-            title = R.string.prediction_settings_transformer_models,
-            style = NavigationItemStyle.HomeTertiary,
-            navigateTo = "models",
-            icon = R.drawable.cpu
-        ).copy(visibilityCheck = visibilityCheckLMEnabled),
-
-        userSettingNavigationItem(
-            title = R.string.prediction_settings_transformer_advanced_params,
-            style = NavigationItemStyle.HomeSecondary,
-            navigateTo = "advancedparams",
-            icon = R.drawable.code
-        ).copy(visibilityCheck = visibilityCheckLMEnabled),
-
-        userSettingDecorationOnly { Tip(stringResource(R.string.prediction_settings_transformer_alpha_notice)) }
-            .copy(visibilityCheck = visibilityCheckLMEnabled),
-        // }
-
+        //if(!transformerLmEnabled) {
+        userSettingToggleDataStore(
+            title = R.string.typing_settings_suggest_emojis,
+            subtitle = R.string.typing_settings_suggest_emojis_subtitle,
+            setting = SHOW_EMOJI_SUGGESTIONS
+        ),
         userSettingNavigationItem(
             title = R.string.edit_personal_dictionary,
             style = NavigationItemStyle.HomePrimary,
@@ -70,7 +109,6 @@ val PredictiveTextMenu = UserSettingsMenu(
                 nav.navigate("pdict")
             }
         ),
-
         userSettingNavigationItem(
             title = R.string.prediction_settings_word_blacklist,
             style = NavigationItemStyle.HomeSecondary,
@@ -79,64 +117,33 @@ val PredictiveTextMenu = UserSettingsMenu(
         ),
 
         // TODO: It doesn't make a lot of sense in the case of having autocorrect on but show_suggestions off
+        userSettingSection(R.string.text_settings_engine_section),
         userSettingToggleSharedPrefs(
-            title = R.string.auto_correction,
-            subtitle = R.string.auto_correction_summary,
-            key = Settings.PREF_AUTO_CORRECTION,
-            default = {true},
-            icon = {
-                Icon(painterResource(id = R.drawable.icon_spellcheck), contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-            }
-        ).copy(searchTags = R.string.auto_correction_tags),
-
-        userSettingToggleSharedPrefs(
-            title = R.string.prediction_settings_smart_keyhit_detection,
-            subtitle = R.string.prediction_settings_smart_keyhit_detection_subtitle,
-            key = Settings.PREF_USE_DICT_KEY_BOOSTING,
-            default = {true},
-            icon = {
-                Icon(painterResource(id = R.drawable.key_border), contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-            }
+            title = R.string.prediction_settings_transformer,
+            key = Settings.PREF_KEY_USE_TRANSFORMER_LM,
+            default = { true }
         ),
 
-        userSettingToggleSharedPrefs(
-            title = R.string.prefs_show_suggestions,
-            subtitle = R.string.prefs_show_suggestions_summary,
-            key = Settings.PREF_SHOW_SUGGESTIONS,
-            default = {true},
-            icon = {
-                Icon(painterResource(id = R.drawable.more_horizontal), contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-            }
-        ),
-
-        userSettingToggleSharedPrefs(
-            title = R.string.use_personalized_dicts,
-            subtitle = R.string.use_personalized_dicts_summary,
-            key = Settings.PREF_KEY_USE_PERSONALIZED_DICTS,
-            default = {true},
-            icon = {
-                Icon(painterResource(id = R.drawable.plus_circle), contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-            }
-        ),
-
-        //if(!transformerLmEnabled) {
-        userSettingToggleSharedPrefs(
-            title = R.string.bigram_prediction,
-            subtitle = R.string.bigram_prediction_summary,
-            key = Settings.PREF_BIGRAM_PREDICTIONS,
-            default = { booleanResource(R.bool.config_default_next_word_prediction) },
-            icon = {
-                Icon(painterResource(id = R.drawable.arrow_right), contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-            }
-        ).copy(visibilityCheck = {
-            // Opposite of visibilityCheckLMEnabled
-            !useSharedPrefsBool(Settings.PREF_KEY_USE_TRANSFORMER_LM, true).value
-        })
-        //}
+        // if(transformerLmEnabled) {
+        //userSettingToggleDataStore(
+        //    title = R.string.prediction_settings_transformer_finetuning,
+        //    subtitle = R.string.prediction_settings_transformer_finetuning_subtitle,
+        //    setting = USE_TRANSFORMER_FINETUNING
+        //).copy(visibilityCheck = visibilityCheckLMEnabled),
+        userSettingNavigationItem(
+            title = R.string.prediction_settings_transformer_models,
+            style = NavigationItemStyle.HomeTertiary,
+            navigateTo = "models",
+            icon = R.drawable.cpu
+        ).copy(visibilityCheck = visibilityCheckLMEnabled),
+        userSettingNavigationItem(
+            title = R.string.prediction_settings_transformer_advanced_params,
+            style = NavigationItemStyle.HomeSecondary,
+            navigateTo = "advancedparams",
+            icon = R.drawable.code
+        ).copy(visibilityCheck = visibilityCheckLMEnabled),
+        userSettingDecorationOnly { Tip(stringResource(R.string.prediction_settings_transformer_alpha_notice)) }
+            .copy(visibilityCheck = visibilityCheckLMEnabled),
+        // }
     )
 )

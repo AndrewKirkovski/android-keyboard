@@ -65,12 +65,7 @@ val HomeScreenLite = UserSettingsMenu(
             icon = R.drawable.text_prediction
         ),
 
-        userSettingNavigationItem(
-            title = TypingSettingsMenu.title,
-            style = NavigationItemStyle.HomeSecondary,
-            navigateTo = TypingSettingsMenu.navPath,
-            icon = R.drawable.keyboard
-        ),
+
 
         userSettingNavigationItem(
             title = SwipeMenu.title,

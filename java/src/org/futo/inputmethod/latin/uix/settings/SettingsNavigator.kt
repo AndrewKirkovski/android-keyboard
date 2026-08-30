@@ -40,7 +40,6 @@ import org.futo.inputmethod.latin.uix.settings.pages.HelpMenu
 import org.futo.inputmethod.latin.uix.settings.pages.HomeScreen
 import org.futo.inputmethod.latin.uix.settings.pages.HomeScreenLite
 import org.futo.inputmethod.latin.uix.settings.pages.KASROZMenu
-import org.futo.inputmethod.latin.uix.settings.pages.KeyboardAndTypingScreen
 import org.futo.inputmethod.latin.uix.settings.pages.AppearanceMenu
 import org.futo.inputmethod.latin.uix.settings.pages.FeedbackMenu
 import org.futo.inputmethod.latin.uix.settings.pages.KeyboardSettingsMenu
@@ -59,7 +58,6 @@ import org.futo.inputmethod.latin.uix.settings.pages.SearchScreen
 import org.futo.inputmethod.latin.uix.settings.pages.SelectLanguageScreen
 import org.futo.inputmethod.latin.uix.settings.pages.SelectLayoutsScreen
 import org.futo.inputmethod.latin.uix.settings.pages.SwipeMenu
-import org.futo.inputmethod.latin.uix.settings.pages.TypingSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.pages.VoiceInputMenu
 import org.futo.inputmethod.latin.uix.settings.pages.addModelManagerNavigation
 import org.futo.inputmethod.latin.uix.settings.pages.buggyeditors.BuggyTextEditVariations
@@ -102,7 +100,6 @@ val SettingsMenus = listOf(
     KeyboardSettingsMenu,
     NumberRowSettingMenu,
     AppearanceMenu,
-    TypingSettingsMenu,
     FeedbackMenu,
     ResizeMenuLite,
     LongPressMenu,
@@ -173,7 +170,6 @@ fun SettingsNavigator(
             SettingsMenus.forEach { menu ->
                 if(menu.registerNavPath) composable(menu.navPath) { UserSettingsMenuScreen(menu) }
             }
-            composable("keyboardAndTyping") { KeyboardAndTypingScreen(navController) }
             composable("resize") { ResizeScreen(navController) }
             composable("themes") { ThemeScreen(navController) }
             composable("developer") { DeveloperScreen(navController) }
