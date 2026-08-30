@@ -60,7 +60,7 @@ val HomeScreenLite = UserSettingsMenu(
         // behind it without being opened: which languages, whether swipe is on, which
         // theme. A destination name alone repeats the title.
         UserSetting(
-            name = R.string.language_settings_title
+            name = R.string.settings_title_languages
         ) {
             val navController = LocalNavController.current
             val subtypes = useDataStoreValue(SubtypesSetting)
@@ -70,7 +70,7 @@ val HomeScreenLite = UserSettingsMenu(
                     .distinct()
             }
             NavigationItem(
-                title = stringResource(R.string.language_settings_title),
+                title = stringResource(R.string.settings_title_languages),
                 subtitle = names.takeIf { it.isNotEmpty() }?.joinToString(", "),
                 style = NavigationItemStyle.HomePrimary,
                 navigate = { navController!!.navigate("languages") }
@@ -78,7 +78,7 @@ val HomeScreenLite = UserSettingsMenu(
         },
 
         userSettingNavigationItem(
-            title = R.string.prediction_settings_title,
+            title = R.string.settings_title_text,
             subtitle = R.string.home_subtitle_text,
             style = NavigationItemStyle.HomeTertiary,
             navigateTo = PredictiveTextMenu.navPath
@@ -87,7 +87,7 @@ val HomeScreenLite = UserSettingsMenu(
 
 
         UserSetting(
-            name = R.string.swipe_settings_title
+            name = R.string.settings_title_swipe
         ) {
             val navController = LocalNavController.current
             val on = useSharedPrefsBool(Settings.PREF_GESTURE_INPUT, true)
@@ -102,11 +102,11 @@ val HomeScreenLite = UserSettingsMenu(
         },
 
         UserSetting(
-            name = R.string.voice_input_settings_title
+            name = R.string.settings_title_voice
         ) {
             val navController = LocalNavController.current
             NavigationItem(
-                title = stringResource(R.string.voice_input_settings_title),
+                title = stringResource(R.string.settings_title_voice),
                 style = NavigationItemStyle.HomePrimary,
                 subtitle = if(useDataStoreValue(USE_SYSTEM_VOICE_INPUT)) {
                     stringResource(R.string.voice_input_settings_builtin_disabled_notice)
@@ -138,7 +138,7 @@ val HomeScreenLite = UserSettingsMenu(
         ),
 
         userSettingNavigationItem(
-            title = R.string.action_settings_title,
+            title = R.string.settings_title_actions,
             subtitle = R.string.home_subtitle_actions,
             style = NavigationItemStyle.HomeSecondary,
             navigateTo = "actions"
@@ -156,7 +156,7 @@ val HomeScreenLite = UserSettingsMenu(
         //}
 
         userSettingNavigationItem(
-            title = R.string.help_menu_title,
+            title = R.string.settings_title_help,
             subtitle = R.string.home_subtitle_help,
             style = NavigationItemStyle.HomeSecondary,
             navigateTo = "help"
@@ -171,7 +171,7 @@ val HomeScreenLite = UserSettingsMenu(
         ),
 
         userSettingNavigationItem(
-            title = R.string.credits_menu_title,
+            title = R.string.settings_title_credits,
             style = NavigationItemStyle.MiscNoArrow,
             navigateTo = "credits"
         ),
@@ -186,7 +186,7 @@ val HomeScreenLite = UserSettingsMenu(
         ),
 
         userSettingNavigationItem(
-            title = R.string.dev_settings_title,
+            title = R.string.settings_title_developer,
             style = NavigationItemStyle.HomeTertiary,
             navigateTo = "developer"
         ).copy(visibilityCheck = {

@@ -25,7 +25,7 @@ internal val visibilityCheckNotSystemVoiceInput = @Composable {
 }
 
 val VoiceInputMenu = UserSettingsMenu(
-    title = R.string.voice_input_settings_title,
+    title = R.string.settings_title_voice,
     navPath = "voiceInput", registerNavPath = true,
     settings = listOf(
         userSettingToggleDataStore(

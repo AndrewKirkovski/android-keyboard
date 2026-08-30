@@ -32,7 +32,7 @@ internal fun Context.copyToClipboard(text: CharSequence, label: String = "Copied
 }
 
 val HelpMenu = UserSettingsMenu(
-    title = R.string.help_menu_title,
+    title = R.string.settings_title_help,
     navPath = "help", registerNavPath = true,
     settings = listOf(
         UserSetting(
@@ -49,7 +49,7 @@ val HelpMenu = UserSettingsMenu(
         },
         UserSetting(
             name = R.string.help_menu_version_code,
-            searchTags = R.string.dev_settings_title
+            searchTags = R.string.settings_title_developer
         ) {
             val context = LocalContext.current
             val numPresses = remember { mutableIntStateOf(0) }

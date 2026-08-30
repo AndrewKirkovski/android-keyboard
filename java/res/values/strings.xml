@@ -316,4 +316,22 @@ mobile devices. [CHAR LIMIT=25] -->
     <string name="home_subtitle_help">Documentation, community, contact</string>
     <string name="home_state_on">On</string>
     <string name="home_state_off">Off</string>
+    <!-- Sentence case. The upstream catalogue is Title Case and lives in a
+         generated file in this same resource set, so it cannot be overridden
+         by name; these are new names the fork's screens point at instead. -->
+    <string name="settings_title_languages">Languages &amp; models</string>
+    <string name="settings_title_text">Text &amp; corrections</string>
+    <string name="settings_title_swipe">Swipe typing</string>
+    <string name="settings_title_voice">Voice input</string>
+    <string name="settings_title_help">Help &amp; feedback</string>
+    <string name="settings_title_actions">Actions &amp; clipboard</string>
+    <string name="settings_title_resize">Resize keyboard</string>
+    <string name="settings_title_blacklist">Word blacklist</string>
+    <string name="settings_title_models">Transformer models</string>
+    <string name="settings_title_developer">Developer</string>
+    <string name="settings_title_credits">Credits</string>
+    <string name="settings_row_number_row">Show number row</string>
+    <string name="settings_row_arrow_keys">Show arrow keys</string>
+    <string name="settings_row_longpress">Long-press keys &amp; spacebar</string>
+    <string name="settings_row_add_language">Add language</string>
 </resources>

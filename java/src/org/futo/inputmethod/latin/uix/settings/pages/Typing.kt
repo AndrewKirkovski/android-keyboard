@@ -169,7 +169,7 @@ val HideOneHandedExitButtonSetting = SettingsKey(
 )
 
 val ResizeMenuLite = UserSettingsMenu(
-    title = R.string.size_settings_title,
+    title = R.string.settings_title_resize,
     navPath = "resize", registerNavPath = false,
     settings = listOf(
         userSettingNavigationItem(
@@ -216,7 +216,7 @@ fun ResizeScreen(navController: NavHostController = rememberNavController()) {
 
     Box {
         ScrollableList {
-            ScreenTitle(stringResource(R.string.size_settings_title), showBack = true, navController)
+            ScreenTitle(stringResource(R.string.settings_title_resize), showBack = true, navController)
 
             Tip {
                 Text(
@@ -514,7 +514,7 @@ private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<St
 }
 
 val LongPressMenu = UserSettingsMenu(
-    title = R.string.morekey_settings_keys,
+    title = R.string.settings_row_longpress,
     navPath = "longPress", registerNavPath = true,
     settings = listOf(
         userSettingDecorationOnly {
@@ -665,14 +665,14 @@ val KeyboardSettingsMenu = UserSettingsMenu(
     navPath = "keyboard", registerNavPath = true,
     settings = listOf(
         userSettingNavigationItem(
-            title = R.string.size_settings_title,
+            title = R.string.settings_title_resize,
             subtitle = R.string.size_settings_subtitle2,
             style = NavigationItemStyle.Misc,
             navigateTo = "resize"
         ),
         userSettingSection(R.string.keyboard_settings_rows_section),
         userSettingToggleSharedPrefs(
-            title = R.string.keyboard_settings_show_number_row,
+            title = R.string.settings_row_number_row,
             subtitle = R.string.keyboard_settings_show_number_row_subtitle,
             key = Settings.PREF_ENABLE_NUMBER_ROW,
             default = {false}
@@ -769,7 +769,7 @@ val KeyboardSettingsMenu = UserSettingsMenu(
             )
         },
         userSettingToggleSharedPrefs(
-            title = R.string.keyboard_settings_show_arrow_row,
+            title = R.string.settings_row_arrow_keys,
             subtitle = R.string.keyboard_settings_show_arrow_row_subtitle,
             key = Settings.PREF_ENABLE_ARROW_ROW,
             default = {false}

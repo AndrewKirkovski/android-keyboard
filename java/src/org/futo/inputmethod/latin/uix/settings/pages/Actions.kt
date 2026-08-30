@@ -30,7 +30,7 @@ import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.latin.uix.urlEncode
 
 val ActionsScreen = UserSettingsMenu(
-    title = R.string.action_settings_title,
+    title = R.string.settings_title_actions,
     navPath = "actions", registerNavPath = true,
     settings = listOf(
         userSettingDecorationOnly { ScreenTitle(stringResource(R.string.action_settings_quick_options_title)) },

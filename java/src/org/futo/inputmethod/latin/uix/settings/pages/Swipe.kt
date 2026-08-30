@@ -222,7 +222,7 @@ fun KASROZMenu() {
 }
 
 val SwipeMenu = UserSettingsMenu(
-    title = R.string.swipe_settings_title,
+    title = R.string.settings_title_swipe,
     navPath = "swipe", registerNavPath = true,
     settings = listOf(
         userSettingToggleSharedPrefs(

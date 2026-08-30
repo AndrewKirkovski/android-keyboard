@@ -549,7 +549,7 @@ val LanguageSettingsBottom = listOf(
 )
 
 val LanguageSettingsLite = UserSettingsMenu(
-    title = R.string.language_settings_title,
+    title = R.string.settings_title_languages,
     navPath = "languages", registerNavPath = false,
     settings = LanguageSettingsTop + listOf(
         userSettingNavigationItem(
@@ -636,7 +636,7 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
         item {
             ScreenTitle(
-                stringResource(R.string.language_settings_title),
+                stringResource(R.string.settings_title_languages),
                 showBack = true,
                 navController
             )

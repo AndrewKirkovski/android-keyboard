@@ -109,7 +109,7 @@ val PredictiveTextMenu = UserSettingsMenu(
             }
         ),
         userSettingNavigationItem(
-            title = R.string.prediction_settings_word_blacklist,
+            title = R.string.settings_title_blacklist,
             style = NavigationItemStyle.HomeSecondary,
             navigateTo = "blacklist"
         ),
@@ -129,7 +129,7 @@ val PredictiveTextMenu = UserSettingsMenu(
         //    setting = USE_TRANSFORMER_FINETUNING
         //).copy(visibilityCheck = visibilityCheckLMEnabled),
         userSettingNavigationItem(
-            title = R.string.prediction_settings_transformer_models,
+            title = R.string.settings_title_models,
             style = NavigationItemStyle.HomeTertiary,
             navigateTo = "models"
         ).copy(visibilityCheck = visibilityCheckLMEnabled),

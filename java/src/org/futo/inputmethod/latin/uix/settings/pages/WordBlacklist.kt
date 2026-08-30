@@ -75,7 +75,7 @@ private val blockSlursSetting =
         })
 
 val BlacklistScreenLite = UserSettingsMenu(
-    title = R.string.prediction_settings_word_blacklist,
+    title = R.string.settings_title_blacklist,
     navPath = "blacklist", registerNavPath = false,
     settings = listOf(
         blockOffensiveWordsSetting,
@@ -99,7 +99,7 @@ fun BlacklistScreen(navController: NavHostController = rememberNavController()) 
 
     var newWord by remember { mutableStateOf("") }
     ScrollableList {
-        ScreenTitle(stringResource(R.string.prediction_settings_word_blacklist), showBack = true, navController)
+        ScreenTitle(stringResource(R.string.settings_title_blacklist), showBack = true, navController)
 
         // The two block-* switches are settings like any other, so they belong in a
         // card. They were rendered straight into the ScrollableList, which is why their
