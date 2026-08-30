@@ -221,11 +221,7 @@ fun ResizeScreen(navController: NavHostController = rememberNavController()) {
         ScrollableList {
             ScreenTitle(stringResource(R.string.size_settings_title), showBack = true, navController)
 
-            PaymentSurface(
-                isPrimary = false,
-            ) {
-                PaymentSurfaceHeading(title = stringResource(R.string.settings_tip))
-
+            Tip {
                 Text(
                     buildAnnotatedString {
                         append(stringResource(R.string.size_settings_keyboard_modes_tip))
@@ -236,7 +232,7 @@ fun ResizeScreen(navController: NavHostController = rememberNavController()) {
                         appendLine()
                         append(stringResource(R.string.size_settings_resize_tip))
                     },
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = LocalContentColor.current,
                     inlineContent = mapOf(
                         "icon" to InlineTextContent(

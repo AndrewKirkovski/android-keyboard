@@ -281,18 +281,38 @@ fun ScreenTitleWithIcon(title: String, painter: Painter) {
     }
 }
 
+/**
+ * A note on the ground between cards.
+ *
+ * The slot overload exists so a tip carrying an inline icon or several lines still
+ * looks like a tip. Resize used to build one out of PaymentSurface -- the payment
+ * screen's promotional panel -- which gave the only tip in the app a heading, a border
+ * and a grey fill.
+ */
 @Composable
-@Preview
-fun Tip(text: String = "This is an example tip") {
+fun Tip(content: @Composable () -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Spacing.cardInset, vertical = Spacing.xs),
         shape = MaterialTheme.shapes.medium
     ) {
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colorScheme.onPrimaryContainer
+        ) {
+            Box(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) {
+                content()
+            }
+        }
+    }
+}
+
+@Composable
+@Preview
+fun Tip(text: String = "This is an example tip") {
+    Tip {
         Text(
             text,
-            modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
