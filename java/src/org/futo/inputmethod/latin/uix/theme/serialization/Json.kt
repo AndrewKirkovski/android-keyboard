@@ -7,6 +7,7 @@ import android.graphics.Rect
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.drawable.toDrawable
@@ -204,6 +205,9 @@ data class SerializableJsonTheme(
     val thumbnailScale: Float = 1.0f,
     val backgroundImage: String? = null,
     val backgroundImageOpacity: Float = 1.0f,
+    // Blur radius in dp. Opacity above already fades the image toward the surface colour;
+    // this softens it instead, which is the half a photograph usually needs.
+    val backgroundImageBlur: Float = 0.0f,
     val backgroundImageCropping: List<Float> = emptyList(),
 
     val keyRoundness: Float = 1.0f,
@@ -285,6 +289,7 @@ data class SerializableJsonTheme(
                     thumbnailImage = decodeOptionalImage(ctx, thumbnailImage),
                     thumbnailScale = thumbnailScale,
                     backgroundImage = decodeOptionalImage(ctx, backgroundImage),
+                    backgroundImageBlur = backgroundImageBlur.dp,
                     backgroundImageVisibleArea = run {
                         if(backgroundImageCropping.size == 4) {
                             Rect(backgroundImageCropping[0].roundToInt(), backgroundImageCropping[1].roundToInt(), backgroundImageCropping[2].roundToInt(), backgroundImageCropping[3].roundToInt())

@@ -40,6 +40,22 @@ data class AdvancedThemeOptions(
     val backgroundShader: String? = null,
     val backgroundImage: ImageBitmap? = null,
     val backgroundImageVisibleArea: Rect? = null,
+
+    /**
+     * How far the background image is blurred behind the keys.
+     *
+     * A photograph at full sharpness competes with the key labels sitting on it. Opacity
+     * already had an answer -- both theme formats carry it and apply it as a surface-coloured
+     * overlay through `keyboardBackgroundGradient` -- but sharpness did not.
+     *
+     * Applied in Compose at [org.futo.inputmethod.latin.uix.KeyboardBackground], so it costs a
+     * RenderEffect on one node rather than any work per key, and it is a no-op below API 31.
+     *
+     * The default must stay: Toml1 parses with `ignoreUnknownNames = false`, so a field without
+     * one would break every theme file written before this change.
+     */
+    val backgroundImageBlur: Dp = 0.dp,
+
     val thumbnailImage: ImageBitmap? = null,
     val thumbnailScale: Float = 1.0f,
     val keyRoundness: Float = 1.0f,

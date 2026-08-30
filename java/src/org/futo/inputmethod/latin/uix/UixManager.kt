@@ -69,6 +69,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
@@ -235,7 +237,20 @@ fun BoxScope.KeyboardBackground(
         shader != null -> KeyboardSurfaceShaderBackground(shader, modifier = Modifier.matchParentSize())
         image != null && rect != null -> {
             val navbarHeight = navBarHeight()
-            Canvas(Modifier.matchParentSize()) {
+            // Blur is applied to the composable rather than to the bitmap: blurring on import
+            // would bake it in, and blurring per frame in a Canvas would cost per draw. This
+            // is a RenderEffect on one node, and it is a no-op below API 31, where the image
+            // simply renders sharp.
+            //
+            // Unbounded edge treatment, because a blurred *background* clipped to its own
+            // bounds fades at the edges and the fade reads as a rendering fault.
+            val blurred = if (advanced.backgroundImageBlur > 0.dp) {
+                Modifier.matchParentSize()
+                    .blur(advanced.backgroundImageBlur, BlurredEdgeTreatment.Unbounded)
+            } else {
+                Modifier.matchParentSize()
+            }
+            Canvas(blurred) {
                 drawRect(colorScheme.keyboardSurface)
 
                 val fixedWidth = computedSize?.width?.toFloat() ?: size.width

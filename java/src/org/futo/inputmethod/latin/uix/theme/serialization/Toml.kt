@@ -5,6 +5,7 @@ import android.graphics.RectF
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.luminance
@@ -87,6 +88,9 @@ private data class SerializedTomlFile(
         data class Background(
             val image: String,
             val opacity: LFloat = 0.5f,
+            // Blur radius in dp. Defaults to none, unlike opacity, which has always
+            // defaulted to half strength in this format.
+            val blur: LFloat = 0.0f,
             val action_bar_opacity: LFloat = 0.5f,
 
             val cropping: List<LFloat> = listOf(0.0f, 0.0f, 1.0f, 1.0f)
@@ -352,6 +356,7 @@ private data class SerializedTomlFile(
                     backgroundShader = null,
 
                     actionBarOpacity = options.background?.action_bar_opacity ?: 0.5f,
+                    backgroundImageBlur = (options.background?.blur ?: 0.0f).dp,
                     thumbnailImage = backgroundImage,
                     thumbnailScale = 1.0f,
                     backgroundImage = backgroundImage,
