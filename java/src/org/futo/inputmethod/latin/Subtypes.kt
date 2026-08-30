@@ -511,7 +511,6 @@ fun LanguageSwitcherDialog(
                         navigate = {
                             switchToIme(ime)
                         },
-                        compact = true,
                         icon = painterResource(R.drawable.circle)
                     )
                 }

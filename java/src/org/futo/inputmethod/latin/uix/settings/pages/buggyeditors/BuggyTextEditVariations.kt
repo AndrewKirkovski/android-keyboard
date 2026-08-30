@@ -172,48 +172,39 @@ fun BuggyTextEditVariations(navController: NavHostController = rememberNavContro
 
         SettingToggleRaw("setComposingTextDoesNotCompose",
             config.value.setComposingTextDoesNotCompose,
-            { config.value = config.value.copy(setComposingTextDoesNotCompose = it) },
-            compact = true)
+            { config.value = config.value.copy(setComposingTextDoesNotCompose = it) })
 
         SettingToggleRaw("composingTextResetsAfter",
             config.value.composingTextResetsAfter != null,
-            { config.value = config.value.copy(composingTextResetsAfter = if(it == false) null else 100) },
-            compact = true)
+            { config.value = config.value.copy(composingTextResetsAfter = if(it == false) null else 100) })
 
         SettingToggleRaw("noComposing",
             config.value.noComposing,
-            { config.value = config.value.copy(noComposing = it) },
-            compact = true)
+            { config.value = config.value.copy(noComposing = it) })
 
         SettingToggleRaw("cursorMovesToEndAndBack",
             config.value.cursorMovesToEndAndBack,
-            { config.value = config.value.copy(cursorMovesToEndAndBack = it) },
-            compact = true)
+            { config.value = config.value.copy(cursorMovesToEndAndBack = it) })
 
         SettingToggleRaw("doesNotSendCursorUpdates",
             config.value.doesNotSendCursorUpdates,
-            { config.value = config.value.copy(doesNotSendCursorUpdates = it) },
-            compact = true)
+            { config.value = config.value.copy(doesNotSendCursorUpdates = it) })
 
         SettingToggleRaw("alwaysSendsNoComposing",
             config.value.alwaysSendsNoComposing,
-            { config.value = config.value.copy(alwaysSendsNoComposing = it) },
-            compact = true)
+            { config.value = config.value.copy(alwaysSendsNoComposing = it) })
 
         SettingToggleRaw("cursor 20ms delay",
             config.value.delayCursorUpdates == 20L,
-            { config.value = config.value.copy(delayCursorUpdates = if(it) 20 else null) },
-            compact = true)
+            { config.value = config.value.copy(delayCursorUpdates = if(it) 20 else null) })
 
         SettingToggleRaw("cursor 200ms delay",
             config.value.delayCursorUpdates == 200L,
-            { config.value = config.value.copy(delayCursorUpdates = if(it) 200 else null) },
-            compact = true)
+            { config.value = config.value.copy(delayCursorUpdates = if(it) 200 else null) })
 
         SettingToggleRaw("cursor 2000ms delay",
             config.value.delayCursorUpdates == 2000L,
-            { config.value = config.value.copy(delayCursorUpdates = if(it) 2000 else null) },
-            compact = true)
+            { config.value = config.value.copy(delayCursorUpdates = if(it) 2000 else null) })
 
         ScreenTitle("Editors")
 

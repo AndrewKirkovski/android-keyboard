@@ -6,7 +6,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -72,9 +71,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -111,6 +108,7 @@ import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
 import org.futo.inputmethod.latin.uix.LocalNavController
 import org.futo.inputmethod.latin.uix.SettingsKey
 import org.futo.inputmethod.latin.uix.getSettingBlocking
+import org.futo.inputmethod.latin.uix.theme.app.Spacing
 import kotlin.math.pow
 
 /**
@@ -343,10 +341,17 @@ fun SettingItem(
     icon: (@Composable () -> Unit)? = null,
     disabled: Boolean = false,
     subcontent: (@Composable () -> Unit)? = null,
-    compact: Boolean = false,
     onSubmenuNavigate: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    // Two heights, and only two. This was 68dp, or 48dp when compact, against
+    // LanguageConfigurable's 50dp and LayoutConfigurable's 44dp -- four heights for
+    // one idea. A row is 56dp, or 72dp when it carries a second line.
+    val minHeight = if (subtitle != null || subcontent != null) {
+        Spacing.rowHeightTwoLine
+    } else {
+        Spacing.rowHeight
+    }
     val textColor = when(LocalContentColor.current) {
         MaterialTheme.colorScheme.onPrimary,
         MaterialTheme.colorScheme.onSecondary,
@@ -366,7 +371,7 @@ fun SettingItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .defaultMinSize(0.dp, if(compact) { 48.dp } else { 68.dp })
+            .defaultMinSize(0.dp, minHeight)
             .let {
                 if(onClick != null && onSubmenuNavigate == null) {
                     it.clickable(enabled = !disabled, onClick = {
@@ -387,39 +392,29 @@ fun SettingItem(
             .height(intrinsicSize = IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(Modifier.weight(1.0f).fillMaxHeight().padding(0.dp, 4.dp)) {
-            Spacer(Modifier.width(4.dp))
-            Spacer(Modifier.width(16.dp))
+        Row(Modifier.weight(1.0f).fillMaxHeight().padding(0.dp, Spacing.xs)) {
+            Spacer(Modifier.width(Spacing.rowInset))
             if (icon != null) {
-                // The slot is a fixed 24dp tall with its content centred, and
-                // nothing clips, so both icon shapes in this app land on the
-                // same line: a 24dp Icon fills it, and NavigationItem's 48dp
-                // Canvas -- which draws a 20dp circle in the middle of itself --
-                // overhangs it evenly and centres on the same point. Without
-                // that, navigation rows sat about 12dp lower than toggle rows.
+                // The slot is the icon, 24dp, not a 48dp column holding a 40dp circle
+                // holding the icon. The column reserved its width whether or not a row
+                // had an icon, so titles started at 20dp on some rows and 80dp on
+                // others -- most of the 14 different left edges came from here.
                 //
-                // On a row with a subtitle the slot pins to the top, beside the
-                // title it labels, rather than floating against the middle of
-                // the whole text block.
-                Column(
+                // On a row with a subtitle the slot pins to the top, beside the title
+                // it labels, rather than floating against the middle of the text block.
+                Box(
                     modifier = Modifier
-                        .width(48.dp)
+                        .size(Spacing.iconSlot)
                         .then(
                             if (subtitle != null || subcontent != null) Modifier
                             else Modifier.align(Alignment.CenterVertically)
-                        )
+                        ),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .height(24.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        icon()
-                    }
+                    icon()
                 }
 
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(Spacing.iconGap))
             }
 
             Row(
@@ -457,10 +452,10 @@ fun SettingItem(
                     }
                 }
             }
-            if(onSubmenuNavigate != null) { Spacer(Modifier.width(8.dp)) }
+            if(onSubmenuNavigate != null) { Spacer(Modifier.width(Spacing.s)) }
         }
 
-        Spacer(Modifier.width(4.dp))
+        Spacer(Modifier.width(Spacing.l))
 
         Row(Modifier.let {
             if(onSubmenuNavigate != null && onClick != null) {
@@ -473,13 +468,14 @@ fun SettingItem(
                 it
             }
         }.fillMaxHeight()) {
-            if(onSubmenuNavigate != null) { Spacer(Modifier.width(8.dp)) }
+            if(onSubmenuNavigate != null) { Spacer(Modifier.width(Spacing.s)) }
             Box(modifier = Modifier.align(Alignment.CenterVertically), contentAlignment = Alignment.Center) {
                 content()
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
-            Spacer(Modifier.width(4.dp))
+            // Matches the leading inset. It was 16dp against a 20dp left edge, so every
+            // switch sat 4dp closer to the screen edge than the title it belonged to.
+            Spacer(Modifier.width(Spacing.rowInset))
         }
     }
 }
@@ -493,7 +489,6 @@ fun SettingToggleRaw(
     disabled: Boolean = false,
     icon: (@Composable () -> Unit)? = null,
     onSubmenuNavigate: (() -> Unit)? = null,
-    compact: Boolean = false,
 ) {
     SettingItem(
         title = title,
@@ -515,8 +510,7 @@ fun SettingToggleRaw(
                 it
             }
         },
-        onSubmenuNavigate = onSubmenuNavigate,
-        compact = compact
+        onSubmenuNavigate = onSubmenuNavigate
     ) {
         Switch(checked = enabled, onCheckedChange = {
             if (!disabled) {
@@ -840,42 +834,33 @@ enum class NavigationItemStyle {
 }
 
 @Composable
-fun NavigationItem(title: String, style: NavigationItemStyle, navigate: () -> Unit, icon: Painter? = null, subtitle: String? = null, compact: Boolean = false) {
+fun NavigationItem(title: String, style: NavigationItemStyle, navigate: () -> Unit, icon: Painter? = null, subtitle: String? = null) {
     SettingItem(
         title = title,
         subtitle = subtitle,
         onClick = navigate,
-        compact = compact,
         // Null when there is no painter, rather than a lambda that draws nothing.
         // SettingItem reserves the gutter on `icon != null`, and a lambda is not
-        // null, so a navigation row without a painter indented its title 48dp
-        // beside an empty slot -- which is the hole that rule exists to close.
+        // null, so a navigation row without a painter indented its title beside an
+        // empty slot -- which is the hole that rule exists to close.
         icon = icon?.let { painter ->
             {
-                // The three Home* styles rotated through primary, secondary and
-                // tertiary containers in the order the rows happened to be
-                // written -- Languages primary, Keyboard secondary, Swipe primary
-                // again. Nothing about a destination decided its tint, so the
-                // colour carried no information; what it did carry was that
-                // whichever role was the palette's neutral read as *disabled*
-                // beside the two that were hues. One accent tint for all of them,
-                // and the enum still separates a home destination from the quiet
-                // footer entries, which draw no circle at all.
-                val circleColor = when(style) {
-                    NavigationItemStyle.HomePrimary,
-                    NavigationItemStyle.HomeSecondary,
-                    NavigationItemStyle.HomeTertiary -> MaterialTheme.colorScheme.primaryContainer
-
-                    NavigationItemStyle.MiscNoArrow,
-                    NavigationItemStyle.Misc,
-                    NavigationItemStyle.ExternalLink,
-                    NavigationItemStyle.Mail -> Color.Transparent
-                }
-
+                // A plain icon, at the same 24dp as every other row's. It used to be a
+                // 48dp Canvas drawing a 40dp filled circle behind the glyph, which made
+                // a navigation row a different shape from a toggle row on the same
+                // screen and pushed its title 80dp from the edge.
+                //
+                // The circle also carried no information. The three Home* styles
+                // rotated through primary, secondary and tertiary containers in the
+                // order the rows happened to be written -- Languages primary, Keyboard
+                // secondary, Swipe primary again -- and whichever role was the palette's
+                // neutral read as *disabled* beside the two that were hues. The enum
+                // still separates a home destination from the quiet footer entries,
+                // which is what it is for.
                 val iconColor = when(style) {
                     NavigationItemStyle.HomePrimary,
                     NavigationItemStyle.HomeSecondary,
-                    NavigationItemStyle.HomeTertiary -> MaterialTheme.colorScheme.onPrimaryContainer
+                    NavigationItemStyle.HomeTertiary -> MaterialTheme.colorScheme.primary
 
                     NavigationItemStyle.MiscNoArrow,
                     NavigationItemStyle.Mail,
@@ -883,17 +868,12 @@ fun NavigationItem(title: String, style: NavigationItemStyle, navigate: () -> Un
                     NavigationItemStyle.Misc -> LocalContentColor.current.copy(alpha = 0.75f)
                 }
 
-                Canvas(modifier = Modifier.size(48.dp)) {
-                    drawCircle(circleColor, this.size.maxDimension / 2.4f)
-                    translate(
-                        left = this.size.width / 2.0f - painter.intrinsicSize.width / 2.0f,
-                        top = this.size.height / 2.0f - painter.intrinsicSize.height / 2.0f
-                    ) {
-                        with(painter) {
-                            draw(painter.intrinsicSize, colorFilter = ColorFilter.tint(iconColor))
-                        }
-                    }
-                }
+                Icon(
+                    painter = painter,
+                    contentDescription = null,
+                    modifier = Modifier.size(Spacing.iconSlot),
+                    tint = iconColor
+                )
             }
         }
     ) {
