@@ -85,6 +85,7 @@ import kotlinx.coroutines.delay
 import org.futo.inputmethod.accessibility.AccessibilityUtils
 import org.futo.inputmethod.engine.IMESettingsMenu
 import org.futo.inputmethod.latin.HideKeyboardWhenHardKeyboardConnected
+import org.futo.inputmethod.latin.uix.theme.app.Spacing
 import org.futo.inputmethod.latin.R
 import org.futo.inputmethod.latin.settings.LongPressKey
 import org.futo.inputmethod.latin.settings.LongPressKeyLayoutSetting
@@ -700,25 +701,42 @@ internal fun AutoSpacesSetting() {
     )
 }
 
-val NumberRowSettingMenu = UserSettingsMenu(
-    title = R.string.keyboard_settings_number_row_title,
-    navPath = "numberRow", registerNavPath = true,
+val KeyboardSettingsMenu = UserSettingsMenu(
+    title = R.string.keyboard_settings_title,
+    navPath = "keyboard", registerNavPath = true,
+    // Every setting on this screen changes how the keyboard looks, so it is worth
+    // the space to show one.
+    showPreview = true,
     settings = listOf(
-        userSettingDecorationOnly {
-            PrimarySettingToggleDataStoreItem(
-                stringResource(R.string.keyboard_settings_show_number_row),
-                useSharedPrefsBool(Settings.PREF_ENABLE_NUMBER_ROW, false)
-            )
-        },
-
+        userSettingNavigationItem(
+            title = R.string.size_settings_title,
+            subtitle = R.string.size_settings_subtitle2,
+            style = NavigationItemStyle.Misc,
+            navigateTo = "resize",
+            icon = R.drawable.maximize
+        ),
+        userSettingToggleSharedPrefs(
+            title = R.string.keyboard_settings_show_number_row,
+            subtitle = R.string.keyboard_settings_show_number_row_subtitle,
+            key = Settings.PREF_ENABLE_NUMBER_ROW,
+            default = {false},
+            icon = { GlyphIcon("123") }
+        ),
+        // Both were behind a submenu whose only other content was a second copy of the
+        // switch above. They already carry the visibility check that hides them when the
+        // number row is off, so inline they simply appear under the switch that turns
+        // them on -- which is what the submenu was standing in for.
         userSettingToggleSharedPrefs(
             R.string.keyboard_settings_number_row_dont_use_script_digits,
             default = {false},
             key = Settings.PREF_USE_WESTERN_NUMERALS,
+            // An empty leading slot rather than an icon: this is a child of the switch
+            // above it, so its title lines up with that title instead of starting 40dp
+            // to the left of the row it belongs to.
+            icon = { Spacer(Modifier.size(Spacing.iconSlot)) },
         ).copy(visibilityCheck = {
             useSharedPrefsBool(Settings.PREF_ENABLE_NUMBER_ROW, false).value
         }),
-
         UserSetting(name = R.string.keyboard_settings_number_row_style, visibilityCheck = {
             useSharedPrefsBool(Settings.PREF_ENABLE_NUMBER_ROW, false).value
         }) {
@@ -798,32 +816,7 @@ val NumberRowSettingMenu = UserSettingsMenu(
                     },
                 )
             )
-        }
-    )
-)
-
-val KeyboardSettingsMenu = UserSettingsMenu(
-    title = R.string.keyboard_settings_title,
-    navPath = "keyboard", registerNavPath = true,
-    // Every setting on this screen changes how the keyboard looks, so it is worth
-    // the space to show one.
-    showPreview = true,
-    settings = listOf(
-        userSettingNavigationItem(
-            title = R.string.size_settings_title,
-            subtitle = R.string.size_settings_subtitle2,
-            style = NavigationItemStyle.Misc,
-            navigateTo = "resize",
-            icon = R.drawable.maximize
-        ),
-        userSettingToggleSharedPrefs(
-            title = R.string.keyboard_settings_show_number_row,
-            subtitle = R.string.keyboard_settings_show_number_row_subtitle,
-            key = Settings.PREF_ENABLE_NUMBER_ROW,
-            default = {false},
-            icon = { GlyphIcon("123") },
-            submenu = NumberRowSettingMenu.navPath
-        ),
+        },
         userSettingToggleSharedPrefs(
             title = R.string.keyboard_settings_show_arrow_row,
             subtitle = R.string.keyboard_settings_show_arrow_row_subtitle,
