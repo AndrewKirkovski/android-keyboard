@@ -1088,7 +1088,7 @@ class UixManager(private val latinIME: LatinIME) {
             }, Modifier.align(Alignment.CenterEnd)) {
                 Icon(
                     painterResource(R.drawable.keyboard_gear),
-                    contentDescription = stringResource(R.string.action_keyboard_modes_title),
+                    contentDescription = stringResource(R.string.settings_action_keyboard_modes),
                     tint = LocalKeyboardScheme.current.onSurfaceVariant
                 )
             }
