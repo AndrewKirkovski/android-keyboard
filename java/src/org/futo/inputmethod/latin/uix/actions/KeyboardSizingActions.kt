@@ -70,7 +70,7 @@ internal fun RowScope.KeyboardMode(iconRes: Int, checkedIconRes: Int, name: Stri
 
 val KeyboardModeAction = Action(
     icon = R.drawable.keyboard_gear,
-    name = R.string.action_keyboard_modes_title,
+    name = R.string.settings_action_keyboard_modes,
     simplePressImpl = null,
     windowImpl = { manager, _ ->
         val sizeCalculator = manager.getSizingCalculator()
@@ -86,7 +86,7 @@ val KeyboardModeAction = Action(
 
             @Composable
             override fun windowName(): String =
-                stringResource(R.string.action_keyboard_modes_title)
+                stringResource(R.string.settings_action_keyboard_modes)
 
             @Composable
             override fun WindowContents(keyboardShown: Boolean) {

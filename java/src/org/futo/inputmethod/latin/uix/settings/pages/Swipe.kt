@@ -172,21 +172,26 @@ fun KASROZMenu() {
     ScrollableList(horizontalAlignment = Alignment.CenterHorizontally) {
         ScreenTitle(stringResource(R.string.swipe_settings_kasroz), showBack = true)
 
-        SettingToggleRaw(
-            "Enable KASROZ Layout",
-            enabled = kasrozEnabled,
-            setValue = {
-                if(it) {
-                    Subtypes.addLanguage(context, englishLocale, "kasroz")
-                } else {
-                    context.getSetting(SubtypesSetting).filter {
-                        it.startsWith("en", ignoreCase = true) && "KeyboardLayoutSet=kasroz" in it
-                    }.forEach {
-                        Subtypes.removeLanguage(context, Subtypes.convertToSubtype(it))
+        // In a card, like every other toggle in the app. This screen drew all
+        // three of its controls straight onto the background, each at its own
+        // left edge.
+        SettingsCard {
+            SettingToggleRaw(
+                "Enable KASROZ layout",
+                enabled = kasrozEnabled,
+                setValue = {
+                    if(it) {
+                        Subtypes.addLanguage(context, englishLocale, "kasroz")
+                    } else {
+                        context.getSetting(SubtypesSetting).filter {
+                            it.startsWith("en", ignoreCase = true) && "KeyboardLayoutSet=kasroz" in it
+                        }.forEach {
+                            Subtypes.removeLanguage(context, Subtypes.convertToSubtype(it))
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
 
         Spacer(Modifier.height(16.dp))
         AnimatedVisibility(!showingKeyboard.value, exit = shrinkVertically()) {
@@ -208,18 +213,20 @@ fun KASROZMenu() {
         Text("KASROZ is the best way to swipe type, being specifically optimized to reduce mistakes in English.\n\nAfter enabling, ${switchingInstruction} to switch between KASROZ and ${nonKasrozLayout}.", modifier = Modifier.padding(24.dp))
 
 
-        NavigationItem("Try it",
-            style = NavigationItemStyle.Misc,
-            navigate = {
-                showingKeyboard.value = false
-                showingKeyboard.value = true
-            })
-        NavigationItem("Read our blog",
-            style = NavigationItemStyle.ExternalLink,
-            navigate = {
-                context.openURI("https://futo.tech/blog/swipe-keyboard")
-            })
-
+        SettingsCard(rows = listOf({
+            NavigationItem("Try it",
+                style = NavigationItemStyle.Misc,
+                navigate = {
+                    showingKeyboard.value = false
+                    showingKeyboard.value = true
+                })
+        }, {
+            NavigationItem("Read our blog",
+                style = NavigationItemStyle.ExternalLink,
+                navigate = {
+                    context.openURI("https://futo.tech/blog/swipe-keyboard")
+                })
+        }))
     }
 }
 

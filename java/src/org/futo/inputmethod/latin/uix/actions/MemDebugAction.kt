@@ -259,7 +259,7 @@ internal fun serializeKeyboard(ime: LatinIME): String {
 
 val MemoryDebugAction = Action(
     icon = R.drawable.code,
-    name = R.string.action_debug_title,
+    name = R.string.settings_action_debug,
     simplePressImpl = null,
     canShowKeyboard = true,
     windowImpl = { manager, _ ->
@@ -273,7 +273,7 @@ val MemoryDebugAction = Action(
 
             @Composable
             override fun windowName(): String {
-                return stringResource(R.string.action_debug_title)
+                return stringResource(R.string.settings_action_debug)
             }
 
             @Composable
