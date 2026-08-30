@@ -30,7 +30,11 @@ val PredictiveTextMenu = UserSettingsMenu(
         userSettingToggleSharedPrefs(
             title = R.string.prediction_settings_transformer,
             key = Settings.PREF_KEY_USE_TRANSFORMER_LM,
-            default = { true }
+            default = { true },
+            icon = {
+                Icon(painterResource(id = R.drawable.activity), contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
+            }
         ),
 
         // if(transformerLmEnabled) {
@@ -90,21 +94,33 @@ val PredictiveTextMenu = UserSettingsMenu(
             title = R.string.prediction_settings_smart_keyhit_detection,
             subtitle = R.string.prediction_settings_smart_keyhit_detection_subtitle,
             key = Settings.PREF_USE_DICT_KEY_BOOSTING,
-            default = {true}
+            default = {true},
+            icon = {
+                Icon(painterResource(id = R.drawable.key_border), contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
+            }
         ),
 
         userSettingToggleSharedPrefs(
             title = R.string.prefs_show_suggestions,
             subtitle = R.string.prefs_show_suggestions_summary,
             key = Settings.PREF_SHOW_SUGGESTIONS,
-            default = {true}
+            default = {true},
+            icon = {
+                Icon(painterResource(id = R.drawable.more_horizontal), contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
+            }
         ),
 
         userSettingToggleSharedPrefs(
             title = R.string.use_personalized_dicts,
             subtitle = R.string.use_personalized_dicts_summary,
             key = Settings.PREF_KEY_USE_PERSONALIZED_DICTS,
-            default = {true}
+            default = {true},
+            icon = {
+                Icon(painterResource(id = R.drawable.plus_circle), contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
+            }
         ),
 
         //if(!transformerLmEnabled) {
@@ -112,7 +128,11 @@ val PredictiveTextMenu = UserSettingsMenu(
             title = R.string.bigram_prediction,
             subtitle = R.string.bigram_prediction_summary,
             key = Settings.PREF_BIGRAM_PREDICTIONS,
-            default = { booleanResource(R.bool.config_default_next_word_prediction) }
+            default = { booleanResource(R.bool.config_default_next_word_prediction) },
+            icon = {
+                Icon(painterResource(id = R.drawable.arrow_right), contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
+            }
         ).copy(visibilityCheck = {
             // Opposite of visibilityCheckLMEnabled
             !useSharedPrefsBool(Settings.PREF_KEY_USE_TRANSFORMER_LM, true).value

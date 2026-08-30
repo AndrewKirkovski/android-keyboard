@@ -53,6 +53,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -74,6 +76,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
@@ -92,12 +96,14 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.futo.inputmethod.latin.R
@@ -107,6 +113,24 @@ import org.futo.inputmethod.latin.uix.SettingsKey
 import org.futo.inputmethod.latin.uix.getSettingBlocking
 import org.futo.inputmethod.latin.uix.theme.Typography
 import kotlin.math.pow
+
+/**
+ * What a [ScrollableList] knows about the screen title scrolling inside it, so it can
+ * put a compact bar in its place once it leaves. Both positions are in root
+ * coordinates, which -- unlike bounds -- are not clipped to the visible region, so the
+ * comparison stays meaningful after the title has scrolled fully out.
+ */
+internal class ScreenTitleAnchor {
+    var title by mutableStateOf<String?>(null)
+    var onBack by mutableStateOf<(() -> Unit)?>(null)
+    var viewportTop by mutableFloatStateOf(0f)
+    var titleBottom by mutableFloatStateOf(Float.MAX_VALUE)
+
+    val scrolledAway: Boolean
+        get() = !title.isNullOrEmpty() && titleBottom <= viewportTop
+}
+
+internal val LocalScreenTitleAnchor = compositionLocalOf<ScreenTitleAnchor?> { null }
 
 @Composable
 fun ScreenTitle(title: String, showBack: Boolean = false, navController: NavHostController? = LocalNavController.current ?: rememberNavController()) {
@@ -147,7 +171,21 @@ fun ScreenTitle(title: String, showBack: Boolean = false, navController: NavHost
         return
     }
 
-    Row(modifier = rowModifier) {
+    // Hand the enclosing ScrollableList this title and where its underside currently is,
+    // so that once it scrolls off the top the screen still says what screen it is.
+    val anchor = LocalScreenTitleAnchor.current
+    val reportModifier = if (anchor == null) Modifier else Modifier.onGloballyPositioned {
+        anchor.titleBottom = it.positionInRoot().y + it.size.height
+    }
+    if (anchor != null) {
+        val nav = navController
+        LaunchedEffect(title, nav) {
+            anchor.title = title
+            anchor.onBack = nav?.let { { it.navigateUp(); Unit } }
+        }
+    }
+
+    Row(modifier = rowModifier.then(reportModifier)) {
         Spacer(modifier = Modifier.width(16.dp))
 
         Icon(Icons.Default.ArrowBack, contentDescription = null, modifier = Modifier.align(CenterVertically))
@@ -155,6 +193,43 @@ fun ScreenTitle(title: String, showBack: Boolean = false, navController: NavHost
         Text(title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier
             .align(CenterVertically)
             .padding(0.dp, 16.dp))
+    }
+}
+
+/**
+ * The screen title, compacted to a bar, shown only once the real one has scrolled away.
+ *
+ * The 28sp title is worth its space at the top of a screen and not worth it for the rest
+ * of the scroll, which is why it is not simply pinned: it hands over to this at the point
+ * where the alternative is no context at all.
+ */
+@Composable
+private fun CollapsedScreenTitle(title: String, onBack: (() -> Unit)?) {
+    Column(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainer)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .let { if (onBack != null) it.clickable(onClickLabel = "Navigate back", onClick = onBack) else it }
+                .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
+            verticalAlignment = CenterVertically
+        ) {
+            Icon(Icons.Default.ArrowBack, contentDescription = null)
+            Spacer(Modifier.width(18.dp))
+            Text(
+                title,
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        // Content passes underneath, so the bar needs an edge or the line half-hidden
+        // behind it reads as a clipping bug rather than as scrolled-away content.
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(MaterialTheme.colorScheme.outlineVariant)
+        )
     }
 }
 
@@ -227,6 +302,38 @@ fun SpacedColumn(gap: Dp, modifier: Modifier = Modifier, horizontalAlignment: Al
     }
 }
 
+/**
+ * A short piece of text standing in the leading slot where its neighbours have
+ * icons, for settings whose subject is a character rather than a thing -- the
+ * number row's "123".
+ *
+ * It was previously plain body text, which put a paragraph's letterform in a
+ * column of 24dp stroked line art and read as a stray word. Boxing it to the
+ * icon's own size and setting it tight and semi-bold makes it a token: it takes
+ * the same space, the same tint and the same optical weight as an icon.
+ *
+ * Decorative by definition -- the row's title says what the setting is -- so the
+ * semantics are cleared rather than left to a screen reader to spell out.
+ */
+@Composable
+fun GlyphIcon(glyph: String, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.size(24.dp).clearAndSetSemantics { },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            glyph,
+            color = LocalContentColor.current,
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = (-0.02).em
+            ),
+            maxLines = 1,
+            softWrap = false
+        )
+    }
+}
+
 
 @Composable
 fun SettingItem(
@@ -285,16 +392,30 @@ fun SettingItem(
             Spacer(Modifier.width(4.dp))
             Spacer(Modifier.width(16.dp))
             if (icon != null) {
+                // The slot is a fixed 24dp tall with its content centred, and
+                // nothing clips, so both icon shapes in this app land on the
+                // same line: a 24dp Icon fills it, and NavigationItem's 48dp
+                // Canvas -- which draws a 20dp circle in the middle of itself --
+                // overhangs it evenly and centres on the same point. Without
+                // that, navigation rows sat about 12dp lower than toggle rows.
+                //
+                // On a row with a subtitle the slot pins to the top, beside the
+                // title it labels, rather than floating against the middle of
+                // the whole text block.
                 Column(
                     modifier = Modifier
                         .width(48.dp)
-                        .padding(top = if (subtitle != null || subcontent != null) 10.dp else 0.dp)
                         .then(
                             if (subtitle != null || subcontent != null) Modifier
                             else Modifier.align(Alignment.CenterVertically)
                         )
                 ) {
-                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .height(24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
                         icon()
                     }
                 }
@@ -663,15 +784,38 @@ fun SettingSliderSharedPrefsInt(
 @Composable
 fun ScrollableList(modifier: Modifier = Modifier, spacing: Dp = 0.dp, horizontalAlignment: Alignment.Horizontal = Alignment.Start, content: @Composable () -> Unit) {
     val scrollState = rememberScrollState()
+    val anchor = remember { ScreenTitleAnchor() }
 
-    Column(
-        modifier = modifier
+    // The viewport is measured on the Box, not on the scrolling Column. A modifier after
+    // verticalScroll observes the *content* node, which moves as you scroll, so measuring
+    // there compares two positions that travel together and the bar never appears.
+    Box(
+        modifier
             .fillMaxSize()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(spacing),
-        horizontalAlignment = horizontalAlignment
+            .onGloballyPositioned { anchor.viewportTop = it.positionInRoot().y }
     ) {
-        content()
+        CompositionLocalProvider(LocalScreenTitleAnchor provides anchor) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(spacing),
+                horizontalAlignment = horizontalAlignment
+            ) {
+                content()
+            }
+        }
+
+        // Only a screen title registers itself, and only screens have one -- the panels
+        // that render inside the keyboard use ScreenTitle as a section header, which does
+        // not. So this appears on settings screens and nowhere else.
+        AnimatedVisibility(
+            visible = anchor.scrolledAway,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            CollapsedScreenTitle(anchor.title ?: "", anchor.onBack)
+        }
     }
 }
 
@@ -703,12 +847,25 @@ fun NavigationItem(title: String, style: NavigationItemStyle, navigate: () -> Un
         subtitle = subtitle,
         onClick = navigate,
         compact = compact,
-        icon = {
-            icon?.let {
+        // Null when there is no painter, rather than a lambda that draws nothing.
+        // SettingItem reserves the gutter on `icon != null`, and a lambda is not
+        // null, so a navigation row without a painter indented its title 48dp
+        // beside an empty slot -- which is the hole that rule exists to close.
+        icon = icon?.let { painter ->
+            {
+                // The three Home* styles rotated through primary, secondary and
+                // tertiary containers in the order the rows happened to be
+                // written -- Languages primary, Keyboard secondary, Swipe primary
+                // again. Nothing about a destination decided its tint, so the
+                // colour carried no information; what it did carry was that
+                // whichever role was the palette's neutral read as *disabled*
+                // beside the two that were hues. One accent tint for all of them,
+                // and the enum still separates a home destination from the quiet
+                // footer entries, which draw no circle at all.
                 val circleColor = when(style) {
-                    NavigationItemStyle.HomePrimary -> MaterialTheme.colorScheme.primaryContainer
-                    NavigationItemStyle.HomeSecondary -> MaterialTheme.colorScheme.secondaryContainer
-                    NavigationItemStyle.HomeTertiary -> MaterialTheme.colorScheme.tertiaryContainer
+                    NavigationItemStyle.HomePrimary,
+                    NavigationItemStyle.HomeSecondary,
+                    NavigationItemStyle.HomeTertiary -> MaterialTheme.colorScheme.primaryContainer
 
                     NavigationItemStyle.MiscNoArrow,
                     NavigationItemStyle.Misc,
@@ -717,9 +874,9 @@ fun NavigationItem(title: String, style: NavigationItemStyle, navigate: () -> Un
                 }
 
                 val iconColor = when(style) {
-                    NavigationItemStyle.HomePrimary -> MaterialTheme.colorScheme.onPrimaryContainer
-                    NavigationItemStyle.HomeSecondary -> MaterialTheme.colorScheme.onSecondaryContainer
-                    NavigationItemStyle.HomeTertiary -> MaterialTheme.colorScheme.onTertiaryContainer
+                    NavigationItemStyle.HomePrimary,
+                    NavigationItemStyle.HomeSecondary,
+                    NavigationItemStyle.HomeTertiary -> MaterialTheme.colorScheme.onPrimaryContainer
 
                     NavigationItemStyle.MiscNoArrow,
                     NavigationItemStyle.Mail,
@@ -730,11 +887,11 @@ fun NavigationItem(title: String, style: NavigationItemStyle, navigate: () -> Un
                 Canvas(modifier = Modifier.size(48.dp)) {
                     drawCircle(circleColor, this.size.maxDimension / 2.4f)
                     translate(
-                        left = this.size.width / 2.0f - icon.intrinsicSize.width / 2.0f,
-                        top = this.size.height / 2.0f - icon.intrinsicSize.height / 2.0f
+                        left = this.size.width / 2.0f - painter.intrinsicSize.width / 2.0f,
+                        top = this.size.height / 2.0f - painter.intrinsicSize.height / 2.0f
                     ) {
-                        with(icon) {
-                            draw(icon.intrinsicSize, colorFilter = ColorFilter.tint(iconColor))
+                        with(painter) {
+                            draw(painter.intrinsicSize, colorFilter = ColorFilter.tint(iconColor))
                         }
                     }
                 }

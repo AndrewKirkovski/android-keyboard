@@ -106,6 +106,7 @@ import org.futo.inputmethod.latin.uix.setSettingBlocking
 import org.futo.inputmethod.latin.uix.settings.BottomSpacer
 import org.futo.inputmethod.latin.uix.settings.DataStoreItem
 import org.futo.inputmethod.latin.uix.settings.DropDownPickerSettingItem
+import org.futo.inputmethod.latin.uix.settings.GlyphIcon
 import org.futo.inputmethod.latin.uix.settings.LocalSharedPrefsCache
 import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.PrimarySettingToggleDataStoreItem
@@ -183,7 +184,10 @@ val ResizeMenuLite = UserSettingsMenu(
         userSettingToggleDataStore(
             title = R.string.size_settings_hide_one_handed_exit,
             subtitle = R.string.size_settings_hide_one_handed_exit_subtitle,
-            setting = HideOneHandedExitButtonSetting
+            setting = HideOneHandedExitButtonSetting,
+            icon = {
+                Icon(painterResource(id = R.drawable.eye), contentDescription = null)
+            }
         )
     )
 )
@@ -699,9 +703,6 @@ private fun AutoSpacesSetting() {
         },
         getDisplayName = {
             autoSpaceModes[it] ?: "?"
-        },
-        icon = {
-            Icon(painterResource(R.drawable.space), contentDescription = null)
         }
     )
 }
@@ -827,8 +828,7 @@ val KeyboardSettingsMenu = UserSettingsMenu(
             subtitle = R.string.keyboard_settings_show_number_row_subtitle,
             key = Settings.PREF_ENABLE_NUMBER_ROW,
             default = {false},
-            icon = { Text("123", style = Typography.Body.MediumMl, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
-                modifier = Modifier.clearAndSetSemantics{}) },
+            icon = { GlyphIcon("123") },
             submenu = NumberRowSettingMenu.navPath
         ),
         userSettingToggleSharedPrefs(
@@ -885,6 +885,10 @@ val KeyboardSettingsMenu = UserSettingsMenu(
 val TypingSettingsMenu = UserSettingsMenu(
     title = R.string.typing_settings_title,
     navPath = "typing", registerNavPath = true,
+    // No icons in this section. Five of its rows are sliders and radio groups
+    // that render their own body and have no leading slot at all, so "every row
+    // carries one" is not reachable here, and three iconed rows among eleven
+    // left the titles starting at two different left edges.
     settings = listOf(
         UserSetting(
             name = R.string.typing_settings_auto_space_mode,
@@ -895,29 +899,19 @@ val TypingSettingsMenu = UserSettingsMenu(
         userSettingToggleDataStore(
             title = R.string.typing_settings_suggest_emojis,
             subtitle = R.string.typing_settings_suggest_emojis_subtitle,
-            setting = SHOW_EMOJI_SUGGESTIONS,
-            icon = {
-                Icon(painterResource(id = R.drawable.smile), contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-            }
+            setting = SHOW_EMOJI_SUGGESTIONS
         ),
         userSettingToggleSharedPrefs(
             title = R.string.auto_cap,
             subtitle = R.string.auto_cap_summary,
             key = Settings.PREF_AUTO_CAP,
-            default = {true},
-            icon = {
-                Text("Aa", style = Typography.Body.MediumMl, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-            }
+            default = {true}
         ),
         userSettingToggleSharedPrefs(
             title = R.string.use_double_space_period,
             subtitle = R.string.use_double_space_period_summary,
             key = Settings.PREF_KEY_USE_DOUBLE_SPACE_PERIOD,
-            default = {true},
-            icon = {
-                Text(".", style = Typography.Body.MediumMl, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-            }
+            default = {true}
         ),
         userSettingToggleSharedPrefs(
             title = R.string.typing_settings_delete_pasted_text_on_backspace,

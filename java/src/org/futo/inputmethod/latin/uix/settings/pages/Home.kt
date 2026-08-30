@@ -49,10 +49,18 @@ val HomeScreenLite = UserSettingsMenu(
     title = R.string.settings_home_title,
     navPath = "home", registerNavPath = false,
     settings = listOf(
+        // The page this opens serves whichever build keyboard.futo.tech has for
+        // the flavor, which on a fork is an upstream release that would replace
+        // it and drop every patch it carries. UPDATE_CHECKING gates the automatic
+        // notice already; it gates the manual route now too.
         userSettingNavigationItem(
             title = R.string.settings_check_for_updates_manually,
             style = NavigationItemStyle.Misc,
-            navigate = { nav -> nav.context.openManualUpdateCheck() }
+            navigate = { nav -> nav.context.openManualUpdateCheck() },
+            icon = R.drawable.external_link
+        ).copy(
+            visibilityCheck = { BuildConfig.UPDATE_CHECKING },
+            appearInSearchIfVisibilityCheckFailed = false
         ),
 
         userSettingNavigationItem(
@@ -141,16 +149,21 @@ val HomeScreenLite = UserSettingsMenu(
         }),
         //}
 
+        // MiscNoArrow draws no circle behind the icon, so these two keep the
+        // quieter weight the style gives them while their titles start on the
+        // same left edge as every row above.
         userSettingNavigationItem(
             title = R.string.misc_settings_title,
             style = NavigationItemStyle.MiscNoArrow,
             navigateTo = "misc",
+            icon = R.drawable.settings
         ),
 
         userSettingNavigationItem(
             title = R.string.credits_menu_title,
             style = NavigationItemStyle.MiscNoArrow,
             navigateTo = "credits",
+            icon = R.drawable.file_text
         ),
     )
 )
