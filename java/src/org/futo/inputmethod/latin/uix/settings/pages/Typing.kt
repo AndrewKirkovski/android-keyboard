@@ -119,6 +119,8 @@ import org.futo.inputmethod.latin.uix.settings.SettingRadio
 import org.futo.inputmethod.latin.uix.settings.SettingSlider
 import org.futo.inputmethod.latin.uix.settings.SettingSliderSharedPrefsInt
 import org.futo.inputmethod.latin.uix.settings.SettingToggleRaw
+import org.futo.inputmethod.latin.uix.settings.SettingsCard
+import org.futo.inputmethod.latin.uix.settings.SettingsRowDivider
 import org.futo.inputmethod.latin.uix.settings.SyncDataStoreToPreferencesFloat
 import org.futo.inputmethod.latin.uix.settings.SyncDataStoreToPreferencesInt
 import org.futo.inputmethod.latin.uix.settings.Tip
@@ -449,23 +451,26 @@ private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<St
                 .fillMaxWidth()
                 .padding(start = Spacing.rowInset, top = Spacing.s, bottom = Spacing.xs)
         )
-        Column(Modifier.semantics {
-            collectionInfo = CollectionInfo(
-                rowCount = items.size,
-                columnCount = 1
-            )
-            contentDescription = resources.getString(R.string.morekey_settings_active)
-        }) {
-            items.forEachIndexed { i, v ->
-                key(v.ordinal) {
-                    DraggableSettingItem(
-                        idx = i,
-                        item = v,
-                        moveItem = moveItem,
-                        disable = disable,
-                        dragIcon = dragIcon,
-                        limits = items.indices
-                    )
+        SettingsCard {
+            Column(Modifier.semantics {
+                collectionInfo = CollectionInfo(
+                    rowCount = items.size,
+                    columnCount = 1
+                )
+                contentDescription = resources.getString(R.string.morekey_settings_active)
+            }) {
+                items.forEachIndexed { i, v ->
+                    key(v.ordinal) {
+                        if (i > 0) SettingsRowDivider()
+                        DraggableSettingItem(
+                            idx = i,
+                            item = v,
+                            moveItem = moveItem,
+                            disable = disable,
+                            dragIcon = dragIcon,
+                            limits = items.indices
+                        )
+                    }
                 }
             }
         }
@@ -481,31 +486,34 @@ private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<St
                 .fillMaxWidth()
                 .padding(start = Spacing.rowInset, top = Spacing.s, bottom = Spacing.xs)
         )
-        Column(Modifier.semantics {
-            collectionInfo = CollectionInfo(
-                rowCount = inactiveEntries.size,
-                columnCount = 1
-            )
-            contentDescription = resources.getString(R.string.morekey_settings_inactive)
-        }) {
-            inactiveEntries.forEach {
-                SettingItem(
-                    title = it.name(resources),
-                    subtitle = it.description(resources),
-                    modifier = Modifier.clearAndSetSemantics {
-                        contentDescription = it.name(resources)
+        SettingsCard {
+            Column(Modifier.semantics {
+                collectionInfo = CollectionInfo(
+                    rowCount = inactiveEntries.size,
+                    columnCount = 1
+                )
+                contentDescription = resources.getString(R.string.morekey_settings_inactive)
+            }) {
+                inactiveEntries.forEachIndexed { i, entry ->
+                    if (i > 0) SettingsRowDivider()
+                    SettingItem(
+                        title = entry.name(resources),
+                        subtitle = entry.description(resources),
+                        modifier = Modifier.clearAndSetSemantics {
+                            contentDescription = entry.name(resources)
 
-                        onClick(label = resources.getString(R.string.morekey_settings_reactivate)) {
-                            enable(it)
-                            true
+                            onClick(label = resources.getString(R.string.morekey_settings_reactivate)) {
+                                enable(entry)
+                                true
+                            }
                         }
-                    }
-                ) {
-                    IconButton(onClick = { enable(it) }) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = stringResource(R.string.morekey_settings_reactivate)
-                        )
+                    ) {
+                        IconButton(onClick = { enable(entry) }) {
+                            Icon(
+                                Icons.Default.Add,
+                                contentDescription = stringResource(R.string.morekey_settings_reactivate)
+                            )
+                        }
                     }
                 }
             }
@@ -517,9 +525,28 @@ val LongPressMenu = UserSettingsMenu(
     title = R.string.settings_row_longpress,
     navPath = "longPress", registerNavPath = true,
     settings = listOf(
-        userSettingDecorationOnly {
-            ScreenTitle(stringResource(R.string.morekey_settings_backspace_title))
+        // The Home row that opens this screen promises "configure long-press
+        // duration", so the duration is the first thing on it rather than the
+        // last. The first card carries no header, as on every other screen.
+        UserSetting(
+            name = R.string.morekey_settings_duration,
+            subtitle = R.string.morekey_settings_duration_subtitle,
+        ) {
+            val resources = LocalResources.current
+            SettingSliderSharedPrefsInt(
+                title = stringResource(R.string.morekey_settings_duration),
+                subtitle = stringResource(R.string.morekey_settings_duration_subtitle),
+                key = Settings.PREF_KEY_LONGPRESS_TIMEOUT,
+                default = 300,
+                range = 100.0f..700.0f,
+                hardRange = 25.0f..1200.0f,
+                transform = { it.roundToInt() },
+                indicator = { resources.getString(R.string.abbreviation_unit_milliseconds, "$it") },
+                steps = 23
+            )
         },
+
+        userSettingSection(R.string.morekey_settings_backspace_title),
 
         UserSetting(name = R.string.morekey_settings_backspace_hold_delete_words) {
             val oldSetting = useSharedPrefsInt(
@@ -563,9 +590,7 @@ val LongPressMenu = UserSettingsMenu(
         },
 
 
-        userSettingDecorationOnly {
-            ScreenTitle(stringResource(R.string.morekey_settings_spacebar_title))
-        },
+        userSettingSection(R.string.morekey_settings_spacebar_title),
 
         UserSetting(name = R.string.morekey_settings_spacebar_swipe_shortcut) {
             val setting = useSharedPrefsInt(
@@ -609,30 +634,16 @@ val LongPressMenu = UserSettingsMenu(
         },
 
         // TODO: Might not work well for showing up in search
-        UserSetting(name = R.string.morekey_settings_layout) {
+        // This one draws its own headers and cards, so it must not be folded into
+        // the card above it. Without the break, its "Layout of long-press keys"
+        // header and its Reset action rendered inside the Spacebar card, which
+        // read as though Reset would undo the spacebar settings.
+        UserSetting(name = R.string.morekey_settings_layout, breaksCardGroup = true) {
             val context = LocalContext.current
             val setting = useDataStore(LongPressKeyLayoutSetting)
             LongPressKeyLayoutEditor(
                 context = context,
                 setting = setting
-            )
-        },
-
-        UserSetting(
-            name = R.string.morekey_settings_duration,
-            subtitle = R.string.morekey_settings_duration_subtitle,
-        ) {
-            val resources = LocalResources.current
-            SettingSliderSharedPrefsInt(
-                title = stringResource(R.string.morekey_settings_duration),
-                subtitle = stringResource(R.string.morekey_settings_duration_subtitle),
-                key = Settings.PREF_KEY_LONGPRESS_TIMEOUT,
-                default = 300,
-                range = 100.0f..700.0f,
-                hardRange = 25.0f..1200.0f,
-                transform = { it.roundToInt() },
-                indicator = { resources.getString(R.string.abbreviation_unit_milliseconds, "$it") },
-                steps = 23
             )
         }
     )

@@ -337,4 +337,8 @@ mobile devices. [CHAR LIMIT=25] -->
     <string name="language_settings_add_layout">Add layout</string>
     <string name="settings_action_add">Add</string>
     <string name="settings_action_import">Import</string>
+    <string name="settings_section_action_settings">Action settings</string>
+    <!-- The two version rows sit directly above this tip, so it no longer
+         repeats the number; it only says why the version is worth quoting. -->
+    <string name="help_version_tip">We want to hear from you. If you\'re reporting an issue, the version above is worth including.</string>
 </resources>

@@ -25,16 +25,17 @@ import org.futo.inputmethod.latin.uix.settings.SettingToggleRaw
 import org.futo.inputmethod.latin.uix.settings.UserSetting
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
-import org.futo.inputmethod.latin.uix.settings.userSettingDecorationOnly
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
+import org.futo.inputmethod.latin.uix.settings.userSettingSection
 import org.futo.inputmethod.latin.uix.urlEncode
 
 val ActionsScreen = UserSettingsMenu(
     title = R.string.settings_title_actions,
     navPath = "actions", registerNavPath = true,
     settings = listOf(
-        userSettingDecorationOnly { ScreenTitle(stringResource(R.string.action_settings_quick_options_title)) },
-
+        // No header over the first card. Every other screen opens straight into
+        // its rows, and ScreenTitle here rendered a second large title under the
+        // app bar, which read as a second screen name rather than a group label.
         UserSetting(
             name = R.string.action_settings_quick_option_enable_action_key,
             subtitle = R.string.action_settings_quick_option_enable_action_key_subtitle_no_assignment
@@ -157,9 +158,7 @@ val ActionsScreen = UserSettingsMenu(
             navigateTo = "actionEdit"
         ),
 
-        userSettingDecorationOnly {
-            ScreenTitle(stringResource(R.string.action_settings_action_settings))
-        }
+        userSettingSection(R.string.settings_section_action_settings)
     ) + AllActionsMap.mapNotNull { v ->
         v.value.settingsMenu?.let {
             userSettingNavigationItem(

@@ -83,10 +83,10 @@ val HelpMenu = UserSettingsMenu(
             )
         },
         userSettingDecorationOnly {
-            Tip(stringResource(
-                    R.string.help_menu_version_tip,
-                    BuildConfig.VERSION_NAME
-                ))
+            // The two rows directly above already carry the version, and the
+            // upstream tip repeated it a third time. Keep the invitation, drop
+            // the number.
+            Tip(stringResource(R.string.help_version_tip))
         },
 
         userSettingNavigationItem(
@@ -134,7 +134,9 @@ val HelpMenu = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.help_menu_email,
             subtitle = R.string.help_menu_email_subtitle,
-            style = NavigationItemStyle.Mail,
+            // Mail put a filled glyph where its three neighbours carry a
+            // chevron, so one row in the card had a different right edge.
+            style = NavigationItemStyle.Misc,
             navigate = { nav ->
                 nav.context.openURI("mailto:keyboard@futo.org")
             }
