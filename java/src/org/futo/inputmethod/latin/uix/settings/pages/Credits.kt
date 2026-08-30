@@ -48,6 +48,9 @@ import org.futo.inputmethod.latin.uix.settings.pages.credits.text
 import org.futo.inputmethod.latin.uix.settings.render
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.updates.openURI
+import org.futo.inputmethod.latin.uix.settings.SettingSectionHeader
+import org.futo.inputmethod.latin.uix.settings.SettingsCard
+import org.futo.inputmethod.latin.uix.theme.app.Spacing
 
 @Composable
 @Preview(showBackground = true)
@@ -128,74 +131,61 @@ fun <T> VerticalGrid(
     }
 }
 
+/**
+ * One category of contributors.
+ *
+ * This drew a saturated header bar and a gradient body in a hardcoded colour per
+ * category -- #3157C6, #31c663, #c69931, #b231c6 -- none of which is in the app's
+ * palette, and none of which said anything the heading above it did not. It was the
+ * loudest surface in the app and it was the credits page.
+ *
+ * It is a section header over a card now, the same as every other group of things in
+ * the app.
+ */
 @Composable
 fun CreditCategorySection(
-    icon: Int, title: String, names: List<String>, color: Color, columns: Int = 2,
+    title: String, names: List<String>, columns: Int = 2,
     thirdPartyInformation: List<ThirdPartyItem>? = null, navController: NavHostController? = null
 ) {
-    val context = LocalContext.current
-    val compositingColor = MaterialTheme.colorScheme.background
-    val bgGradient1 = compositingColor.copy(alpha = 0.6f).compositeOver(color)
-    val bgGradient2 = compositingColor.copy(alpha = 0.77f).compositeOver(color)
-    val foregroundColor = MaterialTheme.colorScheme.onBackground
-
-    Surface(
-        color = color,
-        modifier = Modifier.widthIn(200.dp, 360.dp),
-        shape = RoundedCornerShape(24.dp)
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Box(Modifier.height(55.dp), contentAlignment = Alignment.Center) {
-                Box(Modifier.height(44.dp)) {
-                    Icon(
-                        painterResource(icon),
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.align(
-                            Alignment.TopCenter
-                        )
+    SettingSectionHeader(title)
+    SettingsCard {
+        VerticalGrid(
+            items = names.indices.toList(),
+            columns = columns,
+            verticalArrangement = Arrangement.spacedBy(Spacing.s),
+            horizontalArrangement = Arrangement.spacedBy(Spacing.m),
+            modifier = Modifier.padding(
+                horizontal = Spacing.rowInset, vertical = Spacing.m
+            )
+        ) {
+            val name = names[it]
+            val thirdPartyInfo = thirdPartyInformation?.get(it)
+            if (thirdPartyInfo != null) {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController!!.navigate(Route.ThirdPartyInfo(it))
+                        }
+                        .padding(vertical = Spacing.xs)
+                ) {
+                    Text(
+                        thirdPartyInfo.description,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        title,
-                        color = Color.White,
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                        style = MaterialTheme.typography.labelLarge
+                        thirdPartyInfo.copyright,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
-            }
-            VerticalGrid(
-                items = names.indices.toList(),
-                columns = columns,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                modifier = Modifier
-                    .background(
-                        Brush.verticalGradient(listOf(bgGradient1, bgGradient2))
-                    )
-                    .padding(16.dp)
-            ) {
-                val name = names[it]
-                val thirdPartyInfo = thirdPartyInformation?.get(it)
-                if (thirdPartyInfo != null) {
-                    Column(
-                        Modifier.fillMaxWidth()
-                            .clickable {
-                                navController!!.navigate(Route.ThirdPartyInfo(it))
-                            }
-                    ) {
-                        Text(
-                            thirdPartyInfo.description,
-                            color = foregroundColor, style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            thirdPartyInfo.copyright,
-                            color = foregroundColor.copy(alpha = 0.7f),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                } else {
-                    Text(name, color = foregroundColor, style = MaterialTheme.typography.bodyLarge)
-                }
+            } else {
+                Text(
+                    name,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }
@@ -234,47 +224,37 @@ fun CreditsScreen(navController: NavHostController = rememberNavController()) {
     ScrollableList {
         ScreenTitle(stringResource(R.string.credits_menu_title), showBack = true, navController)
 
-        SpacedColumn(
-            24.dp,
-            Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(Modifier.fillMaxWidth()) {
             Text(
                 stringResource(R.string.credits_menu_header_text),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(
+                    horizontal = Spacing.rowInset + Spacing.m, vertical = Spacing.s
+                )
             )
 
             CreditCategorySection(
-                icon = R.drawable.file_text,
                 title = stringResource(R.string.credits_menu_team_translators_title),
-                names = languageContribs,
-                color = Color(0xFF3157C6)
+                names = languageContribs
             )
 
             CreditCategorySection(
-                icon = R.drawable.globe,
                 title = stringResource(R.string.credits_menu_team_keyboard_layouts_title),
-                names = layoutContribs,
-                color = Color(0xff31c663)
+                names = layoutContribs
             )
 
             CreditCategorySection(
-                icon = R.drawable.code,
                 title = stringResource(R.string.credits_menu_team_code_title),
-                names = codeContribs,
-                color = Color(0xffc69931)
+                names = codeContribs
             )
 
             CreditCategorySection(
-                icon = R.drawable.cpu,
                 title = stringResource(R.string.credits_menu_team_third_party_libraries_title2),
                 columns = 1,
                 names = ThirdPartyList.map { it.description },
                 thirdPartyInformation = ThirdPartyList,
-                navController = navController,
-                color = Color(0xffb231c6)
+                navController = navController
             )
 
             ParagraphText(stringResource(R.string.credits_menu_nonaffiliation_notice))
