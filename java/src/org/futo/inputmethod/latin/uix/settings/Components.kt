@@ -46,6 +46,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
@@ -1220,6 +1221,21 @@ fun<T> DropDownPicker(
     }
 }
 
+/**
+ * A choice among a fixed list: a row that opens a sheet.
+ *
+ * It used to render an outlined box inside the row. An outline says "input", and this is
+ * not one -- it was also the only bordered element on any settings screen, so it read as
+ * a foreign object dropped into a card, and it wrapped to two lines because "Immediate
+ * space after suggestions & punctuation" is 46 characters and no box that width holds
+ * it. The control came out near 96dp beside a 72dp row.
+ *
+ * The current value is the row's subtitle instead, in the accent because it is the part
+ * that changes. That makes this the standard two-line row -- no new height and no new
+ * left edge -- and the options move into a sheet, where a long one is read in full
+ * rather than truncated to fit a control.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun<T> DropDownPickerSettingItem(
     label: String,
@@ -1230,15 +1246,54 @@ fun<T> DropDownPickerSettingItem(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
 ) {
+    var sheetOpen by remember { mutableStateOf(false) }
+
     SettingItem(
         title = label,
         icon = icon,
+        onClick = { sheetOpen = true },
         subcontent = {
-            DropDownPicker(options, selection, onSet, getDisplayName)
+            Text(
+                selection?.let(getDisplayName) ?: "",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         },
         modifier = modifier
     ) {
+        Icon(
+            painterResource(id = R.drawable.chevron_right),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
 
+    if (sheetOpen) {
+        ModalBottomSheet(onDismissRequest = { sheetOpen = false }) {
+            Text(
+                label,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(
+                    start = Spacing.rowInset, end = Spacing.rowInset, bottom = Spacing.s
+                )
+            )
+            options.forEach { option ->
+                val name = getDisplayName(option)
+                SettingItem(
+                    title = name,
+                    onClick = { onSet(option); sheetOpen = false },
+                    icon = { RadioButton(selected = option == selection, onClick = null) },
+                    modifier = Modifier.clearAndSetSemantics {
+                        this.text = AnnotatedString(name)
+                        this.role = Role.RadioButton
+                        this.selected = option == selection
+                    }
+                ) { }
+            }
+            Spacer(Modifier.height(Spacing.xl))
+        }
     }
 }
 
