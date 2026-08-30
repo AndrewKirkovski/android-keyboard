@@ -133,11 +133,15 @@ fun LayoutConfigurable(
 
 /** The accent label above a group of rows inside a language card. */
 @Composable
-private fun LanguageGroupLabel(text: String) {
+private fun LanguageGroupLabel(text: String, muted: Boolean = false) {
     Text(
         text,
         style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.primary,
+        color = if (muted) {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        } else {
+            MaterialTheme.colorScheme.primary
+        },
         modifier = Modifier.padding(
             start = Spacing.rowInset, end = Spacing.rowInset,
             top = Spacing.m, bottom = Spacing.xs
@@ -163,6 +167,26 @@ private fun MissingChip(text: String) {
             text,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(horizontal = Spacing.s, vertical = 3.dp)
+        )
+    }
+}
+
+/** A resource slot with something in it. */
+@Composable
+private fun PresentChip(text: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        shape = MaterialTheme.shapes.extraSmall
+    ) {
+        Text(
+            text,
+            style = MaterialTheme.typography.labelSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .widthIn(max = 160.dp)
+                .padding(horizontal = Spacing.s, vertical = 3.dp)
         )
     }
 }
@@ -276,10 +300,9 @@ fun LanguageSurface(
                 }
             }
             SettingItem(
-                title = stringResource(
-                    R.string.language_settings_add_layout_for_this_language
-                ),
+                title = stringResource(R.string.language_settings_add_layout),
                 onClick = onLayoutAdditionRequested,
+                accentTitle = true
             ) { }
 
             LanguageGroupLabel(stringResource(R.string.language_settings_data_section))
@@ -295,20 +318,16 @@ fun LanguageSurface(
                     if (selection == null) {
                         MissingChip(stringResource(R.string.language_settings_resource_none))
                     } else {
-                        Text(
-                            selection,
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.widthIn(max = 160.dp)
-                        )
+                        PresentChip(selection)
                     }
                 }
             }
 
+            // Muted: this is the last group and the least of the three, and three
+            // accent labels down one card is three claims on the eye.
             LanguageGroupLabel(
-                stringResource(R.string.language_settings_multilingual_section)
+                stringResource(R.string.language_settings_multilingual_section),
+                muted = true
             )
             SettingItem(
                 title = stringResource(

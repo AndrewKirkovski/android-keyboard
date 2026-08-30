@@ -9,6 +9,14 @@ import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.latin.uix.settings.userSettingSection
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleDataStore
+import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
+import org.futo.inputmethod.latin.uix.LocalNavController
+import org.futo.inputmethod.latin.uix.THEME_KEY
+import org.futo.inputmethod.latin.uix.theme.ThemeOptions
+import org.futo.inputmethod.latin.uix.settings.NavigationItem
+import org.futo.inputmethod.latin.uix.settings.UserSetting
+import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 
 /**
  * How the keyboard looks.
@@ -28,11 +36,21 @@ val AppearanceMenu = UserSettingsMenu(
     navPath = "appearance", registerNavPath = true,
     showPreview = true,
     settings = listOf(
-        userSettingNavigationItem(
-            title = R.string.theme_settings_title,
-            style = NavigationItemStyle.Misc,
-            navigateTo = "themes"
-        ),
+        // The screen said nothing about which theme was active, which is the one thing
+        // a reader wants from this row.
+        UserSetting(
+            name = R.string.theme_settings_title
+        ) {
+            val navController = LocalNavController.current
+            val key = useDataStoreValue(THEME_KEY)
+            val option = remember(key) { ThemeOptions[key] }
+            NavigationItem(
+                title = stringResource(R.string.theme_settings_title),
+                subtitle = option?.name?.let { stringResource(it) },
+                style = NavigationItemStyle.Misc,
+                navigate = { navController!!.navigate("themes") }
+            )
+        },
         userSettingSection(R.string.appearance_settings_suggestion_bar_section),
         userSettingToggleDataStore(
             title = R.string.keyboard_settings_show_suggestion_row,

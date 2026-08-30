@@ -472,6 +472,8 @@ fun SettingItem(
     disabled: Boolean = false,
     subcontent: (@Composable () -> Unit)? = null,
     onSubmenuNavigate: (() -> Unit)? = null,
+    /** Accent, for a row that adds or removes rather than navigates. */
+    accentTitle: Boolean = false,
     content: @Composable BoxScope.() -> Unit,
 ) {
     // Two heights, and only two. This was 68dp, or 48dp when compact, against
@@ -563,7 +565,7 @@ fun SettingItem(
                     Text(
                         title,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = textColor,
+                        color = if (accentTitle) MaterialTheme.colorScheme.primary else textColor,
                         modifier = Modifier.heightIn(min = 24.dp)
                     )
 
