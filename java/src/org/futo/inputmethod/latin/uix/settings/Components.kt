@@ -166,14 +166,6 @@ fun SettingSectionHeader(title: String) {
 }
 
 /**
- * The grouped card a run of rows sits in, on the tinted ground the screen paints.
- *
- * One UI's structure: related settings share a rounded container, and the gap between
- * two containers is what says "different subject". Before this the app drew rows
- * directly on the background with nothing between groups but a header, so a screen was
- * an undifferentiated column and grouping was invisible.
- */
-/**
  * The hairline between two rows inside a card.
  *
  * The design has one between every pair and none at the card's edges, which is what
@@ -189,13 +181,6 @@ fun SettingsRowDivider() {
     )
 }
 
-/**
- * A card built from a known list of rows, with a divider between each pair.
- *
- * The lambda overload cannot do this -- a `ColumnScope.() -> Unit` gives no way to
- * count or interleave its children -- so a caller that has its rows as a list uses
- * this one, and bespoke content uses the lambda and places its own dividers.
- */
 /**
  * One row's slice of a card, for a list that must stay lazy.
  *
@@ -232,6 +217,13 @@ fun SettingsCardItem(
     }
 }
 
+/**
+ * A card built from a known list of rows, with a divider between each pair.
+ *
+ * The lambda overload cannot do this -- a `ColumnScope.() -> Unit` gives no way to
+ * count or interleave its children -- so a caller that has its rows as a list uses
+ * this one, and bespoke content uses the lambda and places its own dividers.
+ */
 @Composable
 fun SettingsCard(rows: List<@Composable () -> Unit>, modifier: Modifier = Modifier) {
     SettingsCard(modifier) {
@@ -242,6 +234,14 @@ fun SettingsCard(rows: List<@Composable () -> Unit>, modifier: Modifier = Modifi
     }
 }
 
+/**
+ * The grouped card a run of rows sits in, on the tinted ground the screen paints.
+ *
+ * One UI's structure: related settings share a rounded container, and the gap between
+ * two containers is what says "different subject". Before this the app drew rows
+ * directly on the background with nothing between groups but a header, so a screen was
+ * an undifferentiated column and grouping was invisible.
+ */
 @Composable
 fun SettingsCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Surface(

@@ -96,7 +96,14 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
 
                     ModelNavigationItem(
                         name = name,
-                        isPrimary = model.path == modelChoices[item.key]?.path?.absolutePath,
+                        // modelChoices is keyed by a single language code; this group's
+                        // key is every language the model covers, joined -- "en pl" for
+                        // the bilingual model. Looking that up always missed, so the
+                        // model actually in use never showed as in use, for exactly the
+                        // multi-language case the grouping above exists to handle.
+                        isPrimary = model.languages.any { lang ->
+                            model.path == modelChoices[lang]?.path?.absolutePath
+                        },
                         path = model.path,
                         navController = navController
                     )
