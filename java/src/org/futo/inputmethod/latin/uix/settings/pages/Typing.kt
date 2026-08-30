@@ -29,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -434,14 +435,20 @@ private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPr
 @Composable
 private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<String>) {
     val resources = LocalResources.current
-    Row(Modifier.padding(16.dp)) {
-        Text(stringResource(R.string.morekey_settings_layout), style = MaterialTheme.typography.titleMedium, modifier = Modifier
-            .align(CenterVertically)
-            .weight(1.0f))
-
-        Spacer(Modifier.width(4.dp))
-
-        Button(onClick = {
+    // A section header and a text button, not a 20sp title and a filled pill. The
+    // title read as a second screen heading inside a card, and a filled Button is the
+    // weight this app reserves for a primary action -- reset is the opposite of one.
+    Row(
+        Modifier.padding(start = Spacing.rowInset, end = Spacing.s),
+        verticalAlignment = CenterVertically
+    ) {
+        Text(
+            stringResource(R.string.morekey_settings_layout),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.weight(1.0f)
+        )
+        TextButton(onClick = {
             setting.setValue(LongPressKeyLayoutSetting.default)
         }) {
             Text(stringResource(R.string.morekey_settings_reset))
@@ -490,8 +497,11 @@ private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<St
     if(items.isNotEmpty()) {
         Text(
             stringResource(R.string.morekey_settings_active),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = Spacing.rowInset, top = Spacing.s, bottom = Spacing.xs)
         )
         Column(Modifier.semantics {
             collectionInfo = CollectionInfo(
@@ -519,8 +529,11 @@ private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<St
     if(inactiveEntries.isNotEmpty()) {
         Text(
             stringResource(R.string.morekey_settings_inactive),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = Spacing.rowInset, top = Spacing.s, bottom = Spacing.xs)
         )
         Column(Modifier.semantics {
             collectionInfo = CollectionInfo(
