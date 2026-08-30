@@ -382,4 +382,8 @@ mobile devices. [CHAR LIMIT=25] -->
     <string name="settings_row_autocorrect_threshold">Autocorrect threshold</string>
     <string name="settings_sub_lm_strength">Higher favours the transformer over the dictionary</string>
     <string name="settings_sub_autocorrect_threshold">Lower autocorrects more often, and miscorrects more</string>
+    <string name="settings_sub_hide_one_handed_exit">Long-press the switch-hands button to leave instead</string>
+    <!-- The screen's own title matched neither the row that opens it nor the
+         rest of the app: "Clipboard Manager Settings", inside Settings. -->
+    <string name="settings_row_clipboard_history">Clipboard history</string>
 </resources>

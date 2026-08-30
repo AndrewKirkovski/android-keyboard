@@ -174,19 +174,24 @@ val ResizeMenuLite = UserSettingsMenu(
     title = R.string.settings_title_resize,
     navPath = "resize", registerNavPath = false,
     settings = listOf(
-        userSettingNavigationItem(
-            title = R.string.size_settings_reset,
-            subtitle = R.string.size_settings_reset_subtitle,
-            style = NavigationItemStyle.Misc,
-            navigate = { nav ->
-                KeyboardSettings.values.forEach {
-                    nav.context.setSettingBlocking(it.key, it.default)
+        // An accent action row, not a navigation row: this resets every size and
+        // mode on the spot. A chevron promised a screen that does not exist, and
+        // the subtitle only restated the title at twice the length.
+        UserSetting(name = R.string.size_settings_reset) {
+            val context = LocalContext.current
+            SettingItem(
+                title = stringResource(R.string.size_settings_reset),
+                accentTitle = true,
+                onClick = {
+                    KeyboardSettings.values.forEach {
+                        context.setSettingBlocking(it.key, it.default)
+                    }
                 }
-            }
-        ),
+            ) { }
+        },
         userSettingToggleDataStore(
             title = R.string.size_settings_hide_one_handed_exit,
-            subtitle = R.string.size_settings_hide_one_handed_exit_subtitle,
+            subtitle = R.string.settings_sub_hide_one_handed_exit,
             setting = HideOneHandedExitButtonSetting
         )
     )
@@ -228,8 +233,9 @@ fun ResizeScreen(navController: NavHostController = rememberNavController()) {
                         appendInlineContent("icon")
                         appendLine()
                         append(stringResource(R.string.size_settings_keyboard_modes_portrait_landscape_tip))
-                        appendLine()
-                        append(stringResource(R.string.size_settings_resize_tip))
+                        // The third line told the reader to tap the "Resize Keyboard"
+                        // button, which is on screen and labelled. Four lines of notice
+                        // above two rows made the tip the largest thing on the screen.
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = LocalContentColor.current,

@@ -1316,7 +1316,7 @@ val ClipboardHistoryAction = Action(
     },
 
     settingsMenu = UserSettingsMenu(
-        title = R.string.action_clipboard_manager_settings_title,
+        title = R.string.settings_row_clipboard_manager,
         navPath = "actions/clipboard_history",
         registerNavPath = true,
         settings = listOf(
@@ -1326,7 +1326,7 @@ val ClipboardHistoryAction = Action(
             ),
 
             userSettingToggleDataStore(
-                title = R.string.typing_settings_enable_clipboard_history,
+                title = R.string.settings_row_clipboard_history,
                 setting = ClipboardHistoryEnabled
             ).copy(searchTags = R.string.typing_settings_enable_clipboard_history_tags),
 
