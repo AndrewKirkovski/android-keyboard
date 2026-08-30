@@ -335,4 +335,6 @@ mobile devices. [CHAR LIMIT=25] -->
     <string name="settings_row_longpress">Long-press keys &amp; spacebar</string>
     <string name="settings_row_add_language">Add language</string>
     <string name="language_settings_add_layout">Add layout</string>
+    <string name="settings_action_add">Add</string>
+    <string name="settings_action_import">Import</string>
 </resources>

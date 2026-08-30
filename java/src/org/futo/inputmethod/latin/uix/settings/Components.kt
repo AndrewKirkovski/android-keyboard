@@ -55,6 +55,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -258,16 +259,29 @@ fun SettingsCard(modifier: Modifier = Modifier, content: @Composable ColumnScope
     }
 }
 
+/**
+ * @param actionLabel a single action for this screen, shown at the end of the app bar.
+ *   "Add", "Import", "Done" -- the one thing a screen is for, where the alternative is a
+ *   full-width row that costs 56dp and reads as another setting. The bar had no slot for
+ *   one, which is why Languages opened with an "Add language" row and Transformer models
+ *   ended with an "Import from file" row.
+ */
 @Composable
-fun ScreenTitle(title: String, showBack: Boolean = false, navController: NavHostController? = LocalNavController.current ?: rememberNavController()) {
-    val rowModifier = if(showBack) {
-        Modifier
-            .fillMaxWidth()
-            .clickable(onClickLabel = "Navigate back") {
-                navController!!.navigateUp()
-            }
+fun ScreenTitle(
+    title: String,
+    showBack: Boolean = false,
+    navController: NavHostController? = LocalNavController.current ?: rememberNavController(),
+    actionLabel: String? = null,
+    onAction: (() -> Unit)? = null
+) {
+    // Only the arrow and the title navigate back. Making the whole row clickable would
+    // put the action inside the back target.
+    val backModifier = if(showBack) {
+        Modifier.clickable(onClickLabel = "Navigate back") {
+            navController!!.navigateUp()
+        }
     } else {
-        Modifier.fillMaxWidth()
+        Modifier
     }
     // showBack splits this in two: with a back arrow it is the screen's title, and
     // without one it is an in-page section header, which is now its own composable.
@@ -290,14 +304,29 @@ fun ScreenTitle(title: String, showBack: Boolean = false, navController: NavHost
         }
     }
 
-    Row(modifier = rowModifier.then(reportModifier)) {
-        Spacer(modifier = Modifier.width(16.dp))
+    Row(
+        modifier = Modifier.fillMaxWidth().then(reportModifier),
+        verticalAlignment = CenterVertically
+    ) {
+        Row(
+            modifier = Modifier.weight(1.0f).then(backModifier),
+            verticalAlignment = CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(16.dp))
+            Icon(Icons.Default.ArrowBack, contentDescription = null)
+            Spacer(modifier = Modifier.width(18.dp))
+            Text(
+                title,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(0.dp, 16.dp)
+            )
+        }
 
-        Icon(Icons.Default.ArrowBack, contentDescription = null, modifier = Modifier.align(CenterVertically))
-        Spacer(modifier = Modifier.width(18.dp))
-        Text(title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier
-            .align(CenterVertically)
-            .padding(0.dp, 16.dp))
+        if (actionLabel != null && onAction != null) {
+            TextButton(onClick = onAction, modifier = Modifier.padding(end = Spacing.s)) {
+                Text(actionLabel)
+            }
+        }
     }
 }
 

@@ -657,13 +657,13 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
             ScreenTitle(
                 stringResource(R.string.settings_title_languages),
                 showBack = true,
-                navController
+                navController,
+                actionLabel = stringResource(R.string.settings_action_add),
+                onAction = { navController.navigate("addLanguage") }
             )
         }
 
-        item {
-            SettingsCard(LanguageSettingsTop.map { it.component })
-        }
+
 
         items(inputMethodKeys) { localeString ->
             val subtypes = inputMethodList[localeString]!!

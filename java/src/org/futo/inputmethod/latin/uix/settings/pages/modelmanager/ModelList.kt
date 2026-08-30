@@ -64,7 +64,13 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
     }
 
     ScrollableList {
-        ScreenTitle(stringResource(R.string.settings_title_models), showBack = true, navController)
+        ScreenTitle(
+            stringResource(R.string.settings_title_models),
+            showBack = true,
+            navController,
+            actionLabel = stringResource(R.string.settings_action_import),
+            onAction = { openModelImporter(context) }
+        )
 
         Tip(stringResource(R.string.prediction_settings_transformer_english_notice))
 
@@ -98,16 +104,6 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
             })
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
-        ScreenTitle("Actions")
-        SettingsCard(listOf {
-            NavigationItem(
-                title = "Import from file",
-                style = NavigationItemStyle.Misc,
-                navigate = {
-                    openModelImporter(context)
-                }
-            )
-        })
+
     }
 }
