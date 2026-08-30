@@ -104,7 +104,6 @@ val PredictiveTextMenu = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.edit_personal_dictionary,
             style = NavigationItemStyle.HomePrimary,
-            icon = R.drawable.book,
             navigate = { nav ->
                 nav.navigate("pdict")
             }
@@ -112,7 +111,6 @@ val PredictiveTextMenu = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.prediction_settings_word_blacklist,
             style = NavigationItemStyle.HomeSecondary,
-            icon = R.drawable.file_text,
             navigateTo = "blacklist"
         ),
 
@@ -133,14 +131,12 @@ val PredictiveTextMenu = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.prediction_settings_transformer_models,
             style = NavigationItemStyle.HomeTertiary,
-            navigateTo = "models",
-            icon = R.drawable.cpu
+            navigateTo = "models"
         ).copy(visibilityCheck = visibilityCheckLMEnabled),
         userSettingNavigationItem(
             title = R.string.prediction_settings_transformer_advanced_params,
             style = NavigationItemStyle.HomeSecondary,
-            navigateTo = "advancedparams",
-            icon = R.drawable.code
+            navigateTo = "advancedparams"
         ).copy(visibilityCheck = visibilityCheckLMEnabled),
         userSettingDecorationOnly { Tip(stringResource(R.string.prediction_settings_transformer_alpha_notice)) }
             .copy(visibilityCheck = visibilityCheckLMEnabled),
