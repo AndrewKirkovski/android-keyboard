@@ -44,6 +44,11 @@ import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.latin.uix.settings.userSettingSection
 import org.futo.inputmethod.updates.ConditionalMigrateUpdateNotice
 import org.futo.inputmethod.updates.openManualUpdateCheck
+import org.futo.inputmethod.latin.Subtypes
+import org.futo.inputmethod.latin.SubtypesSetting
+import org.futo.inputmethod.latin.settings.Settings
+import org.futo.inputmethod.latin.uix.settings.useSharedPrefsBool
+import androidx.compose.runtime.remember
 
 val HomeScreenLite = UserSettingsMenu(
     title = R.string.settings_home_title,
@@ -51,25 +56,50 @@ val HomeScreenLite = UserSettingsMenu(
     settings = listOf(
         userSettingSection(R.string.home_section_typing),
 
-        userSettingNavigationItem(
-            title = R.string.language_settings_title,
-            style = NavigationItemStyle.HomePrimary,
-            navigateTo = "languages"
-        ),
+        // The design puts live state in these subtitles, so a home row says what is
+        // behind it without being opened: which languages, whether swipe is on, which
+        // theme. A destination name alone repeats the title.
+        UserSetting(
+            name = R.string.language_settings_title
+        ) {
+            val navController = LocalNavController.current
+            val subtypes = useDataStoreValue(SubtypesSetting)
+            val names = remember(subtypes) {
+                subtypes.mapNotNull { Subtypes.convertToSubtype(it) }
+                    .map { Subtypes.getName(it) }
+                    .distinct()
+            }
+            NavigationItem(
+                title = stringResource(R.string.language_settings_title),
+                subtitle = names.takeIf { it.isNotEmpty() }?.joinToString(", "),
+                style = NavigationItemStyle.HomePrimary,
+                navigate = { navController!!.navigate("languages") }
+            )
+        },
 
         userSettingNavigationItem(
             title = R.string.prediction_settings_title,
+            subtitle = R.string.home_subtitle_text,
             style = NavigationItemStyle.HomeTertiary,
             navigateTo = PredictiveTextMenu.navPath
         ),
 
 
 
-        userSettingNavigationItem(
-            title = SwipeMenu.title,
-            style = NavigationItemStyle.HomePrimary,
-            navigateTo = SwipeMenu.navPath
-        ),
+        UserSetting(
+            name = R.string.swipe_settings_title
+        ) {
+            val navController = LocalNavController.current
+            val on = useSharedPrefsBool(Settings.PREF_GESTURE_INPUT, true)
+            NavigationItem(
+                title = stringResource(SwipeMenu.title),
+                subtitle = stringResource(
+                    if (on.value) R.string.home_state_on else R.string.home_state_off
+                ),
+                style = NavigationItemStyle.HomePrimary,
+                navigate = { navController!!.navigate(SwipeMenu.navPath) }
+            )
+        },
 
         UserSetting(
             name = R.string.voice_input_settings_title
@@ -89,6 +119,7 @@ val HomeScreenLite = UserSettingsMenu(
 
         userSettingNavigationItem(
             title = R.string.keys_layout_settings_title,
+            subtitle = R.string.home_subtitle_keys,
             style = NavigationItemStyle.HomeSecondary,
             navigateTo = KeyboardSettingsMenu.navPath
         ),
@@ -108,6 +139,7 @@ val HomeScreenLite = UserSettingsMenu(
 
         userSettingNavigationItem(
             title = R.string.action_settings_title,
+            subtitle = R.string.home_subtitle_actions,
             style = NavigationItemStyle.HomeSecondary,
             navigateTo = "actions"
         ),
@@ -125,6 +157,7 @@ val HomeScreenLite = UserSettingsMenu(
 
         userSettingNavigationItem(
             title = R.string.help_menu_title,
+            subtitle = R.string.home_subtitle_help,
             style = NavigationItemStyle.HomeSecondary,
             navigateTo = "help"
         ),
@@ -184,7 +217,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             Row(Modifier.padding(16.dp)) {
-                Text(stringResource(R.string.english_ime_settings), style = MaterialTheme.typography.titleMedium, modifier = Modifier
+                Text(stringResource(R.string.english_ime_settings), style = MaterialTheme.typography.headlineMedium, modifier = Modifier
                     .align(CenterVertically)
                     .weight(1.0f))
 

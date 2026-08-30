@@ -310,4 +310,10 @@ mobile devices. [CHAR LIMIT=25] -->
     <string name="keyboard_settings_rows_section">Rows</string>
     <string name="keyboard_settings_keys_section">Keys</string>
     <string name="help_settings_community_section">Community</string>
+    <string name="home_subtitle_text">Autocorrect, prediction, blacklist</string>
+    <string name="home_subtitle_keys">Size, number row, long-press</string>
+    <string name="home_subtitle_actions">Action key, edit actions, clipboard</string>
+    <string name="home_subtitle_help">Documentation, community, contact</string>
+    <string name="home_state_on">On</string>
+    <string name="home_state_off">Off</string>
 </resources>
