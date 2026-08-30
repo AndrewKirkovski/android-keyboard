@@ -197,9 +197,14 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 .sl .knob { position: absolute; top: 50%; width: 20px; height: 20px; border-radius: 50%; background: var(--acc); transform: translate(-50%,-50%); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
 .sl .ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--fg2); margin-top: 10px; }
 
-/* dropdown */
-.dd { margin: 12px 20px 16px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: center; font-size: 15px; }
-.dd .v { color: var(--fg2); }
+/* picker: a row, not an input. The current value is the subtitle. */
+.row .sub.val { color: var(--acc); }
+/* the sheet the picker opens */
+.sheet { margin: 8px 0 0; background: var(--card); border-radius: 26px 26px 0 0; padding: 8px 0 12px; }
+.sheet .grab { width: 32px; height: 4px; border-radius: 2px; background: var(--track); margin: 4px auto 8px; }
+.sheet h5 { margin: 0; padding: 8px 20px 12px; font-size: 17px; font-weight: 500; }
+.sheet .row { min-height: 56px; }
+.sheet .row + .row { box-shadow: none; }
 
 /* tip */
 .tip { margin: 8px 12px; background: color-mix(in srgb, var(--acc) 12%, transparent); border-radius: 16px; padding: 14px 18px; font-size: 14px; line-height: 1.45; }
@@ -529,6 +534,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 </div>
 
 <h2 class="sec">Choice controls</h2>
+<p class="lede">A radio group when the options are few enough to show at once; a picker row that opens a sheet when they are not.</p>
 
 <div class="item">
   <div class="pair">
@@ -541,12 +547,15 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       </div>
       <div class="shead">Spacing</div>
       <div class="group">
-        <div class="row two" style="display:block;padding-bottom:0">
-          <div class="body" style="padding-bottom:0"><div class="ttl">Automatic spaces</div></div>
-        </div>
-        <div class="dd"><span>After suggestions &amp; punctuation</span><span class="v">&#9662;</span></div>
+        <div class="row two"><div class="body"><div class="ttl">Automatic spaces</div><div class="sub val">After suggestions and punctuation</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
       </div>
-      <div style="height:12px"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h5>Automatic spaces</h5>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Never</div></div></div>
+        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">After suggestions and punctuation</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">After suggestions only</div></div></div>
+      </div>
     </div>
     <div class="dev dark">
       <div class="label">Dark</div>
@@ -557,19 +566,32 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       </div>
       <div class="shead">Spacing</div>
       <div class="group">
-        <div class="row two" style="display:block;padding-bottom:0">
-          <div class="body" style="padding-bottom:0"><div class="ttl">Automatic spaces</div></div>
-        </div>
-        <div class="dd"><span>After suggestions &amp; punctuation</span><span class="v">&#9662;</span></div>
+        <div class="row two"><div class="body"><div class="ttl">Automatic spaces</div><div class="sub val">After suggestions and punctuation</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
       </div>
-      <div style="height:12px"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h5>Automatic spaces</h5>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Never</div></div></div>
+        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">After suggestions and punctuation</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">After suggestions only</div></div></div>
+      </div>
     </div>
   </div>
   <div class="notes">
-    <h3>Radio group and dropdown</h3>
+    <span class="tag">Redesigned</span>
+    <h3>Radio group and picker</h3>
+    <p><b>The dropdown stops being an outlined box.</b> An outline says &ldquo;input&rdquo;, and this is not one &mdash; it is a choice among a fixed list, and One&nbsp;UI states that as a row that opens a sheet. The box was also the only element on the screen with a border, so it read as a foreign object dropped into a card, and it wrapped to two lines because &ldquo;Immediate space after suggestions &amp; punctuation&rdquo; is 46&nbsp;characters and no box that width will hold it.</p>
+    <p><b>The current value becomes the subtitle.</b> That is the standard two&#8209;line row at 72&nbsp;dp, so the picker introduces no new height and no new left edge, and the value gets a full line to itself instead of competing with the label for one. It takes the accent, because it is the part that changes.</p>
+    <p><b>The options move into a sheet</b>, where a long option has room to be read in full rather than truncated to fit a control. The sheet is radio rows from this same kit, so nothing new is invented for it.</p>
     <p>The radio sits in the leading slot at 22&nbsp;dp, sharing the row&rsquo;s text edge with an icon. Today it sits in the 48&nbsp;dp icon column, so every radio option is indented 80&nbsp;dp.</p>
-    <p>The dropdown keeps its own outline &mdash; it is an input, and an outline is how an input says so &mdash; but it inherits the row&rsquo;s 20&nbsp;dp side padding instead of the 16&nbsp;dp it uses today.</p>
-    <p><b>Compose:</b> <code>SettingRadio</code> and <code>DropDownPickerSettingItem</code>, both keeping their signatures. <code>SettingRadio</code> stops emitting a <code>ScreenTitle</code> for its own label.</p>
+    <p><b>Compose:</b> <code>DropDownPickerSettingItem</code> keeps its signature and stops rendering <code>DropDownPicker</code> as <code>subcontent</code>; it becomes a <code>SettingItem</code> whose subtitle is the current selection, with a <code>ModalBottomSheet</code> of <code>SettingRadio</code> rows. <code>SettingRadio</code> is unchanged apart from no longer emitting a section header for its own label.</p>
+    <table class="num">
+      <tr><th></th><th>Today</th><th>Kit</th></tr>
+      <tr><td>Control</td><td class="was">outlined box, 1&nbsp;dp border</td><td>row + sheet</td></tr>
+      <tr><td>Height</td><td class="was">wraps to 2 lines, ~96&nbsp;dp</td><td>72&nbsp;dp</td></tr>
+      <tr><td>Label</td><td class="was">bare text above the box</td><td>row title</td></tr>
+      <tr><td>Long option</td><td class="was">wrapped inside the control</td><td>full width in the sheet</td></tr>
+    </table>
   </div>
 </div>
 
