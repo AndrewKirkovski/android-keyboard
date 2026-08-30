@@ -76,6 +76,17 @@ import org.futo.inputmethod.latin.utils.SubtypeLocaleUtils
 import org.futo.inputmethod.latin.xlm.ModelPaths
 import org.futo.inputmethod.updates.openURI
 import java.util.Locale
+import org.futo.inputmethod.latin.uix.theme.app.Spacing
+import org.futo.inputmethod.latin.uix.settings.SettingItem
+import org.futo.inputmethod.latin.uix.settings.SettingsCard
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Surface
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material.icons.filled.MoreVert
 
 private val InputMethodSubtype.layoutSetName
     get() = SubtypeLocaleUtils.getKeyboardLayoutSetName(this)
@@ -87,60 +98,6 @@ data class LanguageItem(
     val inMultilingualBucket: Boolean
 )
 
-@Composable
-fun LanguageConfigurable(
-    kind: FileKind,
-    selection: String,
-    onSelected: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-        .clickable(enabled = true) { onSelected() }
-        .padding(start = 16.dp, top = 8.dp, end = 6.dp, bottom = 8.dp)
-        .defaultMinSize(0.dp, 50.dp)) {
-        Column(
-            modifier = Modifier
-                .weight(1.0f)
-                .align(Alignment.CenterVertically)
-        ) {
-            Row {
-                Icon(
-                    painterResource(kind.icon()),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    kind.kindTitle(LocalResources.current),
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                selection,
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-        }
-        Icon(
-            Icons.Default.ArrowForward,
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .size(44.dp)
-                .padding(10.dp)
-        )
-    }
-}
 
 @Composable
 fun LayoutConfigurable(
@@ -173,157 +130,213 @@ fun LayoutConfigurable(
     }
 }
 
+
+/** The accent label above a group of rows inside a language card. */
 @Composable
-fun ActionableItem(
-    icon: Painter,
-    text: String,
-    color: Color,
-    onTrigger: () -> Unit
-) {
-    TextButton(
-        onClick = onTrigger, colors = ButtonColors(
-            containerColor = color,
-            contentColor = contentColorFor(color),
-            disabledContainerColor = color,
-            disabledContentColor = contentColorFor(color).copy(alpha = 0.75f)
-        ), modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp, 0.dp)
-            .height(44.dp)
+private fun LanguageGroupLabel(text: String) {
+    Text(
+        text,
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(
+            start = Spacing.rowInset, end = Spacing.rowInset,
+            top = Spacing.m, bottom = Spacing.xs
+        )
+    )
+}
+
+/**
+ * A resource slot with nothing in it and no built-in to fall back to.
+ *
+ * The slot has three states and the screen used to show two: a filename, or the word
+ * "None". "No voice model, and that is fine" therefore looked identical to "no
+ * dictionary, and autocorrect is off for this language".
+ */
+@Composable
+private fun MissingChip(text: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        shape = MaterialTheme.shapes.extraSmall
     ) {
-        Row {
-            Icon(
-                icon,
-                contentDescription = null,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text,
-                modifier = Modifier.align(Alignment.CenterVertically),
-                style = MaterialTheme.typography.labelLarge
-            )
-        }
+        Text(
+            text,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier.padding(horizontal = Spacing.s, vertical = 3.dp)
+        )
     }
 }
 
+/**
+ * One language.
+ *
+ * Built from what a language *is* in the data -- a name, three resource slots, a list of
+ * layouts, a multilingual flag and a way to be removed -- rather than from the screen
+ * that happened to be there.
+ *
+ * Layouts come first, because they are what somebody opens this screen to change; the
+ * three model slots are plumbing that is correct by default, and the old order put them
+ * on top. Removal moves into the overflow: a full-width filled red button was the
+ * loudest thing on the screen and it is the action wanted least often.
+ *
+ * When this is the only language installed, three of its controls have nothing to act
+ * on. The layout cannot be removed, the language cannot be removed, and multilingual
+ * typing needs a second language before it means anything. The card says so, rather than
+ * offering controls that quietly do nothing.
+ */
 @Composable
 fun LanguageSurface(
     item: LanguageItem,
     modifier: Modifier = Modifier,
+    isOnlyLanguage: Boolean = false,
     onConfigurableSelected: (FileKind) -> Unit,
     onLayoutRemoved: (InputMethodSubtype) -> Unit,
     onLayoutAdditionRequested: () -> Unit,
     onLanguageRemoved: () -> Unit,
     onToggleMultilingualBucket: (Boolean) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Column(
-            modifier
-                .padding(start = 32.dp, end = 32.dp)
-                .widthIn(296.dp, 400.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.secondaryContainer,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .border(
-                    1.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(top = 14.dp, bottom = 12.dp)
-        ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSecondaryContainer) {
-                Text(
-                    item.languageName,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    style = MaterialTheme.typography.titleMedium
-                )
+    val resources = LocalResources.current
+    var menuOpen by remember { mutableStateOf(false) }
 
-                if (item.options.dictionary == null) {
-                    Tip(stringResource(R.string.language_settings_warning_language_has_no_dict))
-                } else {
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
-
-                LanguageConfigurable(
-                    kind = FileKind.VoiceInput,
-                    selection = item.options.voiceInputModel
-                        ?: stringResource(R.string.language_settings_resource_none)
-                ) { onConfigurableSelected(FileKind.VoiceInput) }
-                LanguageConfigurable(
-                    kind = FileKind.Dictionary,
-                    selection = item.options.dictionary
-                        ?: stringResource(R.string.language_settings_resource_none)
-                ) { onConfigurableSelected(FileKind.Dictionary) }
-                LanguageConfigurable(
-                    kind = FileKind.Transformer,
-                    selection = item.options.transformerModel
-                        ?: stringResource(R.string.language_settings_resource_none)
-                ) { onConfigurableSelected(FileKind.Transformer) }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    stringResource(R.string.language_settings_layouts_of_this_language),
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
-                )
-
-                Spacer(modifier = Modifier.height(9.dp))
-
-                item.layouts.forEach {
-                    LayoutConfigurable(
-                        name = it.second,
-                        active = true,
-                        onDelete = { onLayoutRemoved(it.first) },
-                        canDelete = (item.layouts.size > 1)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-
-                Spacer(modifier = Modifier.height(21.dp))
-
-                Row(Modifier.padding(start = 16.dp, end = 6.dp)) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = Spacing.cardInset, vertical = Spacing.xs),
+        color = MaterialTheme.colorScheme.surface,
+        shape = MaterialTheme.shapes.large
+    ) {
+        Column(Modifier.padding(vertical = Spacing.s)) {
+            Row(
+                modifier = Modifier.padding(
+                    start = Spacing.rowInset, end = Spacing.s,
+                    top = Spacing.s, bottom = Spacing.xs
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(Modifier.weight(1.0f)) {
+                    Text(item.languageName, style = MaterialTheme.typography.titleMedium)
                     Text(
-                        stringResource(R.string.language_settings_enable_multilingual_typing_for_this_language),
-                        modifier = Modifier
-                            .weight(1.0f)
-                            .align(Alignment.CenterVertically),
+                        resources.getQuantityString(
+                            R.plurals.language_settings_layout_count,
+                            item.layouts.size, item.layouts.size
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
-                    )
-                    Checkbox(
-                        checked = item.inMultilingualBucket,
-                        onCheckedChange = { onToggleMultilingualBucket(it) },
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            uncheckedColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            checkmarkColor = MaterialTheme.colorScheme.secondaryContainer
-                        )
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+                // Removal is the only entry, so there is no menu when there is nothing
+                // to remove.
+                if (!isOnlyLanguage) {
+                    Box {
+                        IconButton(onClick = { menuOpen = true }) {
+                            Icon(
+                                Icons.Default.MoreVert,
+                                contentDescription = stringResource(
+                                    R.string.language_settings_remove_this_language
+                                )
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = menuOpen,
+                            onDismissRequest = { menuOpen = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(
+                                            R.string.language_settings_remove_this_language
+                                        ),
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                },
+                                onClick = {
+                                    menuOpen = false
+                                    onLanguageRemoved()
+                                }
+                            )
+                        }
+                    }
+                }
+            }
 
+            LanguageGroupLabel(
+                stringResource(R.string.language_settings_layouts_of_this_language)
+            )
+            item.layouts.forEach { (subtype, layoutName) ->
+                SettingItem(title = layoutName) {
+                    // A language must keep one layout, so the last one has no remove.
+                    if (item.layouts.size > 1) {
+                        IconButton(onClick = { onLayoutRemoved(subtype) }) {
+                            Icon(
+                                painterResource(id = R.drawable.trash),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
+            }
+            SettingItem(
+                title = stringResource(
+                    R.string.language_settings_add_layout_for_this_language
+                ),
+                onClick = onLayoutAdditionRequested,
+                icon = {
+                    Icon(
+                        painterResource(id = R.drawable.plus_circle),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            ) { }
 
-                Spacer(modifier = Modifier.height(21.dp))
+            LanguageGroupLabel(stringResource(R.string.language_settings_data_section))
+            listOf(
+                FileKind.Dictionary to item.options.dictionary,
+                FileKind.Transformer to item.options.transformerModel,
+                FileKind.VoiceInput to item.options.voiceInputModel,
+            ).forEach { (kind, selection) ->
+                SettingItem(
+                    title = kind.kindTitle(resources),
+                    onClick = { onConfigurableSelected(kind) }
+                ) {
+                    if (selection == null) {
+                        MissingChip(stringResource(R.string.language_settings_resource_none))
+                    } else {
+                        Text(
+                            selection,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.widthIn(max = 160.dp)
+                        )
+                    }
+                }
+            }
 
-                ActionableItem(
-                    icon = painterResource(id = R.drawable.plus_circle),
-                    text = stringResource(R.string.language_settings_add_layout_for_this_language),
-                    color = MaterialTheme.colorScheme.primary,
-                    onTrigger = onLayoutAdditionRequested
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                ActionableItem(
-                    icon = painterResource(id = R.drawable.trash),
-                    text = stringResource(R.string.language_settings_remove_this_language),
-                    color = MaterialTheme.colorScheme.error,
-                    onTrigger = onLanguageRemoved
+            LanguageGroupLabel(
+                stringResource(R.string.language_settings_multilingual_section)
+            )
+            SettingItem(
+                title = stringResource(
+                    R.string.language_settings_enable_multilingual_typing_for_this_language
+                ),
+                subtitle = if (isOnlyLanguage) {
+                    stringResource(R.string.language_settings_multilingual_needs_second)
+                } else {
+                    null
+                },
+                disabled = isOnlyLanguage,
+                onClick = if (isOnlyLanguage) {
+                    null
+                } else {
+                    { onToggleMultilingualBucket(!item.inMultilingualBucket) }
+                }
+            ) {
+                Switch(
+                    checked = item.inMultilingualBucket && !isOnlyLanguage,
+                    onCheckedChange = null,
+                    enabled = !isOnlyLanguage
                 )
             }
         }
@@ -642,8 +655,8 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
             )
         }
 
-        items(LanguageSettingsTop) {
-            it.component()
+        item {
+            SettingsCard { LanguageSettingsTop.forEach { it.component() } }
         }
 
         items(inputMethodKeys) { localeString ->
@@ -695,7 +708,10 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
             Spacer(modifier = Modifier.height(12.dp))
 
             LanguageSurface(
-                LanguageItem(
+                // Removing the last language would leave the keyboard with none, and the
+                // multilingual bucket needs a second language to mean anything.
+                isOnlyLanguage = inputMethodKeys.size == 1,
+                item = LanguageItem(
                     languageName = name,
                     options = options,
                     layouts = subtypes.map {
@@ -749,8 +765,9 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
             Spacer(modifier = Modifier.height(32.dp))
             ScreenTitle(stringResource(R.string.language_settings_other_options))
         }
-        items(LanguageSettingsBottom) {
-            it.component()
+        item {
+            SettingsCard { LanguageSettingsBottom.forEach { it.component() } }
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

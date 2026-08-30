@@ -296,4 +296,11 @@ mobile devices. [CHAR LIMIT=25] -->
     <string name="text_settings_as_you_type_section">As you type</string>
     <string name="text_settings_corrections_section">Corrections</string>
     <string name="text_settings_engine_section">Prediction engine</string>
+    <string name="language_settings_data_section">Language data</string>
+    <string name="language_settings_multilingual_section">Multilingual</string>
+    <string name="language_settings_multilingual_needs_second">Add a second language to use this</string>
+    <plurals name="language_settings_layout_count">
+        <item quantity="one">%d layout</item>
+        <item quantity="other">%d layouts</item>
+    </plurals>
 </resources>
