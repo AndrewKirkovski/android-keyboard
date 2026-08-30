@@ -404,8 +404,11 @@ private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPr
             .onSizeChanged { size -> height.intValue = size.height }
             .let { modifier ->
                 if (!dragging.value) {
+                    // No zebra striping. It alternated two alphas of surfaceTint, which
+                    // in this palette is the crimson accent, so a list of five items got
+                    // pink bands across it -- and the bands said nothing the numbers in
+                    // the titles do not already say.
                     modifier
-                        .background(MaterialTheme.colorScheme.surfaceTint.copy(alpha = if(idx % 2 == 0) 0.02f else 0.06f))
                 } else {
                     modifier
                         .zIndex(10.0f)
