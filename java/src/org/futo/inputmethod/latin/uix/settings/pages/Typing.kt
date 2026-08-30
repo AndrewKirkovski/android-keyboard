@@ -130,6 +130,7 @@ import org.futo.inputmethod.latin.uix.settings.useSharedPrefsBool
 import org.futo.inputmethod.latin.uix.settings.useSharedPrefsInt
 import org.futo.inputmethod.latin.uix.settings.userSettingDecorationOnly
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
+import org.futo.inputmethod.latin.uix.settings.userSettingSection
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleDataStore
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleSharedPrefs
 import org.futo.inputmethod.v2keyboard.KeyboardSettings
@@ -175,7 +176,6 @@ val ResizeMenuLite = UserSettingsMenu(
             title = R.string.size_settings_reset,
             subtitle = R.string.size_settings_reset_subtitle,
             style = NavigationItemStyle.Misc,
-            icon = R.drawable.close,
             navigate = { nav ->
                 KeyboardSettings.values.forEach {
                     nav.context.setSettingBlocking(it.key, it.default)
@@ -185,10 +185,7 @@ val ResizeMenuLite = UserSettingsMenu(
         userSettingToggleDataStore(
             title = R.string.size_settings_hide_one_handed_exit,
             subtitle = R.string.size_settings_hide_one_handed_exit_subtitle,
-            setting = HideOneHandedExitButtonSetting,
-            icon = {
-                Icon(painterResource(id = R.drawable.eye), contentDescription = null)
-            }
+            setting = HideOneHandedExitButtonSetting
         )
     )
 )
@@ -346,56 +343,6 @@ private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPr
     SettingItem(
         title = "${idx+1}. " + item.name(resources),
         subtitle = item.description(resources),
-        icon = {
-            if(talkBackOn) {
-                Column {
-                    IconButton(onClick = { moveItem(item, -1) }) {
-                        Icon(
-                            Icons.Default.KeyboardArrowUp,
-                            contentDescription = stringResource(R.string.morekey_settings_move_kind_up)
-                        )
-                    }
-                    IconButton(onClick = { moveItem(item, 1) }) {
-                        Icon(
-                            Icons.Default.KeyboardArrowDown,
-                            contentDescription = stringResource(R.string.morekey_settings_move_kind_down)
-                        )
-                    }
-                }
-            } else {
-                Box(Modifier.pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = {
-                            dragging.value = true
-                            offset.floatValue = 0.0f
-                        },
-                        onDragEnd = {
-                            dragging.value = false
-                            offset.floatValue = 0.0f
-                        },
-                        onDragCancel = {
-                            dragging.value = false
-                            offset.floatValue = 0.0f
-                        },
-                        onDrag = { change, dragAmount ->
-                            offset.floatValue += dragAmount.y
-
-                            if ((offset.floatValue + pendingOffsetDiff.floatValue).absoluteValue > height.intValue) {
-                                val direction = offset.floatValue.sign.toInt()
-                                moveItem(
-                                    item,
-                                    direction
-                                )
-                                pendingOffsetDiff.floatValue -= height.intValue * direction
-                            }
-
-                        }
-                    )
-                }) {
-                    dragIcon()
-                }
-            }
-        },
         modifier = semantics
             .onSizeChanged { size -> height.intValue = size.height }
             .let { modifier ->
@@ -603,7 +550,7 @@ val LongPressMenu = UserSettingsMenu(
             val deleteModes = mapOf(
                 Settings.BACKSPACE_MODE_OFF to stringResource(R.string.morekey_settings_backspace_swipe_to_delete_off),
                 Settings.BACKSPACE_MODE_CHARACTERS to stringResource(R.string.morekey_settings_backspace_swipe_to_delete_characters),
-                Settings.BACKSPACE_MODE_WORDS to stringResource(R.string.morekey_settings_backspace_swipe_to_delete_words),
+                Settings.BACKSPACE_MODE_WORDS to stringResource(R.string.morekey_settings_backspace_swipe_to_delete_words)
             )
 
             DropDownPickerSettingItem(
@@ -611,7 +558,7 @@ val LongPressMenu = UserSettingsMenu(
                 options = deleteModes.keys.toList(),
                 selection = setting.value,
                 onSet = { setting.setValue(it) },
-                getDisplayName = { deleteModes[it] ?: "?" },
+                getDisplayName = { deleteModes[it] ?: "?" }
             )
         },
 
@@ -629,7 +576,7 @@ val LongPressMenu = UserSettingsMenu(
             val modes = mapOf(
                 Settings.SPACEBAR_MODE_OFF to stringResource(R.string.morekey_settings_spacebar_swipe_shortcut_off),
                 Settings.SPACEBAR_MODE_CURSOR to stringResource(R.string.morekey_settings_spacebar_swipe_shortcut_cursor),
-                Settings.SPACEBAR_MODE_LANGUAGE to stringResource(R.string.morekey_settings_spacebar_swipe_shortcut_language),
+                Settings.SPACEBAR_MODE_LANGUAGE to stringResource(R.string.morekey_settings_spacebar_swipe_shortcut_language)
             )
 
             DropDownPickerSettingItem(
@@ -637,7 +584,7 @@ val LongPressMenu = UserSettingsMenu(
                 options = modes.keys.toList(),
                 selection = setting.value,
                 onSet = { setting.setValue(it) },
-                getDisplayName = { modes[it] ?: "?" },
+                getDisplayName = { modes[it] ?: "?" }
             )
         },
 
@@ -649,7 +596,7 @@ val LongPressMenu = UserSettingsMenu(
 
             val modes = mapOf(
                 Settings.SPACEBAR_MODE_CURSOR to stringResource(R.string.morekey_settings_spacebar_hold_shortcut_cursor),
-                Settings.SPACEBAR_MODE_LANGUAGE to stringResource(R.string.morekey_settings_spacebar_hold_shortcut_language),
+                Settings.SPACEBAR_MODE_LANGUAGE to stringResource(R.string.morekey_settings_spacebar_hold_shortcut_language)
             )
 
             DropDownPickerSettingItem(
@@ -657,7 +604,7 @@ val LongPressMenu = UserSettingsMenu(
                 options = modes.keys.toList(),
                 selection = setting.value,
                 onSet = { setting.setValue(it) },
-                getDisplayName = { modes[it] ?: "?" },
+                getDisplayName = { modes[it] ?: "?" }
             )
         },
 
@@ -667,7 +614,7 @@ val LongPressMenu = UserSettingsMenu(
             val setting = useDataStore(LongPressKeyLayoutSetting)
             LongPressKeyLayoutEditor(
                 context = context,
-                setting = setting,
+                setting = setting
             )
         },
 
@@ -687,7 +634,7 @@ val LongPressMenu = UserSettingsMenu(
                 indicator = { resources.getString(R.string.abbreviation_unit_milliseconds, "$it") },
                 steps = 23
             )
-        },
+        }
     )
 )
 
@@ -698,7 +645,7 @@ internal fun AutoSpacesSetting() {
         Settings.SPACES_MODE_ALL to stringResource(R.string.typing_settings_auto_space_mode_auto2),
         Settings.SPACES_MODE_SUGGESTIONS to stringResource(R.string.typing_settings_auto_space_mode_suggestions2),
         Settings.SPACES_MODE_LEGACY to stringResource(R.string.typing_settings_auto_space_mode_legacy2),
-        Settings.SPACES_MODE_NONE to stringResource(R.string.typing_settings_auto_space_mode_none2),
+        Settings.SPACES_MODE_NONE to stringResource(R.string.typing_settings_auto_space_mode_none2)
     )
     DropDownPickerSettingItem(
         label = stringResource(R.string.typing_settings_auto_space_mode),
@@ -716,23 +663,19 @@ internal fun AutoSpacesSetting() {
 val KeyboardSettingsMenu = UserSettingsMenu(
     title = R.string.keyboard_settings_title,
     navPath = "keyboard", registerNavPath = true,
-    // Every setting on this screen changes how the keyboard looks, so it is worth
-    // the space to show one.
-    showPreview = true,
     settings = listOf(
         userSettingNavigationItem(
             title = R.string.size_settings_title,
             subtitle = R.string.size_settings_subtitle2,
             style = NavigationItemStyle.Misc,
-            navigateTo = "resize",
-            icon = R.drawable.maximize
+            navigateTo = "resize"
         ),
+        userSettingSection(R.string.keyboard_settings_rows_section),
         userSettingToggleSharedPrefs(
             title = R.string.keyboard_settings_show_number_row,
             subtitle = R.string.keyboard_settings_show_number_row_subtitle,
             key = Settings.PREF_ENABLE_NUMBER_ROW,
-            default = {false},
-            icon = { GlyphIcon("123") }
+            default = {false}
         ),
         // Both were behind a submenu whose only other content was a second copy of the
         // switch above. They already carry the visibility check that hides them when the
@@ -741,11 +684,7 @@ val KeyboardSettingsMenu = UserSettingsMenu(
         userSettingToggleSharedPrefs(
             R.string.keyboard_settings_number_row_dont_use_script_digits,
             default = {false},
-            key = Settings.PREF_USE_WESTERN_NUMERALS,
-            // An empty leading slot rather than an icon: this is a child of the switch
-            // above it, so its title lines up with that title instead of starting 40dp
-            // to the left of the row it belongs to.
-            icon = { Spacer(Modifier.size(Spacing.iconSlot)) },
+            key = Settings.PREF_USE_WESTERN_NUMERALS
         ).copy(visibilityCheck = {
             useSharedPrefsBool(Settings.PREF_ENABLE_NUMBER_ROW, false).value
         }),
@@ -792,7 +731,7 @@ val KeyboardSettingsMenu = UserSettingsMenu(
                 ),
                 optionNames = listOf(
                     stringResource(R.string.keyboard_settings_number_row_style_default),
-                    stringResource(R.string.keyboard_settings_number_row_style_classic),
+                    stringResource(R.string.keyboard_settings_number_row_style_classic)
                 ),
                 setting = useSharedPrefsInt(
                     key = Settings.PREF_NUMBER_ROW_MODE,
@@ -807,7 +746,7 @@ val KeyboardSettingsMenu = UserSettingsMenu(
                                 textLayoutResult = textLayoutResult,
                                 topLeft = Offset(
                                     x = background.width / 2.0f - textLayoutResult.size.width / 2.0f,
-                                    y = background.height / 2.0f - textLayoutResult.size.height / 2.0f,
+                                    y = background.height / 2.0f - textLayoutResult.size.height / 2.0f
                                 )
                             )
                         }
@@ -821,11 +760,11 @@ val KeyboardSettingsMenu = UserSettingsMenu(
                                 textLayoutResult = textLayoutResult,
                                 topLeft = Offset(
                                     x = background.width / 2.0f - textLayoutResult.size.width / 2.0f,
-                                    y = background.height / 2.0f - textLayoutResult.size.height / 2.0f,
+                                    y = background.height / 2.0f - textLayoutResult.size.height / 2.0f
                                 )
                             )
                         }
-                    },
+                    }
                 )
             )
         },
@@ -833,33 +772,24 @@ val KeyboardSettingsMenu = UserSettingsMenu(
             title = R.string.keyboard_settings_show_arrow_row,
             subtitle = R.string.keyboard_settings_show_arrow_row_subtitle,
             key = Settings.PREF_ENABLE_ARROW_ROW,
-            default = {false},
-            icon = {
-                Icon(painterResource(id = R.drawable.direction_arrows), contentDescription = null)
-            }
+            default = {false}
         ),
+        userSettingSection(R.string.keyboard_settings_keys_section),
         userSettingNavigationItem(
             title = R.string.morekey_settings_title,
             subtitle = R.string.morekey_settings_subtitle,
             style = NavigationItemStyle.Misc,
-            navigateTo = "longPress",
-            icon = R.drawable.arrow_up
+            navigateTo = "longPress"
         ),
         userSettingToggleSharedPrefs(
             title = R.string.keyboard_settings_period_key,
             subtitle = R.string.keyboard_settings_period_key_subtitle2,
             key = Settings.PREF_ENABLE_ALT_PERIOD_KEY,
-            default = {false},
-            icon = {
-                Icon(painterResource(id = R.drawable.type), contentDescription = null)
-            }
+            default = {false}
         ),
         userSettingToggleDataStore(
             title = R.string.keyboard_settings_hide_when_hardware_keyboard_is_connected,
-            setting = HideKeyboardWhenHardKeyboardConnected,
-            icon = {
-                Icon(painterResource(id = R.drawable.eye), contentDescription = null)
-            }
+            setting = HideKeyboardWhenHardKeyboardConnected
         )
     )
 )

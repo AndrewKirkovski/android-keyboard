@@ -303,4 +303,11 @@ mobile devices. [CHAR LIMIT=25] -->
         <item quantity="one">%d layout</item>
         <item quantity="other">%d layouts</item>
     </plurals>
+    <string name="backup_settings_title">Backup &amp; restore</string>
+    <string name="voice_settings_recording_section">Recording</string>
+    <string name="voice_settings_behaviour_section">Behaviour</string>
+    <string name="voice_settings_models_section">Models</string>
+    <string name="keyboard_settings_rows_section">Rows</string>
+    <string name="keyboard_settings_keys_section">Keys</string>
+    <string name="help_settings_community_section">Community</string>
 </resources>

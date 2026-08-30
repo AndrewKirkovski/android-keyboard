@@ -56,6 +56,7 @@ import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import java.util.Locale
 import kotlin.collections.get
+import org.futo.inputmethod.latin.uix.settings.SettingsCard
 
 private data class ExceptionalPersonalDictionaryViewConfiguration(
     val supported: Boolean,
@@ -243,8 +244,7 @@ fun PersonalDictionaryLanguageListForLocale(
                             type = "text/plain"
                         }
                         findActivity(context)!!.startActivityForResult(intent, IMPORT_SETTINGS_REQUEST)
-                    },
-                    icon = painterResource(R.drawable.plus_circle)
+                    }
                 )
             }
             items(files) {
@@ -253,8 +253,7 @@ fun PersonalDictionaryLanguageListForLocale(
                     style = NavigationItemStyle.MiscNoArrow,
                     navigate = {
                         navController.navigate(Route.PersonalDictDelete(it.first.name))
-                    },
-                    icon = painterResource(R.drawable.file_text)
+                    }
                 )
             }
 
@@ -267,8 +266,7 @@ fun PersonalDictionaryLanguageListForLocale(
                 style = NavigationItemStyle.HomePrimary,
                 navigate = {
                     navController.navigate(Route.PersonalDictWord(locale?.toLanguageTag(), null))
-                },
-                icon = painterResource(R.drawable.plus_circle)
+                }
             )
         }
         items(words) {
@@ -306,26 +304,32 @@ fun PersonalDictionaryLanguageList() {
 
     ScrollableList {
         ScreenTitle(stringResource(R.string.edit_personal_dictionary), showBack = true, navController = nav)
-        NavigationItem(
-            title = stringResource(R.string.user_dict_settings_all_languages),
-            subtitle = pluralStringResource(R.plurals.personal_dictionary_language_word_count, allLanguagesCount, allLanguagesCount),
-            style = NavigationItemStyle.MiscNoArrow,
-            navigate = {
-                nav!!.navigate(Route.PersonalDictList(null))
-            }
-        )
-        languages.forEach {
-            val exception = ExceptionalPersonalDictionaryLanguages[it.first.language]
-            if(exception?.supported == false) return@forEach
-
-            NavigationItem(
-                title = it.first.getDisplayName(LocalConfiguration.current.locale),
-                subtitle = pluralStringResource(R.plurals.personal_dictionary_language_word_count, it.second, it.second),
-                style = NavigationItemStyle.MiscNoArrow,
-                navigate = {
-                    nav!!.navigate(Route.PersonalDictList(it.first.toLanguageTag()))
-                }
-            )
+        val supported = languages.filter {
+            ExceptionalPersonalDictionaryLanguages[it.first.language]?.supported != false
         }
+        SettingsCard(buildList {
+            add {
+                NavigationItem(
+                    title = stringResource(R.string.user_dict_settings_all_languages),
+                    subtitle = pluralStringResource(R.plurals.personal_dictionary_language_word_count, allLanguagesCount, allLanguagesCount),
+                    style = NavigationItemStyle.Misc,
+                    navigate = {
+                        nav!!.navigate(Route.PersonalDictList(null))
+                    }
+                )
+            }
+            supported.forEach { entry ->
+                add {
+                    NavigationItem(
+                        title = entry.first.getDisplayName(LocalConfiguration.current.locale),
+                        subtitle = pluralStringResource(R.plurals.personal_dictionary_language_word_count, entry.second, entry.second),
+                        style = NavigationItemStyle.Misc,
+                        navigate = {
+                            nav!!.navigate(Route.PersonalDictList(entry.first.toLanguageTag()))
+                        }
+                    )
+                }
+            }
+        })
     }
 }

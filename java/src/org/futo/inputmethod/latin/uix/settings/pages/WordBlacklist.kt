@@ -38,6 +38,8 @@ import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useSharedPrefsBool
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleSharedPrefs
+import org.futo.inputmethod.latin.uix.settings.SettingsCard
+import org.futo.inputmethod.latin.uix.theme.app.Spacing
 
 @Composable
 fun BlacklistedWord(word: String, remove: () -> Unit) { 
@@ -99,12 +101,17 @@ fun BlacklistScreen(navController: NavHostController = rememberNavController()) 
     ScrollableList {
         ScreenTitle(stringResource(R.string.prediction_settings_word_blacklist), showBack = true, navController)
 
-        blockOffensiveWordsSetting.component()
-        if(blockSlursSetting.visibilityCheck?.invoke() != false) {
-            blockSlursSetting.component()
-        }
+        // The two block-* switches are settings like any other, so they belong in a
+        // card. They were rendered straight into the ScrollableList, which is why their
+        // titles sat 12dp left of every other screen's.
+        SettingsCard(buildList {
+            add(blockOffensiveWordsSetting.component)
+            if (blockSlursSetting.visibilityCheck?.invoke() != false) {
+                add(blockSlursSetting.component)
+            }
+        })
 
-        Row(modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp)) {
+        Row(modifier = Modifier.padding(start = Spacing.cardInset, top = Spacing.l, end = Spacing.s)) {
             TextField(value = newWord, onValueChange = {newWord = it}, modifier = Modifier.weight(1.0f), label = {
                 Text(stringResource(R.string.prediction_settings_word_blacklist_add))
             })
@@ -118,15 +125,18 @@ fun BlacklistScreen(navController: NavHostController = rememberNavController()) 
             }
         }
 
-        if(blacklistedWords.isEmpty()) {
+        if (blacklistedWords.isEmpty()) {
             Tip(stringResource(R.string.prediction_settings_word_blacklist_none))
-        }
-        blacklistedWords.forEach {
-            BlacklistedWord(word = it) {
-                val newSet = blacklistedWords.toMutableSet()
-                newSet.remove(it)
-                setBlacklistedWords(newSet)
-            }
+        } else {
+            SettingsCard(blacklistedWords.map { word ->
+                {
+                    BlacklistedWord(word = word) {
+                        val newSet = blacklistedWords.toMutableSet()
+                        newSet.remove(word)
+                        setBlacklistedWords(newSet)
+                    }
+                }
+            })
         }
     }
 }

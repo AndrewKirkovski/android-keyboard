@@ -1,23 +1,23 @@
 package org.futo.inputmethod.latin.uix.settings.pages
 
-import androidx.compose.ui.res.stringResource
 import org.futo.inputmethod.latin.R
 import org.futo.inputmethod.latin.uix.SettingsExporter
 import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
-import org.futo.inputmethod.latin.uix.settings.ScreenTitle
-import org.futo.inputmethod.latin.uix.settings.Tip
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
-import org.futo.inputmethod.latin.uix.settings.userSettingDecorationOnly
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 
+/**
+ * Backing settings up and restoring them.
+ *
+ * The screen was called "Miscellaneous" and contained exactly one section, headed
+ * "Settings Backup", holding exactly two rows. Two of those three labels said nothing:
+ * the title named no subject, and the header repeated the screen it was the whole of.
+ * The screen is named for what is on it and the header is gone.
+ */
 val MiscMenu = UserSettingsMenu(
-    title = R.string.misc_settings_title,
+    title = R.string.backup_settings_title,
     navPath = "misc", registerNavPath = true,
     settings = listOf(
-        userSettingDecorationOnly {
-            ScreenTitle(stringResource(R.string.settings_export_configuration_title))
-        },
-
         userSettingNavigationItem(
             title = (R.string.settings_export_configuration),
             subtitle = (R.string.settings_export_configuration_subtitle),

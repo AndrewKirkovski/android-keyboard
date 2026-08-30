@@ -23,6 +23,7 @@ import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.userSettingDecorationOnly
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
 import org.futo.inputmethod.updates.openURI
+import org.futo.inputmethod.latin.uix.settings.userSettingSection
 
 internal fun Context.copyToClipboard(text: CharSequence, label: String = "Copied Text") {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -105,6 +106,7 @@ val HelpMenu = UserSettingsMenu(
                 nav.context.openURI("https://docs.keyboard.futo.tech/")
             }
         ),
+        userSettingSection(R.string.help_settings_community_section),
         userSettingNavigationItem(
             title = R.string.help_menu_discord,
             subtitle = R.string.help_menu_discord_subtitle,

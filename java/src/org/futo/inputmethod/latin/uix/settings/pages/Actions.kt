@@ -165,8 +165,7 @@ val ActionsScreen = UserSettingsMenu(
             userSettingNavigationItem(
                 title = v.value.name,
                 style = NavigationItemStyle.HomeTertiary,
-                navigateTo = "actions/" + v.key.urlEncode(),
-                icon = v.value.icon
+                navigateTo = "actions/" + v.key.urlEncode()
             )
         }
     }

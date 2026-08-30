@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,6 +42,7 @@ import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.v2keyboard.LayoutManager
 import java.text.Normalizer
 import java.util.Locale
+import org.futo.inputmethod.latin.uix.settings.SettingsCardItem
 
 private val alphaRegex = Regex("[^a-zA-Z\\s]")
 fun normalize(str: String): String {
@@ -87,19 +89,28 @@ fun SelectLanguageScreen(navController: NavHostController = rememberNavControlle
                         Icons.Default.Search,
                         contentDescription = stringResource(R.string.settings_search_menu_title)
                     )
-                }, autofocus = true, forceQwerty = true)
+                }, autofocus = false, forceQwerty = true)
             }
         }
 
-        items(searchKeys) {
-            NavigationItem(
-                title = Subtypes.getLocaleDisplayName(it, systemLocale),
-                subtitle = Subtypes.getLocaleDisplayName(it, it),
-                style = NavigationItemStyle.MiscNoArrow,
-                navigate = {
-                    navController.navigate(Route.AddLayout(it.toLanguageTag()))
-                }
-            )
+        // The native name is only worth a second line when it differs from the display
+        // name -- "Afrikaans / Afrikaans" was two lines saying one thing.
+        itemsIndexed(searchKeys) { index, locale ->
+            val display = Subtypes.getLocaleDisplayName(locale, systemLocale)
+            val native = Subtypes.getLocaleDisplayName(locale, locale)
+            SettingsCardItem(
+                isFirst = index == 0,
+                isLast = index == searchKeys.lastIndex
+            ) {
+                NavigationItem(
+                    title = display,
+                    subtitle = native.takeIf { it != display },
+                    style = NavigationItemStyle.Misc,
+                    navigate = {
+                        navController.navigate(Route.AddLayout(locale.toLanguageTag()))
+                    }
+                )
+            }
         }
     }
 }

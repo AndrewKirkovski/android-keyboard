@@ -89,7 +89,7 @@ private val AppLightColors = lightColorScheme(
     surfaceContainerHighest = Color(0xFFE8E6E1),
 
     outline = Color(0xFFC5C0B6),
-    outlineVariant = Color(0xFFD8D4CC),
+    outlineVariant = Color(0xFFE6E4DE),
     scrim = Color(0xFF000000),
 )
 
@@ -128,7 +128,7 @@ private val AppDarkColors = darkColorScheme(
     surfaceContainerHighest = Color(0xFF2E2E2C),
 
     outline = Color(0xFF6E6D69),
-    outlineVariant = Color(0xFF3A3A36),
+    outlineVariant = Color(0xFF2A2A2D),
     scrim = Color(0xFF000000),
 )
 

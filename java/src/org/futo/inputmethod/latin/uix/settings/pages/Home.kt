@@ -54,15 +54,13 @@ val HomeScreenLite = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.language_settings_title,
             style = NavigationItemStyle.HomePrimary,
-            navigateTo = "languages",
-            icon = R.drawable.globe
+            navigateTo = "languages"
         ),
 
         userSettingNavigationItem(
             title = R.string.prediction_settings_title,
             style = NavigationItemStyle.HomeTertiary,
-            navigateTo = PredictiveTextMenu.navPath,
-            icon = R.drawable.text_prediction
+            navigateTo = PredictiveTextMenu.navPath
         ),
 
 
@@ -70,8 +68,7 @@ val HomeScreenLite = UserSettingsMenu(
         userSettingNavigationItem(
             title = SwipeMenu.title,
             style = NavigationItemStyle.HomePrimary,
-            navigateTo = SwipeMenu.navPath,
-            icon = R.drawable.swipe_icon
+            navigateTo = SwipeMenu.navPath
         ),
 
         UserSetting(
@@ -84,8 +81,7 @@ val HomeScreenLite = UserSettingsMenu(
                 subtitle = if(useDataStoreValue(USE_SYSTEM_VOICE_INPUT)) {
                     stringResource(R.string.voice_input_settings_builtin_disabled_notice)
                 } else { null },
-                navigate = { navController!!.navigate(VoiceInputMenu.navPath) },
-                icon = painterResource(R.drawable.mic_fill)
+                navigate = { navController!!.navigate(VoiceInputMenu.navPath) }
             )
         },
 
@@ -94,30 +90,26 @@ val HomeScreenLite = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.keys_layout_settings_title,
             style = NavigationItemStyle.HomeSecondary,
-            navigateTo = KeyboardSettingsMenu.navPath,
-            icon = R.drawable.keyboard
+            navigateTo = KeyboardSettingsMenu.navPath
         ),
 
         userSettingNavigationItem(
             title = AppearanceMenu.title,
             style = NavigationItemStyle.HomeSecondary,
-            navigateTo = AppearanceMenu.navPath,
-            icon = R.drawable.themes
+            navigateTo = AppearanceMenu.navPath
         ),
 
         userSettingNavigationItem(
             title = FeedbackMenu.title,
             subtitle = R.string.feedback_settings_subtitle,
             style = NavigationItemStyle.HomeSecondary,
-            navigateTo = FeedbackMenu.navPath,
-            icon = R.drawable.activity
+            navigateTo = FeedbackMenu.navPath
         ),
 
         userSettingNavigationItem(
             title = R.string.action_settings_title,
             style = NavigationItemStyle.HomeSecondary,
-            navigateTo = "actions",
-            icon = R.drawable.smile
+            navigateTo = "actions"
         ),
 
         userSettingSection(R.string.home_section_app),
@@ -125,8 +117,7 @@ val HomeScreenLite = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.payment_screen_short_title,
             style = NavigationItemStyle.HomePrimary,
-            navigateTo = "payment",
-            icon = R.drawable.dollar_sign,
+            navigateTo = "payment"
         ).copy(visibilityCheck = {
             useDataStoreValue(IS_ALREADY_PAID) == false
         }, appearInSearchIfVisibilityCheckFailed = false),
@@ -135,31 +126,27 @@ val HomeScreenLite = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.help_menu_title,
             style = NavigationItemStyle.HomeSecondary,
-            navigateTo = "help",
-            icon = R.drawable.help_circle
+            navigateTo = "help"
         ),
 
         //if(isDeveloper || LocalInspectionMode.current) {
 
         userSettingNavigationItem(
-            title = R.string.misc_settings_title,
+            title = MiscMenu.title,
             style = NavigationItemStyle.MiscNoArrow,
-            navigateTo = "misc",
-            icon = R.drawable.settings
+            navigateTo = "misc"
         ),
 
         userSettingNavigationItem(
             title = R.string.credits_menu_title,
             style = NavigationItemStyle.MiscNoArrow,
-            navigateTo = "credits",
-            icon = R.drawable.file_text
+            navigateTo = "credits"
         ),
 
         userSettingNavigationItem(
             title = R.string.settings_check_for_updates_manually,
             style = NavigationItemStyle.Misc,
-            navigate = { nav -> nav.context.openManualUpdateCheck() },
-            icon = R.drawable.external_link
+            navigate = { nav -> nav.context.openManualUpdateCheck() }
         ).copy(
             visibilityCheck = { BuildConfig.UPDATE_CHECKING },
             appearInSearchIfVisibilityCheckFailed = false
@@ -168,8 +155,7 @@ val HomeScreenLite = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.dev_settings_title,
             style = NavigationItemStyle.HomeTertiary,
-            navigateTo = "developer",
-            icon = R.drawable.code
+            navigateTo = "developer"
         ).copy(visibilityCheck = {
             useDataStoreValue(IS_DEVELOPER) == true || LocalInspectionMode.current
         }),

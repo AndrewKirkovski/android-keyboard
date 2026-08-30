@@ -280,13 +280,6 @@ fun LanguageSurface(
                     R.string.language_settings_add_layout_for_this_language
                 ),
                 onClick = onLayoutAdditionRequested,
-                icon = {
-                    Icon(
-                        painterResource(id = R.drawable.plus_circle),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
             ) { }
 
             LanguageGroupLabel(stringResource(R.string.language_settings_data_section))
@@ -393,9 +386,6 @@ fun ConfirmResourceActionDialog(
     }
 
     AlertDialog(
-        icon = {
-            Icon(painterResource(id = resourceKind.icon()), contentDescription = null)
-        },
         title = {
             Text(text = "${locale.displayLanguage} - ${resourceKind.kindTitle(LocalResources.current)}")
         },
@@ -473,9 +463,6 @@ fun ConfirmDeleteLanguageDialog(
     locale: Locale
 ) {
     AlertDialog(
-        icon = {
-            Icon(painterResource(id = R.drawable.trash), contentDescription = null)
-        },
         title = {
             Text(
                 text = stringResource(
@@ -518,7 +505,7 @@ val LanguageSettingsTop = listOf(
     userSettingNavigationItem(
         title = R.string.language_settings_add_language_button,
         style = NavigationItemStyle.Misc,
-        navigateTo = "addLanguage",
+        navigateTo = "addLanguage"
     )
 )
 val LanguageSettingsBottom = listOf(
@@ -527,7 +514,7 @@ val LanguageSettingsBottom = listOf(
         style = NavigationItemStyle.Misc,
         navigate = { nav ->
             openModelImporter(nav.context)
-        },
+        }
     ),
     userSettingNavigationItem(
         title = R.string.language_settings_explore_voice_input_models_online,
@@ -537,7 +524,7 @@ val LanguageSettingsBottom = listOf(
                 FileKind.VoiceInput.getAddonUrlForLocale(null),
                 true
             )
-        },
+        }
     ),
     userSettingNavigationItem(
         title = R.string.language_settings_explore_dictionaries_online,
@@ -547,7 +534,7 @@ val LanguageSettingsBottom = listOf(
                 FileKind.Dictionary.getAddonUrlForLocale(null),
                 true
             )
-        },
+        }
     ),
     userSettingNavigationItem(
         title = R.string.language_settings_explore_transformers_online,
@@ -557,7 +544,7 @@ val LanguageSettingsBottom = listOf(
                 FileKind.Transformer.getAddonUrlForLocale(null),
                 true
             )
-        },
+        }
     )
 )
 
@@ -656,7 +643,7 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
         }
 
         item {
-            SettingsCard { LanguageSettingsTop.forEach { it.component() } }
+            SettingsCard(LanguageSettingsTop.map { it.component })
         }
 
         items(inputMethodKeys) { localeString ->
@@ -766,7 +753,7 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
             ScreenTitle(stringResource(R.string.language_settings_other_options))
         }
         item {
-            SettingsCard { LanguageSettingsBottom.forEach { it.component() } }
+            SettingsCard(LanguageSettingsBottom.map { it.component })
             Spacer(modifier = Modifier.height(24.dp))
         }
     }

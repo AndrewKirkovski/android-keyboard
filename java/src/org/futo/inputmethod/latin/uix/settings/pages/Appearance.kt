@@ -31,34 +31,24 @@ val AppearanceMenu = UserSettingsMenu(
         userSettingNavigationItem(
             title = R.string.theme_settings_title,
             style = NavigationItemStyle.Misc,
-            navigateTo = "themes",
-            icon = R.drawable.eye
+            navigateTo = "themes"
         ),
         userSettingSection(R.string.appearance_settings_suggestion_bar_section),
         userSettingToggleDataStore(
             title = R.string.keyboard_settings_show_suggestion_row,
             subtitle = R.string.keyboard_settings_show_suggestion_row_subtitle,
-            setting = ActionBarDisplayedSetting,
-            icon = {
-                Icon(painterResource(id = R.drawable.more_horizontal), contentDescription = null)
-            }
+            setting = ActionBarDisplayedSetting
         ),
         userSettingToggleDataStore(
             title = R.string.keyboard_settings_inline_autofill,
             subtitle = R.string.keyboard_settings_inline_autofill_subtitle,
-            setting = InlineAutofillSetting,
-            icon = {
-                Icon(painterResource(id = R.drawable.edit_text), contentDescription = null)
-            }
+            setting = InlineAutofillSetting
         ),
         userSettingSection(R.string.appearance_settings_keys_section),
         userSettingToggleDataStore(
             title = R.string.morekey_settings_show_hints,
             subtitle = R.string.morekey_settings_show_hints_subtitle,
-            setting = KeyHintsSetting,
-            icon = {
-                Icon(painterResource(id = R.drawable.type), contentDescription = null)
-            }
-        ).copy(searchTags = R.string.morekey_settings_show_hints_tags),
+            setting = KeyHintsSetting
+        ).copy(searchTags = R.string.morekey_settings_show_hints_tags)
     )
 )

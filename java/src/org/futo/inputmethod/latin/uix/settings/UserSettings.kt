@@ -179,9 +179,7 @@ fun UserSettingsMenu.render(showBack: Boolean = true, showTitle: Boolean = true)
                 run.add(visible[index])
                 index++
             }
-            SettingsCard {
-                run.forEach { it.component() }
-            }
+            SettingsCard(run.map { setting -> setting.component })
         }
     }
 }

@@ -44,6 +44,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.ModalBottomSheet
@@ -155,7 +156,7 @@ fun SettingSectionHeader(title: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                start = Spacing.rowInset + Spacing.m,
+                start = Spacing.xl,
                 end = Spacing.rowInset,
                 top = Spacing.xl,
                 bottom = Spacing.s
@@ -171,6 +172,75 @@ fun SettingSectionHeader(title: String) {
  * directly on the background with nothing between groups but a header, so a screen was
  * an undifferentiated column and grouping was invisible.
  */
+/**
+ * The hairline between two rows inside a card.
+ *
+ * The design has one between every pair and none at the card's edges, which is what
+ * makes a card of six rows read as six things rather than one block of text. Full
+ * width, not inset: the rows in this app have no leading icon, so there is no icon
+ * gutter for a divider to start after.
+ */
+@Composable
+fun SettingsRowDivider() {
+    HorizontalDivider(
+        thickness = 1.dp,
+        color = MaterialTheme.colorScheme.outlineVariant
+    )
+}
+
+/**
+ * A card built from a known list of rows, with a divider between each pair.
+ *
+ * The lambda overload cannot do this -- a `ColumnScope.() -> Unit` gives no way to
+ * count or interleave its children -- so a caller that has its rows as a list uses
+ * this one, and bespoke content uses the lambda and places its own dividers.
+ */
+/**
+ * One row's slice of a card, for a list that must stay lazy.
+ *
+ * [SettingsCard] composes every row it is given, which is right for a menu of eight and
+ * wrong for the language picker's hundred-odd. This gives a lazy item the same fill,
+ * inset and divider, rounding only the first and last so the run still reads as one
+ * card.
+ */
+@Composable
+fun SettingsCardItem(
+    isFirst: Boolean,
+    isLast: Boolean,
+    content: @Composable () -> Unit
+) {
+    val r = 22.dp
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Spacing.cardInset),
+        color = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(
+            topStart = if (isFirst) r else 0.dp,
+            topEnd = if (isFirst) r else 0.dp,
+            bottomStart = if (isLast) r else 0.dp,
+            bottomEnd = if (isLast) r else 0.dp
+        )
+    ) {
+        Column {
+            if (isFirst) Spacer(Modifier.height(Spacing.s))
+            if (!isFirst) SettingsRowDivider()
+            content()
+            if (isLast) Spacer(Modifier.height(Spacing.s))
+        }
+    }
+}
+
+@Composable
+fun SettingsCard(rows: List<@Composable () -> Unit>, modifier: Modifier = Modifier) {
+    SettingsCard(modifier) {
+        rows.forEachIndexed { i, row ->
+            if (i > 0) SettingsRowDivider()
+            row()
+        }
+    }
+}
+
 @Composable
 fun SettingsCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Surface(
@@ -1003,7 +1073,25 @@ fun NavigationItem(title: String, style: NavigationItemStyle, navigate: () -> Un
         }
     ) {
         when(style) {
-            NavigationItemStyle.Misc -> Icon(Icons.Default.ArrowForward, contentDescription = null)
+            // A chevron, not an arrow. An arrow reads as "do this", a chevron as
+            // "there is more in here", which is what a navigation row means. Quiet,
+            // because it is an affordance rather than content.
+            NavigationItemStyle.Misc -> Icon(
+                painterResource(id = R.drawable.chevron_right),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            // Every navigation row gets the chevron. The three Home* styles rendered
+            // nothing at all, so on the busiest screen in the app no row said it led
+            // anywhere -- the circle behind the icon had been carrying that, and the
+            // circle is gone.
+            NavigationItemStyle.HomePrimary,
+            NavigationItemStyle.HomeSecondary,
+            NavigationItemStyle.HomeTertiary -> Icon(
+                painterResource(id = R.drawable.chevron_right),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             NavigationItemStyle.Mail -> Icon(Icons.Default.Send, contentDescription = null)
             NavigationItemStyle.ExternalLink -> Icon(painterResource(R.drawable.external_link), contentDescription = null)
             else -> {}

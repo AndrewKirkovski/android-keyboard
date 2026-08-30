@@ -25,6 +25,7 @@ import org.futo.inputmethod.latin.xlm.ModelPaths
 import org.futo.inputmethod.updates.openURI
 import java.net.URLEncoder
 import java.util.Locale
+import org.futo.inputmethod.latin.uix.settings.SettingsCard
 
 @Composable
 fun ModelNavigationItem(navController: NavHostController, name: String, isPrimary: Boolean, path: String) {
@@ -39,8 +40,7 @@ fun ModelNavigationItem(navController: NavHostController, name: String, isPrimar
         style = style,
         navigate = {
             navController.navigate("model/${URLEncoder.encode(path, "utf-8")}")
-        },
-        icon = painterResource(id = R.drawable.cpu)
+        }
     )
 }
 
@@ -80,30 +80,34 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
                     .joinToString(" + ") { Locale(it).displayLanguage }
             )
 
-            item.value.forEach { model ->
-                val name = if (model.finetune_count > 0) {
-                    model.name.trim() + " (local finetune)"
-                } else {
-                    model.name.trim()
-                }
+            SettingsCard(item.value.map { model ->
+                {
+                    val name = if (model.finetune_count > 0) {
+                        model.name.trim() + " (local finetune)"
+                    } else {
+                        model.name.trim()
+                    }
 
-                ModelNavigationItem(
-                    name = name,
-                    isPrimary = model.path == modelChoices[item.key]?.path?.absolutePath,
-                    path = model.path,
-                    navController = navController
-                )
-            }
+                    ModelNavigationItem(
+                        name = name,
+                        isPrimary = model.path == modelChoices[item.key]?.path?.absolutePath,
+                        path = model.path,
+                        navController = navController
+                    )
+                }
+            })
         }
 
         Spacer(modifier = Modifier.height(32.dp))
         ScreenTitle("Actions")
-        NavigationItem(
-            title = "Import from file",
-            style = NavigationItemStyle.Misc,
-            navigate = {
-                openModelImporter(context)
-            }
-        )
+        SettingsCard(listOf {
+            NavigationItem(
+                title = "Import from file",
+                style = NavigationItemStyle.Misc,
+                navigate = {
+                    openModelImporter(context)
+                }
+            )
+        })
     }
 }

@@ -67,6 +67,7 @@ import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.latin.uix.settings.SettingsCard
+import org.futo.inputmethod.latin.uix.settings.SettingsRowDivider
 import org.futo.inputmethod.latin.uix.settings.SettingToggleDataStore
 import org.futo.inputmethod.latin.uix.settings.SettingToggleRaw
 import org.futo.inputmethod.latin.uix.settings.useDataStore
@@ -206,10 +207,13 @@ fun DeveloperScreen(navController: NavHostController = rememberNavController()) 
         SettingsCard {
             SettingToggleDataStore(title = "Developer mode", setting = IS_DEVELOPER)
 
+            SettingsRowDivider()
             CrashLoggingApplication.CopyLogsOption()
 
+            SettingsRowDivider()
             SettingToggleDataStore(title = "Disable all update reminders", setting = DISABLE_UPDATE_REMINDER)
         
+            SettingsRowDivider()
             SettingToggleDataStore(
                 title = "Touch typing mode",
                 subtitle = "Hides all keys. Touch typists only! Recommended to disable emoji key and enable key borders",
@@ -218,8 +222,10 @@ fun DeveloperScreen(navController: NavHostController = rememberNavController()) 
 
             SettingToggleDataStore(title = "Dismissed migration notice", setting = dismissedMigrateUpdateNotice)
 
+            SettingsRowDivider()
             SettingToggleDataStore(title = "Old action bar", setting = OldStyleActionsBar)
 
+            SettingsRowDivider()
             NavigationItem(
                 title = "Text edit variations",
                 style = NavigationItemStyle.Misc,
@@ -315,8 +321,11 @@ fun DeveloperScreen(navController: NavHostController = rememberNavController()) 
         ScreenTitle(title = "Payment stuff")
         SettingsCard {
             SettingToggleDataStore(title = "Is paid", setting = IS_ALREADY_PAID)
+            SettingsRowDivider()
             SettingToggleDataStore(title = "Is payment pending", setting = IS_PAYMENT_PENDING)
+            SettingsRowDivider()
             SettingToggleDataStore(title = "Has seen paid notice", setting = HAS_SEEN_PAID_NOTICE)
+            SettingsRowDivider()
             SettingToggleDataStore(title = "Force show notice", setting = FORCE_SHOW_NOTICE)
 
             val reminder = useDataStore(NOTICE_REMINDER_TIME)
@@ -360,7 +369,7 @@ fun DeveloperScreen(navController: NavHostController = rememberNavController()) 
         SettingsCard {
             SettingToggleDataStore(
                 "Use expandable suggestions UI for all languages",
-                UseExpandableSuggestionsForGeneralIME,
+                UseExpandableSuggestionsForGeneralIME
             )
 
             if(!BuildConfig.IS_PLAYSTORE_BUILD) {
@@ -374,8 +383,7 @@ fun DeveloperScreen(navController: NavHostController = rememberNavController()) 
                                 throw RuntimeException("User requested app to crash :3")
                             }
                         }
-                    },
-                    icon = painterResource(id = R.drawable.close)
+                    }
                 )
 
                 if(BuildConfig.DEBUG) {

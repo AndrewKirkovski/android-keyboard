@@ -17,6 +17,7 @@ import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.settings.userSettingNavigationItem
+import org.futo.inputmethod.latin.uix.settings.userSettingSection
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleDataStore
 
 internal val visibilityCheckNotSystemVoiceInput = @Composable {
@@ -43,6 +44,7 @@ val VoiceInputMenu = UserSettingsMenu(
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
          */
 
+        userSettingSection(R.string.voice_settings_recording_section),
         userSettingToggleDataStore(
             title = R.string.voice_input_settings_use_personal_dict,
             subtitle = R.string.voice_input_settings_use_personal_dict_subtitle,
@@ -66,6 +68,7 @@ val VoiceInputMenu = UserSettingsMenu(
             setting = DISALLOW_SYMBOLS
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
+        userSettingSection(R.string.voice_settings_behaviour_section),
         userSettingToggleDataStore(
             title = R.string.voice_input_settings_long_form,
             subtitle = R.string.voice_input_settings_long_form_subtitle,
@@ -84,6 +87,7 @@ val VoiceInputMenu = UserSettingsMenu(
             setting = ANIMATE_BUBBLE
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
+        userSettingSection(R.string.voice_settings_models_section),
         userSettingNavigationItem(
             title = R.string.voice_input_settings_change_models,
             subtitle = R.string.voice_input_settings_change_models_subtitle,

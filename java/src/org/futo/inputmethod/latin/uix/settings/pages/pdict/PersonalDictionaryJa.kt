@@ -133,7 +133,6 @@ fun JapaneseWordPopupDialog(selectedWord: JapanesePersonalWord? = null, locale: 
     val word = remember { mutableStateOf((selectedWord?.output ?: "")) }
     val pos = remember { mutableStateOf(selectedWord?.pos ?: PosTypes.NO_POS) }
     AlertDialog(
-        icon = { },
         title = {
             Text(
                 if (selectedWord == null) {
@@ -236,7 +235,6 @@ fun ConfirmDeleteExtraDictFileDialog(name: String) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current
     AlertDialog(
-        icon = { },
         title = {
             Text(stringResource(R.string.personal_dictionary_delete_additional_file))
         },
