@@ -75,9 +75,9 @@ private val AppLightColors = lightColorScheme(
     errorContainer = Color(0xFFF9DEDC),
     onErrorContainer = Color(0xFF410E0B),
 
-    background = Color(0xFFFAF9F6),
+    background = Color(0xFFF4F3EF),
     onBackground = Color(0xFF1A1A1A),
-    surface = Color(0xFFFAF9F6),
+    surface = Color(0xFFFFFFFF),
     onSurface = Color(0xFF1A1A1A),
     surfaceVariant = Color(0xFFF0EEE9),
     onSurfaceVariant = Color(0xFF6B6862),
@@ -114,9 +114,9 @@ private val AppDarkColors = darkColorScheme(
     errorContainer = Color(0xFF8C1D18),
     onErrorContainer = Color(0xFFF9DEDC),
 
-    background = Color(0xFF111111),
+    background = Color(0xFF0A0A0B),
     onBackground = Color(0xFFF0EEE9),
-    surface = Color(0xFF111111),
+    surface = Color(0xFF1A1A1C),
     onSurface = Color(0xFFF0EEE9),
     surfaceVariant = Color(0xFF242422),
     onSurfaceVariant = Color(0xFF9B9B9B),

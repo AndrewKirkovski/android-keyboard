@@ -30,6 +30,12 @@ data class UserSetting(
     val visibilityCheck: (@Composable () -> Boolean)? = null,
     val appearInSearchIfVisibilityCheckFailed: Boolean = true,
     val appearsInSearch: Boolean = true,
+    /**
+     * Whether this entry ends the card its neighbours are grouped into and draws on the
+     * ground instead. True for decorations -- a section header, a tip, a warning -- which
+     * are not rows and would look wrong inside a card of them.
+     */
+    val breaksCardGroup: Boolean = false,
     val component: @Composable () -> Unit,
 )
 
@@ -128,7 +134,18 @@ fun userSettingDecorationOnly(
 ): UserSetting = UserSetting(
     name = 0,
     component = decoration,
-    appearsInSearch = false
+    appearsInSearch = false,
+    breaksCardGroup = true
+)
+
+/** The label above a group of rows. Ends the previous card and starts the next. */
+fun userSettingSection(
+    @StringRes title: Int
+): UserSetting = UserSetting(
+    name = title,
+    component = { SettingSectionHeader(stringResource(title)) },
+    appearsInSearch = false,
+    breaksCardGroup = true
 )
 
 @Composable
@@ -141,9 +158,30 @@ fun UserSettingsMenu.render(showBack: Boolean = true, showTitle: Boolean = true)
     if(showPreview) {
         KeyboardPreviewHeader()
     }
-    settings.forEach {
-        if(it.visibilityCheck?.invoke() != false) {
-            it.component()
+
+    // Rows are grouped into cards; a decoration -- a section header, a tip, a warning --
+    // ends the run and renders on the ground between them. That gap is what makes the
+    // grouping visible: before this every setting was drawn straight onto the background
+    // and a screen read as one undifferentiated column.
+    //
+    // Visibility is resolved first, so a hidden setting cannot leave a card split in two
+    // where it used to be.
+    val visible = settings.filter { it.visibilityCheck?.invoke() != false }
+    var index = 0
+    while (index < visible.size) {
+        val setting = visible[index]
+        if (setting.breaksCardGroup) {
+            setting.component()
+            index++
+        } else {
+            val run = ArrayList<UserSetting>()
+            while (index < visible.size && !visible[index].breaksCardGroup) {
+                run.add(visible[index])
+                index++
+            }
+            SettingsCard {
+                run.forEach { it.component() }
+            }
         }
     }
 }

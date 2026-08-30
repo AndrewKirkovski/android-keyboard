@@ -134,6 +134,59 @@ internal class ScreenTitleAnchor {
 
 internal val LocalScreenTitleAnchor = compositionLocalOf<ScreenTitleAnchor?> { null }
 
+/**
+ * The label above a group of rows.
+ *
+ * Accent-coloured and sentence case. It used to be uppercase behind a 3dp accent rail,
+ * which is two devices doing one job, and caps are worse than useless in the many
+ * locales among the app's 91 whose scripts have no case at all -- there the rail was
+ * carrying the whole burden and the tracking just spaced the glyphs out.
+ *
+ * The header sits *outside* the card its rows live in, which is what makes it read as a
+ * heading rather than as the first row.
+ */
+@Composable
+fun SettingSectionHeader(title: String) {
+    Text(
+        title,
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = Spacing.rowInset + Spacing.m,
+                end = Spacing.rowInset,
+                top = Spacing.xl,
+                bottom = Spacing.s
+            )
+    )
+}
+
+/**
+ * The grouped card a run of rows sits in, on the tinted ground the screen paints.
+ *
+ * One UI's structure: related settings share a rounded container, and the gap between
+ * two containers is what says "different subject". Before this the app drew rows
+ * directly on the background with nothing between groups but a header, so a screen was
+ * an undifferentiated column and grouping was invisible.
+ */
+@Composable
+fun SettingsCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = Spacing.cardInset, vertical = Spacing.xs),
+        color = MaterialTheme.colorScheme.surface,
+        shape = MaterialTheme.shapes.large
+    ) {
+        // The card breathes at its ends. A row centres itself in 56dp so a single line
+        // already sits clear of the edge, but a two-line row or one carrying a control
+        // fills its height, and without this the first and last of those touch the
+        // rounded corner they sit against.
+        Column(Modifier.padding(vertical = Spacing.s), content = content)
+    }
+}
+
 @Composable
 fun ScreenTitle(title: String, showBack: Boolean = false, navController: NavHostController? = LocalNavController.current ?: rememberNavController()) {
     val rowModifier = if(showBack) {
@@ -146,30 +199,9 @@ fun ScreenTitle(title: String, showBack: Boolean = false, navController: NavHost
         Modifier.fillMaxWidth()
     }
     // showBack splits this in two: with a back arrow it is the screen's title, and
-    // without one it is an in-page section header. They were rendering identically,
-    // which is why a section header looked like just another row of text. The header
-    // now gets an accent rail and an uppercase tracked label -- structure a reader can
-    // see at a glance, without a fill or a divider.
+    // without one it is an in-page section header, which is now its own composable.
     if (!showBack) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 28.dp, bottom = 8.dp),
-            verticalAlignment = CenterVertically
-        ) {
-            Box(
-                Modifier
-                    .width(3.dp)
-                    .height(14.dp)
-                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(2.dp))
-            )
-            Spacer(Modifier.width(10.dp))
-            Text(
-                title.uppercase(),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+        SettingSectionHeader(title)
         return
     }
 
@@ -254,12 +286,13 @@ fun Tip(text: String = "This is an example tip") {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp), shape = RoundedCornerShape(4.dp)
+            .padding(horizontal = Spacing.cardInset, vertical = Spacing.xs),
+        shape = MaterialTheme.shapes.medium
     ) {
         Text(
             text,
-            modifier = Modifier.padding(8.dp),
-            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m),
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
@@ -271,7 +304,8 @@ fun WarningTip(text: String = "This is an example tip") {
     Surface(
         color = MaterialTheme.colorScheme.errorContainer, modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp), shape = RoundedCornerShape(4.dp)
+            .padding(horizontal = Spacing.cardInset, vertical = Spacing.xs),
+        shape = MaterialTheme.shapes.medium
     ) {
 
         Text(
@@ -280,8 +314,8 @@ fun WarningTip(text: String = "This is an example tip") {
                 append(' ')
                 append(text)
             },
-            modifier = Modifier.padding(8.dp),
-            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m),
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onErrorContainer,
             inlineContent = mapOf(
                 "icon" to InlineTextContent(
@@ -597,8 +631,18 @@ fun<T> SettingRadio(
     hints: List<@Composable () -> Unit>? = null,
     subcontent: List<@Composable () -> Unit>? = null,
 ) {
-    ScreenTitle(title, showBack = false)
+    // The group's label is a label, not a section header. It used to emit
+    // ScreenTitle(showBack = false), so a radio group inside a card announced itself as
+    // a new section of the screen -- the same mistake the slider made.
     Column {
+        Text(
+            title,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = Spacing.rowInset, end = Spacing.rowInset, top = Spacing.m)
+        )
         options.zip(optionNames).forEachIndexed { i, it ->
             SettingItem(title = it.second, onClick = { setting.setValue(it.first) }, icon = {
                 RadioButton(selected = setting.value == it.first, onClick = null)
