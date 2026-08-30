@@ -811,6 +811,9 @@ val NumberRowSettingMenu = UserSettingsMenu(
 val KeyboardSettingsMenu = UserSettingsMenu(
     title = R.string.keyboard_settings_title,
     navPath = "keyboard", registerNavPath = true,
+    // Every setting on this screen changes how the keyboard looks, so it is worth
+    // the space to show one.
+    showPreview = true,
     settings = listOf(
         userSettingNavigationItem(
             title = R.string.size_settings_title,

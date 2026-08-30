@@ -2,12 +2,25 @@ package org.futo.inputmethod.latin.uix.settings
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import org.futo.inputmethod.latin.RichInputMethodSubtype
+import org.futo.inputmethod.latin.Subtypes
+import org.futo.inputmethod.latin.SubtypesSetting
+import org.futo.inputmethod.latin.uix.KeyboardLayoutPreview
 import org.futo.inputmethod.latin.uix.LocalNavController
 import org.futo.inputmethod.latin.uix.SettingsKey
+import org.futo.inputmethod.latin.uix.theme.UixThemeAuto
 
 data class UserSetting(
     @StringRes val name: Int,
@@ -26,7 +39,10 @@ data class UserSettingsMenu(
     val visibilityCheck: (@Composable () -> Boolean)? = null,
     val navPath: String,
     val registerNavPath: Boolean,
-    val settings: List<UserSetting>
+    val settings: List<UserSetting>,
+    // Pin a picture of the keyboard under the title. Worth the space only where
+    // every setting on the screen changes how the keyboard looks or behaves.
+    val showPreview: Boolean = false
 )
 
 
@@ -122,9 +138,43 @@ fun UserSettingsMenu.render(showBack: Boolean = true, showTitle: Boolean = true)
     if(showTitle) {
         ScreenTitle(stringResource(title), showBack = showBack, navController)
     }
+    if(showPreview) {
+        KeyboardPreviewHeader()
+    }
     settings.forEach {
         if(it.visibilityCheck?.invoke() != false) {
             it.component()
+        }
+    }
+}
+
+/**
+ * The keyboard, drawn under the title of a screen whose settings all change it.
+ *
+ * It renders in the *keyboard's* theme, not the app's, which is why it is wrapped
+ * rather than inheriting: the page follows the system light/dark setting and the
+ * keyboard follows whatever theme the user picked for it. Looking different from
+ * the page around it is the correct outcome.
+ */
+@Composable
+private fun KeyboardPreviewHeader() {
+    val context = LocalContext.current
+    val subtypes = useDataStoreValue(SubtypesSetting)
+    val first = remember(subtypes) {
+        subtypes.firstOrNull()?.let { Subtypes.convertToSubtype(it) }
+    } ?: return
+    val rich = remember(first) { RichInputMethodSubtype(first) }
+
+    Box(
+        Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        UixThemeAuto {
+            KeyboardLayoutPreview(
+                id = rich.keyboardLayoutSetName,
+                width = 320.dp,
+                locale = rich.locale
+            )
         }
     }
 }
