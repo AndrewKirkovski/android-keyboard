@@ -46,19 +46,19 @@ val VoiceInputMenu = UserSettingsMenu(
 
         userSettingSection(R.string.voice_settings_recording_section),
         userSettingToggleDataStore(
-            title = R.string.voice_input_settings_use_personal_dict,
-            subtitle = R.string.voice_input_settings_use_personal_dict_subtitle,
+            title = R.string.settings_row_voice_personal_dict,
+            subtitle = R.string.settings_sub_voice_personal_dict,
             setting = USE_PERSONAL_DICT
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
         userSettingToggleDataStore(
-            title = R.string.voice_input_settings_use_bluetooth_mic,
-            subtitle = R.string.voice_input_settings_use_bluetooth_mic_subtitle,
+            title = R.string.settings_row_bluetooth_mic,
+            subtitle = R.string.settings_sub_bluetooth_mic,
             setting = PREFER_BLUETOOTH
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
         userSettingToggleDataStore(
-            title = R.string.voice_input_settings_audio_focus,
+            title = R.string.settings_row_audio_focus,
             subtitle = R.string.voice_input_settings_audio_focus_subtitle,
             setting = AUDIO_FOCUS
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
@@ -71,13 +71,13 @@ val VoiceInputMenu = UserSettingsMenu(
         userSettingSection(R.string.voice_settings_behaviour_section),
         userSettingToggleDataStore(
             title = R.string.voice_input_settings_long_form,
-            subtitle = R.string.voice_input_settings_long_form_subtitle,
+            subtitle = R.string.settings_sub_longform,
             setting = CAN_EXPAND_SPACE
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
         userSettingToggleDataStore(
             title = R.string.voice_input_settings_autostop_vad,
-            subtitle = R.string.voice_input_settings_autostop_vad_subtitle,
+            subtitle = R.string.settings_sub_autostop_vad,
             setting = USE_VAD_AUTOSTOP
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 

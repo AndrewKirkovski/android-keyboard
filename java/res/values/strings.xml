@@ -340,5 +340,42 @@ mobile devices. [CHAR LIMIT=25] -->
     <string name="settings_section_action_settings">Action settings</string>
     <!-- The two version rows sit directly above this tip, so it no longer
          repeats the number; it only says why the version is worth quoting. -->
-    <string name="help_version_tip">We want to hear from you. If you\'re reporting an issue, the version above is worth including.</string>
+    <string name="help_version_tip">We want to hear from you. If you’re reporting an issue, the version above is worth including.</string>
+
+    <!-- Sentence case, continued. Title Case appeared next to sentence case
+         inside single cards: "Prefer Bluetooth Mic" beside "Suppress symbols",
+         "Emoji Suggestions" beside "Auto-correction". -->
+    <string name="settings_row_edit_actions">Edit actions</string>
+    <string name="settings_row_clipboard_manager">Clipboard manager</string>
+    <string name="settings_row_longpress_duration">Long-press duration</string>
+    <string name="settings_row_emoji_suggestions">Emoji suggestions</string>
+    <string name="settings_row_voice_personal_dict">Personal dictionary</string>
+    <string name="settings_row_bluetooth_mic">Prefer Bluetooth mic</string>
+    <string name="settings_row_audio_focus">Audio focus</string>
+    <string name="settings_row_futo_website">FUTO website</string>
+    <string name="settings_row_discord">Discord</string>
+    <string name="settings_row_futo_chat">FUTO chat</string>
+    <string name="settings_row_github">Issue tracker</string>
+    <string name="settings_row_version_name">Version %1$s</string>
+    <string name="settings_row_version_code">Version code %1$s</string>
+
+    <!-- Subtitles as fragments, not sentences. A list row gives a subtitle two
+         lines; the upstream copy is full product prose and ellipsized mid-word
+         ("Boosting is avoided a…", "must be negotiat…", "will move the …"). -->
+    <string name="settings_sub_edit_actions">Favourites, pinned actions, and the action key</string>
+    <string name="settings_sub_action_key">A key left of the spacebar for one quick action</string>
+    <string name="settings_sub_action_key_assigned">A key left of the spacebar, currently %s</string>
+    <string name="settings_sub_bluetooth_mic">Recording may take longer to start</string>
+    <string name="settings_sub_voice_personal_dict">Recognise words you have added yourself</string>
+    <string name="settings_sub_longpress_duration">How long a key is held before the popup opens</string>
+    <string name="settings_sub_website">About FUTO</string>
+    <string name="settings_sub_discord">Chat with the community</string>
+    <string name="settings_sub_futo_chat">The same community, on Zulip</string>
+    <string name="settings_sub_github">Report a bug or request a feature</string>
+    <string name="settings_sub_email">Private feedback and support</string>
+    <string name="settings_sub_keyhit_detection">Widen the hit area of the likely next keys</string>
+    <string name="settings_sub_autostop_vad">Stop when silence is detected</string>
+    <string name="settings_sub_longform">Otherwise recording stops after 30 seconds</string>
+    <!-- Quotes the row below it, so it has to match its name. -->
+    <string name="settings_sub_language_switch_key">Replaces the emoji key. Choose something else in Edit actions.</string>
 </resources>

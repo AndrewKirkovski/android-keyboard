@@ -1007,7 +1007,7 @@ fun String.toFNV1aHash(): Long {
 @OptIn(ExperimentalFoundationApi::class)
 val ClipboardHistoryAction = Action(
     icon = R.drawable.clipboard_manager,
-    name = R.string.action_clipboard_manager_title,
+    name = R.string.settings_row_clipboard_manager,
     simplePressImpl = null,
     canShowKeyboard = true,
     persistentState = { manager ->
@@ -1025,7 +1025,7 @@ val ClipboardHistoryAction = Action(
         object : ActionWindow() {
             @Composable
             override fun windowName(): String {
-                return stringResource(R.string.action_clipboard_manager_title)
+                return stringResource(R.string.settings_row_clipboard_manager)
             }
 
             @Composable

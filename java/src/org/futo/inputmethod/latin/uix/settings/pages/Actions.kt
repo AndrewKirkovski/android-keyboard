@@ -38,7 +38,7 @@ val ActionsScreen = UserSettingsMenu(
         // app bar, which read as a second screen name rather than a group label.
         UserSetting(
             name = R.string.action_settings_quick_option_enable_action_key,
-            subtitle = R.string.action_settings_quick_option_enable_action_key_subtitle_no_assignment
+            subtitle = R.string.settings_sub_action_key
         ) {
             val context = LocalContext.current
             val actionMap = useDataStoreValue(ActionsSettings)
@@ -51,9 +51,9 @@ val ActionsScreen = UserSettingsMenu(
             SettingToggleRaw(
                 title = stringResource(R.string.action_settings_quick_option_enable_action_key),
                 subtitle = when(currActionKey) {
-                    null -> stringResource(R.string.action_settings_quick_option_enable_action_key_subtitle_no_assignment)
+                    null -> stringResource(R.string.settings_sub_action_key)
                     else -> stringResource(
-                        R.string.action_settings_quick_option_enable_action_key_subtitle_with_assignment,
+                        R.string.settings_sub_action_key_assigned,
                         stringResource(currActionKey.name)
                     )
                 },
@@ -88,7 +88,7 @@ val ActionsScreen = UserSettingsMenu(
 
         UserSetting(
             name = R.string.action_settings_quick_option_language_switch_key,
-            subtitle = R.string.action_settings_quick_option_language_switch_key_subtitle,
+            subtitle = R.string.settings_sub_language_switch_key,
             visibilityCheck = {
                 // Do not show the language key setting if action key is disabled entirely.
                 val actionMap = useDataStoreValue(ActionsSettings)
@@ -112,7 +112,7 @@ val ActionsScreen = UserSettingsMenu(
 
             SettingToggleRaw(
                 title = stringResource(R.string.action_settings_quick_option_language_switch_key),
-                subtitle = stringResource(R.string.action_settings_quick_option_language_switch_key_subtitle),
+                subtitle = stringResource(R.string.settings_sub_language_switch_key),
                 enabled = isLanguageKeyEnabled,
                 disabled = currActionKey == null,
                 setValue = { to ->
@@ -152,8 +152,8 @@ val ActionsScreen = UserSettingsMenu(
         // TODO: Add a "Show voice input button" toggle
 
         userSettingNavigationItem(
-            title = R.string.action_editor_title,
-            subtitle = R.string.action_editor_subtitle,
+            title = R.string.settings_row_edit_actions,
+            subtitle = R.string.settings_sub_edit_actions,
             style = NavigationItemStyle.Misc,
             navigateTo = "actionEdit"
         ),
@@ -174,7 +174,7 @@ val ActionsScreen = UserSettingsMenu(
 @Composable
 fun ActionEditorScreen(navController: NavHostController = rememberNavController()) {
     Column {
-        ScreenTitle(stringResource(R.string.action_editor_title), showBack = true, navController)
+        ScreenTitle(stringResource(R.string.settings_row_edit_actions), showBack = true, navController)
         ActionsEditor { }
     }
 }

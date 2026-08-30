@@ -36,11 +36,11 @@ val HelpMenu = UserSettingsMenu(
     navPath = "help", registerNavPath = true,
     settings = listOf(
         UserSetting(
-            name = R.string.help_menu_version_name
+            name = R.string.settings_row_version_name
         ) {
             val context = LocalContext.current
             NavigationItem(
-                title = stringResource(R.string.help_menu_version_name, BuildConfig.VERSION_NAME),
+                title = stringResource(R.string.settings_row_version_name, BuildConfig.VERSION_NAME),
                 style = NavigationItemStyle.MiscNoArrow,
                 navigate = {
                     context.copyToClipboard(BuildConfig.VERSION_NAME)
@@ -48,14 +48,14 @@ val HelpMenu = UserSettingsMenu(
             )
         },
         UserSetting(
-            name = R.string.help_menu_version_code,
+            name = R.string.settings_row_version_code,
             searchTags = R.string.settings_title_developer
         ) {
             val context = LocalContext.current
             val numPresses = remember { mutableIntStateOf(0) }
             var lastToast: MutableState<Toast?> = remember { mutableStateOf(null) }
             NavigationItem(
-                title = stringResource(R.string.help_menu_version_code, BuildConfig.VERSION_CODE),
+                title = stringResource(R.string.settings_row_version_code, BuildConfig.VERSION_CODE),
                 style = NavigationItemStyle.MiscNoArrow,
                 navigate = {
                     val makeToast: (String) -> Unit = { text ->
@@ -90,8 +90,8 @@ val HelpMenu = UserSettingsMenu(
         },
 
         userSettingNavigationItem(
-            title = R.string.help_menu_website,
-            subtitle = R.string.help_menu_website_subtitle,
+            title = R.string.settings_row_futo_website,
+            subtitle = R.string.settings_sub_website,
             style = NavigationItemStyle.Misc,
             navigate = { nav ->
                 nav.context.openURI("https://futo.tech/")
@@ -108,24 +108,24 @@ val HelpMenu = UserSettingsMenu(
         ),
         userSettingSection(R.string.help_settings_community_section),
         userSettingNavigationItem(
-            title = R.string.help_menu_discord,
-            subtitle = R.string.help_menu_discord_subtitle,
+            title = R.string.settings_row_discord,
+            subtitle = R.string.settings_sub_discord,
             style = NavigationItemStyle.Misc,
             navigate = { nav ->
                 nav.context.openURI("https://keyboard.futo.tech/discord")
             }
         ),
         userSettingNavigationItem(
-            title = R.string.help_menu_futo_chat,
-            subtitle = R.string.help_menu_futo_chat_subtitle,
+            title = R.string.settings_row_futo_chat,
+            subtitle = R.string.settings_sub_futo_chat,
             style = NavigationItemStyle.Misc,
             navigate = { nav ->
                 nav.context.openURI("https://chat.futo.org/")
             }
         ),
         userSettingNavigationItem(
-            title = R.string.help_menu_github,
-            subtitle = R.string.help_menu_github_subtitle,
+            title = R.string.settings_row_github,
+            subtitle = R.string.settings_sub_github,
             style = NavigationItemStyle.Misc,
             navigate = { nav ->
                 nav.context.openURI("https://github.com/futo-org/android-keyboard/issues")
@@ -133,7 +133,7 @@ val HelpMenu = UserSettingsMenu(
         ),
         userSettingNavigationItem(
             title = R.string.help_menu_email,
-            subtitle = R.string.help_menu_email_subtitle,
+            subtitle = R.string.settings_sub_email,
             // Mail put a filled glyph where its three neighbours carry a
             // chevron, so one row in the card had a different right edge.
             style = NavigationItemStyle.Misc,

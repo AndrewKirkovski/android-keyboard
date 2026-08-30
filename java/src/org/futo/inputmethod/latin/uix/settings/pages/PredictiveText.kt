@@ -74,7 +74,7 @@ val PredictiveTextMenu = UserSettingsMenu(
         ),
         userSettingToggleSharedPrefs(
             title = R.string.prediction_settings_smart_keyhit_detection,
-            subtitle = R.string.prediction_settings_smart_keyhit_detection_subtitle,
+            subtitle = R.string.settings_sub_keyhit_detection,
             key = Settings.PREF_USE_DICT_KEY_BOOSTING,
             default = {true}
         ),
@@ -97,7 +97,7 @@ val PredictiveTextMenu = UserSettingsMenu(
 
         //if(!transformerLmEnabled) {
         userSettingToggleDataStore(
-            title = R.string.typing_settings_suggest_emojis,
+            title = R.string.settings_row_emoji_suggestions,
             subtitle = R.string.typing_settings_suggest_emojis_subtitle,
             setting = SHOW_EMOJI_SUGGESTIONS
         ),

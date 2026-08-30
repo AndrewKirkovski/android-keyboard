@@ -529,13 +529,13 @@ val LongPressMenu = UserSettingsMenu(
         // duration", so the duration is the first thing on it rather than the
         // last. The first card carries no header, as on every other screen.
         UserSetting(
-            name = R.string.morekey_settings_duration,
-            subtitle = R.string.morekey_settings_duration_subtitle,
+            name = R.string.settings_row_longpress_duration,
+            subtitle = R.string.settings_sub_longpress_duration,
         ) {
             val resources = LocalResources.current
             SettingSliderSharedPrefsInt(
-                title = stringResource(R.string.morekey_settings_duration),
-                subtitle = stringResource(R.string.morekey_settings_duration_subtitle),
+                title = stringResource(R.string.settings_row_longpress_duration),
+                subtitle = stringResource(R.string.settings_sub_longpress_duration),
                 key = Settings.PREF_KEY_LONGPRESS_TIMEOUT,
                 default = 300,
                 range = 100.0f..700.0f,
