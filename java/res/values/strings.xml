@@ -378,4 +378,8 @@ mobile devices. [CHAR LIMIT=25] -->
     <string name="settings_sub_longform">Otherwise recording stops after 30 seconds</string>
     <!-- Quotes the row below it, so it has to match its name. -->
     <string name="settings_sub_language_switch_key">Replaces the emoji key. Choose something else in Edit actions.</string>
+    <string name="settings_title_advanced_params">Advanced parameters</string>
+    <string name="settings_row_autocorrect_threshold">Autocorrect threshold</string>
+    <string name="settings_sub_lm_strength">Higher favours the transformer over the dictionary</string>
+    <string name="settings_sub_autocorrect_threshold">Lower autocorrects more often, and miscorrects more</string>
 </resources>

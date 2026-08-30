@@ -32,7 +32,7 @@ import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.latin.uix.settings.SettingItem
-import org.futo.inputmethod.latin.uix.settings.Tip
+import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useSharedPrefsBool
@@ -111,7 +111,10 @@ fun BlacklistScreen(navController: NavHostController = rememberNavController()) 
             }
         })
 
-        Row(modifier = Modifier.padding(start = Spacing.cardInset, top = Spacing.l, end = Spacing.s)) {
+        // No end padding: the icon button carries 12dp of its own around a 24dp
+        // icon, so zero here puts its visual edge on the card inset. With 8dp it
+        // sat 20dp in, and the row agreed with neither the card above nor below.
+        Row(modifier = Modifier.padding(start = Spacing.cardInset, top = Spacing.l)) {
             TextField(value = newWord, onValueChange = {newWord = it}, modifier = Modifier.weight(1.0f), label = {
                 Text(stringResource(R.string.prediction_settings_word_blacklist_add))
             })
@@ -126,7 +129,9 @@ fun BlacklistScreen(navController: NavHostController = rememberNavController()) 
         }
 
         if (blacklistedWords.isEmpty()) {
-            Tip(stringResource(R.string.prediction_settings_word_blacklist_none))
+            // An accent-filled Tip made "you have blocked nothing" the loudest
+            // thing on an otherwise blank screen.
+            SettingsEmptyState(stringResource(R.string.prediction_settings_word_blacklist_none))
         } else {
             SettingsCard(blacklistedWords.map { word ->
                 {

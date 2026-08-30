@@ -19,6 +19,7 @@ import org.futo.inputmethod.latin.uix.settings.NavigationItem
 import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.ScrollableList
+import org.futo.inputmethod.latin.uix.settings.SettingSectionHeader
 import org.futo.inputmethod.latin.uix.settings.Tip
 import org.futo.inputmethod.latin.xlm.ModelInfo
 import org.futo.inputmethod.latin.xlm.ModelPaths
@@ -75,12 +76,15 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
         Tip(stringResource(R.string.prediction_settings_transformer_english_notice))
 
         modelsByLanguage.forEach { item ->
-            Spacer(modifier = Modifier.height(32.dp))
             // The key is `model.languages.joinToString(" ")`, so a model covering more
             // than one language arrives here as "en pl". Locale("en pl") is not a
             // locale, and its displayLanguage is the raw string, which then appears as
             // the section heading. Resolve each language separately.
-            ScreenTitle(
+            //
+            // A section header, not a ScreenTitle: this labels a group. The 32dp
+            // spacer that used to precede it applied before the first group too,
+            // leaving a hole between the tip and the first header.
+            SettingSectionHeader(
                 item.key.split(" ")
                     .filter { it.isNotEmpty() }
                     .joinToString(" + ") { Locale(it).displayLanguage }

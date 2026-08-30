@@ -101,6 +101,7 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
@@ -414,6 +415,31 @@ fun Tip(text: String = "This is an example tip") {
             text,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    }
+}
+
+/**
+ * What a list shows when it has nothing in it yet.
+ *
+ * Not a [Tip]. A tip is accent-filled, which is the app's way of saying "read this";
+ * an empty list is the normal state of a list nobody has added to, and colouring it
+ * like a notice gives a blank screen the loudest element on it.
+ */
+@Composable
+@Preview
+fun SettingsEmptyState(text: String = "Nothing here yet") {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Spacing.xl, vertical = Spacing.xxl),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
         )
     }
 }
