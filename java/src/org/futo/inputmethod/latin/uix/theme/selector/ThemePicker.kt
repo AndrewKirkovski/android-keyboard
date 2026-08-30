@@ -8,6 +8,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -262,60 +263,75 @@ fun DynamicThemePreview(isSelected: Boolean = false, onClick: () -> Unit = { }) 
     }
 }
 
+/**
+ * An action tile in the theme grid: an icon over the word for what it does.
+ *
+ * On `surfaceVariant` these were #F0EEE9 on a #F4F3EF ground -- four units apart, so in
+ * light they read as empty space rather than as buttons. An icon on its own also left
+ * "browse online" as something to guess at, next to eight tiles that all name
+ * themselves. The card surface is what the rest of the app puts content on, and it
+ * separates from the ground in both themes.
+ */
 @Composable
-fun AddCustomThemeButton(short: Boolean = false, onClick: () -> Unit = { }) {
-    val currColors = MaterialTheme.colorScheme
-
-    val keyboardShape = RoundedCornerShape(8.dp)
-
+private fun ThemeActionTile(
+    short: Boolean,
+    label: String,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit
+) {
     Surface(
         modifier = Modifier
             .padding(12.dp)
             .width(172.dp)
-            .height(if(short) 64.dp else 128.dp ),
-        onClick = { onClick() },
-        color = currColors.surfaceVariant,
-        shape = keyboardShape
+            .height(if (short) 80.dp else 128.dp),
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Icon(
-                Icons.Default.Add,
-                contentDescription = stringResource(R.string.theme_settings_add_new_theme),
-                modifier = Modifier
-                    .size(if(short) 32.dp else 48.dp)
-                    .align(Alignment.Center)
+        Column(
+            modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically)
+        ) {
+            icon()
+            Text(
+                label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
         }
     }
 }
 
 @Composable
+fun AddCustomThemeButton(short: Boolean = false, onClick: () -> Unit = { }) {
+    ThemeActionTile(
+        short = short,
+        label = stringResource(R.string.theme_settings_add_new_theme),
+        onClick = onClick
+    ) {
+        Icon(
+            Icons.Default.Add,
+            contentDescription = null,
+            modifier = Modifier.size(if (short) 28.dp else 40.dp)
+        )
+    }
+}
+
+@Composable
 fun VisitThemeStoreButton(short: Boolean = false) {
     val context = LocalContext.current
-    val currColors = MaterialTheme.colorScheme
-
-    val keyboardShape = RoundedCornerShape(8.dp)
-
-    Surface(
-        modifier = Modifier
-            .padding(12.dp)
-            .width(172.dp)
-            .height(if(short) 64.dp else 128.dp ),
-        onClick = {
-            context.openURI("https://keyboard.futo.tech/themes", true)
-        },
-        color = currColors.surfaceVariant,
-        shape = keyboardShape
+    ThemeActionTile(
+        short = short,
+        label = stringResource(R.string.theme_settings_visit_theme_store),
+        onClick = { context.openURI("https://keyboard.futo.tech/themes", true) }
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Icon(
-                painterResource(R.drawable.compass),
-                contentDescription = stringResource(R.string.theme_settings_visit_theme_store),
-                modifier = Modifier
-                    .size(if(short) 32.dp else 48.dp)
-                    .align(Alignment.Center)
-            )
-        }
+        Icon(
+            painterResource(R.drawable.compass),
+            contentDescription = null,
+            modifier = Modifier.size(if (short) 28.dp else 40.dp)
+        )
     }
 }
 
@@ -352,6 +368,10 @@ fun ThemePicker(onDeleteCustomTheme: (String) -> Unit, onCustomTheme: () -> Unit
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxWidth(),
+                // The keyboard-preview FAB floats over this grid -- Scaffold's inner
+                // padding does not account for it -- so the last row scrolled under it
+                // and the button sat on top of a theme tile.
+                contentPadding = PaddingValues(bottom = 88.dp),
                 columns = GridCells.Adaptive(minSize = 172.dp),
                 horizontalArrangement = if (LocalLayoutDirection.current == LayoutDirection.Rtl) {
                     Arrangement.End

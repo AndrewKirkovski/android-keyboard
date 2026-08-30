@@ -672,7 +672,9 @@ internal fun AutoSpacesSetting() {
 }
 
 val KeyboardSettingsMenu = UserSettingsMenu(
-    title = R.string.keyboard_settings_title,
+    // The same string the Home row that opens this screen uses. They disagreed:
+    // the row said "Keys & layout" and the screen it opened said "Keyboard".
+    title = R.string.keys_layout_settings_title,
     navPath = "keyboard", registerNavPath = true,
     settings = listOf(
         userSettingNavigationItem(

@@ -49,6 +49,8 @@ import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.latin.uix.settings.SettingRadio
+import org.futo.inputmethod.latin.uix.settings.SettingItem
+import org.futo.inputmethod.latin.uix.settings.SettingsCard
 import org.futo.inputmethod.latin.uix.settings.SettingToggleDataStore
 import org.futo.inputmethod.latin.uix.settings.SettingToggleRaw
 import org.futo.inputmethod.latin.uix.settings.UserSetting
@@ -296,20 +298,25 @@ val SwipeMenu = UserSettingsMenu(
             val useLegacy = useDataStoreValue(LegacySwipeSetting)
             val showUseLegacy = remember { mutableStateOf(useLegacy) }
 
-            Spacer(Modifier.height(8.dp))
-            if(!showUseLegacy.value) {
-                TextButton(onClick = {
-                    showUseLegacy.value = true
-                }) {
-                    Text(stringResource(R.string.swipe_settings_show_unsupported))
+            // Both states sit in a card. The reveal was a bare TextButton drawn on
+            // the background, agreeing with neither the cards above it nor the
+            // screen edge, and once revealed the toggle it swapped in had no
+            // surface either.
+            SettingsCard {
+                if(!showUseLegacy.value) {
+                    SettingItem(
+                        title = stringResource(R.string.swipe_settings_show_unsupported),
+                        accentTitle = true,
+                        onClick = { showUseLegacy.value = true }
+                    ) { }
+                } else {
+                    SettingToggleDataStore(
+                        title = stringResource(R.string.swipe_settings_use_old_swipe),
+                        subtitle = stringResource(
+                            if(useLegacy) R.string.swipe_settings_use_old_swipe_subtitle else R.string.swipe_settings_use_old_swipe_subtitle_short),
+                        setting = LegacySwipeSetting
+                    )
                 }
-            } else {
-                SettingToggleDataStore(
-                    title = stringResource(R.string.swipe_settings_use_old_swipe),
-                    subtitle = stringResource(
-                        if(useLegacy) R.string.swipe_settings_use_old_swipe_subtitle else R.string.swipe_settings_use_old_swipe_subtitle_short),
-                    setting = LegacySwipeSetting
-                )
             }
         },
     )
