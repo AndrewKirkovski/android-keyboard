@@ -73,7 +73,11 @@ They now follow the system light/dark setting like any other app, with the
 product's own palette. The keyboard theme stays where it belongs: on the
 keyboard, and on the previews of it that settings screens show.
 
-A fuller redesign is in progress and this section will grow.
+A fuller redesign is in progress. Its component kit lives at
+[`docs/settings-ui-kit.html`](docs/settings-ui-kit.html) — open it in a browser
+beside the app. It is the target the Compose work is measured against, in both
+light and dark, with every entry naming the composable and file it maps to and
+carrying the measurement it replaces.
 
 ### Smaller changes
 

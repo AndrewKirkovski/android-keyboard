@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keyboard Settings Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Roboto:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --paper: #f7f6f3;
+  --ink: #17171a;
+  --muted: #6b6862;
+  --rule: #e2e0da;
+  --panel: #ffffff;
+  --accent: #b3243c;
+
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --device: 'Roboto', system-ui, sans-serif;
+
+  /* the proposed scale — every number in the specimens comes from here */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
+  --s5: 20px; --s6: 24px; --s7: 32px; --s8: 40px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #131315;
+    --ink: #eceae6;
+    --muted: #9a978f;
+    --rule: #2c2c30;
+    --panel: #1a1a1d;
+    --accent: #f2718a;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #131315;
+  --ink: #eceae6;
+  --muted: #9a978f;
+  --rule: #2c2c30;
+  --panel: #1a1a1d;
+  --accent: #f2718a;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: var(--s7) var(--s4) 96px; }
+
+header.top { margin-bottom: var(--s8); }
+header.top h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--s3);
+  text-wrap: balance;
+}
+header.top p { max-width: 62ch; margin: 0 0 var(--s2); color: var(--muted); }
+
+h2.sec {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  margin: var(--s8) 0 var(--s2);
+  padding-top: var(--s5);
+  border-top: 1px solid var(--rule);
+}
+h2.sec:first-of-type { border-top: 0; padding-top: 0; }
+h2.sec + p.lede { max-width: 62ch; margin: 0 0 var(--s5); color: var(--muted); }
+
+/* ---- component block: specimen left, notes right ---- */
+.item { display: grid; grid-template-columns: 360px 1fr; gap: var(--s6); margin: var(--s6) 0 var(--s7); align-items: start; }
+.item.wide { grid-template-columns: 1fr; }
+@media (max-width: 820px) { .item { grid-template-columns: 1fr; } }
+
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); }
+@media (max-width: 820px) { .pair { grid-template-columns: 1fr; } }
+
+.notes h3 { font-size: 17px; margin: 0 0 var(--s2); letter-spacing: -0.005em; }
+.notes p { margin: 0 0 var(--s3); max-width: 60ch; }
+.notes p:last-child { margin-bottom: 0; }
+code, .mono {
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+  font-size: 0.86em;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--s1);
+}
+table.num { border-collapse: collapse; margin: var(--s3) 0 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+table.num th, table.num td { text-align: left; padding: 5px 18px 5px 0; }
+table.num th { font-weight: 600; border-bottom: 1px solid var(--rule); }
+table.num td.was { color: var(--muted); text-decoration: line-through; }
+
+/* =========================================================
+   SPECIMENS — the app itself. Roboto, real dp values.
+   360dp is the width the settings app is designed for.
+   ========================================================= */
+.dev {
+  --bg: #f4f3ef;      /* One UI's tinted ground; cards need something to sit on */
+  --card: #ffffff;
+  --fg: #1a1a1a;
+  --fg2: #6b6862;
+  --acc: #e94560;
+  --line: #e6e4de;
+  --track: #dedcd6;
+
+  width: 360px; max-width: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--device);
+  border-radius: 14px;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 1.4;
+}
+.dev.dark {
+  --bg: #0a0a0b;
+  --card: #1a1a1c;
+  --fg: #f0eee9;
+  --fg2: #9b9b9b;
+  --acc: #ee6680;
+  --line: #2a2a2d;
+  --track: #34343a;
+  border-color: #2c2c30;
+}
+.dev .label {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--fg2); padding: 8px 12px 0; opacity: .8;
+}
+
+/* app bar — the One UI signature: a large title with room above it */
+.appbar { padding: 28px 24px 20px; }
+.appbar .t { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+.appbar.collapsed { padding: 12px 16px; display: flex; gap: 18px; align-items: center; border-bottom: 1px solid var(--line); }
+.appbar.collapsed .t { font-size: 17px; font-weight: 500; letter-spacing: 0; }
+.back { width: 24px; height: 24px; flex: none; }
+
+/* section header — One UI: accent-coloured, sentence case, no rail */
+.shead { font-size: 13px; font-weight: 700; color: var(--acc); padding: 24px 24px 8px; letter-spacing: 0.01em; }
+
+/* the card group: rows live inside a rounded card on the tinted ground */
+.group { background: var(--card); border-radius: 22px; margin: 0 12px 8px; overflow: hidden; }
+
+.row { display: flex; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; }
+.row.two { min-height: 72px; }
+.row + .row { box-shadow: inset 0 1px 0 var(--line); }
+.row .ic { width: 24px; height: 24px; flex: none; color: var(--fg2); }
+.row .body { flex: 1; min-width: 0; padding: 10px 0; }
+.row .ttl { font-size: 16px; font-weight: 400; }
+.row .sub { font-size: 13px; line-height: 1.35; color: var(--fg2); margin-top: 2px; }
+.row.dis { opacity: .38; }
+.row .chev { width: 20px; height: 20px; color: var(--fg2); flex: none; }
+
+/* switch — One UI's is a rounded pill with a large travel */
+.sw { width: 46px; height: 28px; border-radius: 14px; background: var(--track); position: relative; flex: none; transition: background .15s; }
+.sw i { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.28); transition: left .15s; }
+.sw.on { background: var(--acc); }
+.sw.on i { left: 21px; }
+
+/* radio */
+.rd { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--fg2); flex: none; position: relative; }
+.rd.on { border-color: var(--acc); }
+.rd.on::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--acc); }
+
+/* THE SLIDER — title and value on one line, track beneath, full row width */
+.sl { padding: 14px 20px 18px; }
+.sl .head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.sl .head .ttl { font-size: 16px; }
+.sl .head .val { font-size: 15px; font-weight: 500; color: var(--acc); font-variant-numeric: tabular-nums; }
+.sl .track { height: 4px; border-radius: 2px; background: var(--track); margin-top: 14px; position: relative; }
+.sl .fill { position: absolute; inset: 0 auto 0 0; border-radius: 2px; background: var(--acc); }
+.sl .knob { position: absolute; top: 50%; width: 20px; height: 20px; border-radius: 50%; background: var(--acc); transform: translate(-50%,-50%); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+.sl .ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--fg2); margin-top: 10px; }
+
+/* dropdown */
+.dd { margin: 4px 20px 16px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: center; font-size: 15px; }
+.dd .v { color: var(--fg2); }
+
+/* tip */
+.tip { margin: 8px 12px; background: color-mix(in srgb, var(--acc) 12%, transparent); border-radius: 16px; padding: 14px 18px; font-size: 14px; line-height: 1.45; }
+.tip.warn { background: color-mix(in srgb, #d08700 20%, transparent); }
+
+/* dialog */
+.dlg { margin: 12px; background: var(--card); border-radius: 26px; padding: 24px; }
+.dlg h4 { margin: 0 0 8px; font-size: 19px; font-weight: 500; }
+.dlg p { margin: 0 0 20px; font-size: 14px; color: var(--fg2); line-height: 1.45; }
+.dlg .btns { display: flex; justify-content: flex-end; gap: 8px; }
+.btn { border: 0; background: transparent; color: var(--acc); font: inherit; font-size: 14px; font-weight: 500; padding: 10px 16px; border-radius: 20px; cursor: pointer; font-family: var(--device); }
+.btn.fill { background: var(--acc); color: #fff; }
+
+/* empty + progress */
+.empty { padding: 40px 24px; text-align: center; color: var(--fg2); }
+.empty .big { font-size: 15px; color: var(--fg); margin-bottom: 4px; }
+.empty .sm { font-size: 13px; }
+.prog { height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; margin: 0 20px; }
+.prog i { display: block; height: 100%; width: 42%; background: var(--acc); border-radius: 2px; }
+
+.swatches { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s3); }
+.sw-chip { width: 84px; font-size: 11px; font-family: ui-monospace, monospace; color: var(--muted); }
+.sw-chip b { display: block; height: 44px; border-radius: 8px; border: 1px solid var(--rule); margin-bottom: 4px; }
+
+/* ---------- a language card ---------- */
+.lang { background: var(--card); border-radius: 22px; margin: 0 12px 8px; overflow: hidden; }
+.lang .hd { display: flex; align-items: flex-start; gap: 16px; padding: 18px 20px 16px; }
+.lang .hd .n { flex: 1; min-width: 0; }
+.lang .hd .n b { display: block; font-size: 21px; font-weight: 500; letter-spacing: -0.01em; }
+.lang .hd .n span { font-size: 13px; color: var(--fg2); font-variant-numeric: tabular-nums; }
+.lang .hd .kebab { width: 24px; height: 24px; flex: none; color: var(--fg2); }
+.lang .grp { font-size: 12px; font-weight: 700; color: var(--acc); padding: 6px 20px 6px; letter-spacing: .02em; box-shadow: inset 0 1px 0 var(--line); }
+.lang .row { padding: 0 20px; }
+.lang .row + .row { box-shadow: none; }
+.lang .add { color: var(--acc); }
+.chip { font-size: 12px; font-weight: 500; padding: 3px 9px; border-radius: 9px; flex: none; background: color-mix(in srgb, var(--fg2) 18%, transparent); color: var(--fg2); }
+.chip.warn { background: color-mix(in srgb, #d08700 26%, transparent); color: #7a5100; }
+.dev.dark .chip.warn { color: #ffcf70; }
+.res { font-size: 14px; color: var(--fg2); font-variant-numeric: tabular-nums; flex: none; max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- the keyboard's own surfaces ---------- */
+.kbd {
+  --kb: #dedede; --kbc: #fbfbfb; --kbfg: #1b1b1b; --kbfg2: #5c5c5c; --kbacc: #2f6fed;
+  width: 360px; max-width: 100%; background: var(--kb); color: var(--kbfg);
+  font-family: var(--device); border-radius: 14px; border: 1px solid var(--rule);
+  overflow: hidden; font-size: 16px; line-height: 1.4;
+}
+.kbd.dark { --kb: #232326; --kbc: #37373b; --kbfg: #ececec; --kbfg2: #a0a0a0; --kbacc: #6f9bff; border-color: #2c2c30; }
+.kbd .label { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--kbfg2); padding: 8px 12px 0; opacity: .85; }
+.wbar { display: flex; align-items: center; gap: 4px; height: 48px; padding: 0 6px; }
+.wbar .ib { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; color: var(--kbfg); }
+.wbar .wt { flex: 1; min-width: 0; font-size: 16px; font-weight: 500; padding-left: 4px; }
+.wbar .txtbtn { font-size: 14px; font-weight: 500; color: var(--kbacc); padding: 0 12px; height: 40px; display: grid; place-items: center; border-radius: 20px; flex: none; }
+.agrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 8px 16px 16px; }
+.acard { background: var(--kbc); border-radius: 18px; height: 72px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 6px; padding: 8px 4px; text-align: center; }
+.acard .g { width: 24px; height: 24px; flex: none; }
+.acard .l { font-size: 11px; line-height: 1.25; color: var(--kbfg); max-height: 2.5em; overflow: hidden; }
+.agrid.old { grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 8px 11px 8px 40px; }
+.agrid.old .acard { height: 86px; border-radius: 16px; }
+.agrid.old .acard .l { line-height: 1; }
+.kstrip { position: relative; height: 150px; margin: 0; }
+.kstrip .keys { position: absolute; inset: 8px 8px 8px 56px; display: grid; grid-template-rows: repeat(3, 1fr); gap: 6px; }
+.kstrip .krow { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.kstrip .k { background: var(--kbc); border-radius: 6px; }
+.oh { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px;
+  border-radius: 50%; background: var(--kbc); display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+.oh.bare { background: transparent; box-shadow: none; top: 22px; transform: none; left: 12px; width: 32px; height: 32px; }
+.kstrip .guide { position: absolute; left: 0; right: 0; height: 1px; background: var(--acc); opacity: .55; }
+
+
+.prov { max-width: 62ch; margin: var(--s3) 0 0; padding-top: var(--s3);
+        border-top: 1px solid var(--rule); font-size: 14px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>Keyboard settings &mdash; component kit</h1>
+  <p>The vocabulary the settings app is rebuilt from, in the Samsung One&nbsp;UI idiom. Every specimen below is at a true 360&nbsp;dp width in Roboto, so it can be held next to the phone. Light on the left, dark on the right.</p>
+  <p>Each entry names the Compose composable it maps to, so implementation is mechanical rather than interpretive. Numbers marked <span class="mono" style="text-decoration:line-through">like this</span> are what the app uses today.</p>
+  <p class="prov">Reference for the settings rebuild &mdash; the target the Compose
+  work is measured against, not a description of what ships today. Every entry
+  names the composable and file it maps to. Numbers marked
+  <span class="mono" style="text-decoration:line-through">like this</span> were
+  measured from the app as it stands.</p>
+</header>
+
+<h2 class="sec">Tokens</h2>
+<p class="lede">The audit found 66&nbsp;distinct gap values, 44&nbsp;distinct element heights and 14&nbsp;different left edges across 1020&nbsp;measured elements. Everything below comes from one scale.</p>
+
+<div class="item wide">
+  <div class="notes">
+    <span class="tag">Spacing</span>
+    <h3>One scale, eight steps</h3>
+    <p>A 4&nbsp;dp base. Nothing in the kit uses a value outside it &mdash; that single constraint removes the raggedness, because a gap can no longer be 9 or 19 or 21&nbsp;dp because someone typed it.</p>
+    <table class="num">
+      <tr><th>Step</th><th>Value</th><th>Used for</th></tr>
+      <tr><td>1</td><td>4 dp</td><td>title&ndash;subtitle</td></tr>
+      <tr><td>2</td><td>8 dp</td><td>between card groups</td></tr>
+      <tr><td>3</td><td>12 dp</td><td>card inset from screen edge</td></tr>
+      <tr><td>4</td><td>16 dp</td><td>icon&ndash;text gap</td></tr>
+      <tr><td>5</td><td>20 dp</td><td>row horizontal padding</td></tr>
+      <tr><td>6</td><td>24 dp</td><td>section header padding, app-bar sides</td></tr>
+      <tr><td>7</td><td>32 dp</td><td>space above a section header</td></tr>
+      <tr><td>8</td><td>40 dp</td><td>screen-level separation</td></tr>
+    </table>
+    <p><b>Compose:</b> a <code>Spacing</code> object beside <code>AppShapes</code> in <code>theme/app/AppTheme.kt</code>, replacing the 259&nbsp;raw <code>dp</code> literals across 27&nbsp;files.</p>
+  </div>
+</div>
+
+<div class="item wide">
+  <div class="notes">
+    <span class="tag">Colour</span>
+    <h3>A tinted ground, so cards can sit on it</h3>
+    <p>This is the one palette change the One&nbsp;UI idiom forces. Today the app paints <code>background</code> and <code>surface</code> the same value (<code>#FAF9F6</code>), which is correct for a flat list and impossible for grouped cards &mdash; a white card on a white ground is invisible. The ground moves down and the card takes the old value.</p>
+    <div class="swatches">
+      <div class="sw-chip"><b style="background:#f4f3ef"></b>#f4f3ef<br>ground</div>
+      <div class="sw-chip"><b style="background:#ffffff"></b>#ffffff<br>card</div>
+      <div class="sw-chip"><b style="background:#1a1a1a"></b>#1a1a1a<br>text</div>
+      <div class="sw-chip"><b style="background:#6b6862"></b>#6b6862<br>secondary</div>
+      <div class="sw-chip"><b style="background:#e94560"></b>#e94560<br>accent</div>
+      <div class="sw-chip"><b style="background:#0a0a0b"></b>#0a0a0b<br>ground dk</div>
+      <div class="sw-chip"><b style="background:#1a1a1c"></b>#1a1a1c<br>card dk</div>
+      <div class="sw-chip"><b style="background:#ee6680"></b>#ee6680<br>accent dk</div>
+    </div>
+    <p style="margin-top:var(--s4)">Everything else keeps the palette already in <code>AppTheme.kt</code>.</p>
+  </div>
+</div>
+
+<div class="item wide">
+  <div class="notes">
+    <span class="tag">Type</span>
+    <h3>Six roles, one system</h3>
+    <p>The app currently runs two type systems in parallel: a hand-rolled <code>Typography</code> object used 58&nbsp;times under <code>settings/</code>, against 9&nbsp;uses of <code>MaterialTheme.typography</code>. Four of the hand-rolled styles set line-height equal to font-size &mdash; 100%&nbsp;leading. These six replace both.</p>
+    <table class="num">
+      <tr><th>Role</th><th>Size / line</th><th>Weight</th><th>M3 slot</th></tr>
+      <tr><td>Large title</td><td>30 / 34</td><td>700</td><td><code>headlineMedium</code></td></tr>
+      <tr><td>Collapsed title</td><td>17 / 22</td><td>500</td><td><code>titleMedium</code></td></tr>
+      <tr><td>Section header</td><td>13 / 18</td><td>700, accent</td><td><code>labelMedium</code></td></tr>
+      <tr><td>Row title</td><td>16 / 22</td><td>400</td><td><code>bodyLarge</code></td></tr>
+      <tr><td>Row subtitle</td><td>13 / 18</td><td>400, secondary</td><td><code>bodyMedium</code></td></tr>
+      <tr><td>Control value</td><td>15 / 20</td><td>500, accent</td><td><code>labelLarge</code></td></tr>
+    </table>
+    <p>Row title drops from weight&nbsp;500 to 400. At 16&nbsp;sp against a 13&nbsp;sp secondary subtitle the hierarchy is already carried by size and colour; the extra weight was doing the work colour should do, and made every row shout equally.</p>
+  </div>
+</div>
+
+<h2 class="sec">App bar</h2>
+<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement across 69&nbsp;call sites. <code>LargeTopAppBar</code> is used zero times today.</p>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev">
+      <div class="label">Light &mdash; expanded</div>
+      <div class="appbar"><div class="t">Text &amp; corrections</div></div>
+      <div class="shead">As you type</div>
+      <div class="group">
+        <div class="row"><div class="body"><div class="ttl">Auto-capitalization</div></div><div class="sw on"><i></i></div></div>
+      </div>
+    </div>
+    <div class="dev dark">
+      <div class="label">Dark &mdash; collapsed</div>
+      <div class="appbar collapsed">
+        <svg class="back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <div class="t">Text &amp; corrections</div>
+      </div>
+      <div class="shead">As you type</div>
+      <div class="group">
+        <div class="row"><div class="body"><div class="ttl">Auto-capitalization</div></div><div class="sw on"><i></i></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="notes">
+    <h3>Large collapsing title</h3>
+    <p>Expanded: 30&nbsp;sp, 28&nbsp;dp of space above it. The generous space is the point &mdash; it puts the title where a thumb is not, and the content where it is.</p>
+    <p>Collapsed: 17&nbsp;sp with the back arrow, 45&nbsp;dp tall, a hairline beneath. It appears on scroll, which the app already does; what it does not do is use a real app bar to do it.</p>
+    <p><b>Compose:</b> <code>Scaffold</code> + <code>LargeTopAppBar</code> with <code>enterAlwaysScrollBehavior</code>, replacing <code>ScreenTitle(showBack = true)</code> at its 26&nbsp;call sites. The other 43&nbsp;call sites are section headers and become the component below.</p>
+  </div>
+</div>
+
+<h2 class="sec">Section header and card group</h2>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev">
+      <div class="label">Light</div>
+      <div class="shead">Feedback</div>
+      <div class="group">
+        <div class="row"><div class="body"><div class="ttl">Popup on keypress</div></div><div class="sw on"><i></i></div></div>
+        <div class="row"><div class="body"><div class="ttl">Vibrate on keypress</div></div><div class="sw on"><i></i></div></div>
+      </div>
+      <div class="shead">Sound</div>
+      <div class="group">
+        <div class="row"><div class="body"><div class="ttl">Sound on keypress</div></div><div class="sw"><i></i></div></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <div class="dev dark">
+      <div class="label">Dark</div>
+      <div class="shead">Feedback</div>
+      <div class="group">
+        <div class="row"><div class="body"><div class="ttl">Popup on keypress</div></div><div class="sw on"><i></i></div></div>
+        <div class="row"><div class="body"><div class="ttl">Vibrate on keypress</div></div><div class="sw on"><i></i></div></div>
+      </div>
+      <div class="shead">Sound</div>
+      <div class="group">
+        <div class="row"><div class="body"><div class="ttl">Sound on keypress</div></div><div class="sw"><i></i></div></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </div>
+  <div class="notes">
+    <h3>Grouping you can see</h3>
+    <p>The card is what makes grouping legible without a divider for every row. Rows inside one card belong together; the 8&nbsp;dp of ground between cards says the next group is a different subject.</p>
+    <p>The section header is accent-coloured and sentence case. The current one is uppercase, letterspaced, and carries a 3&times;14&nbsp;dp accent rail &mdash; three devices doing one job. Colour alone is enough when the card already provides the boundary.</p>
+    <table class="num">
+      <tr><th></th><th>Now</th><th>Kit</th></tr>
+      <tr><td>Card radius</td><td class="was">none</td><td>22 dp</td></tr>
+      <tr><td>Card inset</td><td class="was">0</td><td>12 dp</td></tr>
+      <tr><td>Header case</td><td class="was">UPPER, 0.08em</td><td>Sentence, accent</td></tr>
+      <tr><td>Space above header</td><td class="was">28 dp</td><td>24 dp</td></tr>
+    </table>
+    <p><b>Compose:</b> <code>SectionHeader</code> (new) and <code>SettingGroup</code> (new, a <code>Card</code>), replacing <code>ScreenTitle(showBack = false)</code>.</p>
+  </div>
+</div>
+
+<h2 class="sec">Rows</h2>
+<p class="lede">The app has three incompatible row heights today &mdash; 68&nbsp;dp in <code>SettingItem</code>, 50&nbsp;dp in <code>LanguageConfigurable</code>, 44&nbsp;dp in <code>LayoutConfigurable</code> &mdash; and not one screen uses a single height. Two heights, by content.</p>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev">
+      <div class="label">Light</div>
+      <div class="group" style="margin-top:12px">
+        <div class="row"><div class="body"><div class="ttl">Show arrow keys</div></div><div class="sw"><i></i></div></div>
+        <div class="row two"><div class="body"><div class="ttl">Quick period key</div><div class="sub">Long-pressing the period gives a flickable <span style="font-variant-numeric:tabular-nums">! , ?</span></div></div><div class="sw"><i></i></div></div>
+        <div class="row two">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M12 10h.01M17 10h.01M8 14h8"/></svg>
+          <div class="body"><div class="ttl">Resize keyboard</div><div class="sub">Size, one-handed, floating, split</div></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="row dis"><div class="body"><div class="ttl">Vibration strength</div></div><div class="sw"><i></i></div></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <div class="dev dark">
+      <div class="label">Dark</div>
+      <div class="group" style="margin-top:12px">
+        <div class="row"><div class="body"><div class="ttl">Show arrow keys</div></div><div class="sw"><i></i></div></div>
+        <div class="row two"><div class="body"><div class="ttl">Quick period key</div><div class="sub">Long-pressing the period gives a flickable <span style="font-variant-numeric:tabular-nums">! , ?</span></div></div><div class="sw"><i></i></div></div>
+        <div class="row two">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M12 10h.01M17 10h.01M8 14h8"/></svg>
+          <div class="body"><div class="ttl">Resize keyboard</div><div class="sub">Size, one-handed, floating, split</div></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="row dis"><div class="body"><div class="ttl">Vibration strength</div></div><div class="sw"><i></i></div></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </div>
+  <div class="notes">
+    <h3>Two heights, four states</h3>
+    <p>Shown: single-line, two-line, two-line with a leading icon and a chevron, and disabled. A row grows only for a subtitle; nothing else changes its height.</p>
+    <table class="num">
+      <tr><th></th><th>Now</th><th>Kit</th></tr>
+      <tr><td>Single line</td><td class="was">68 / 50 / 44</td><td>56 dp</td></tr>
+      <tr><td>With subtitle</td><td class="was">68&ndash;76</td><td>72 dp</td></tr>
+      <tr><td>Side padding</td><td class="was">20 left / 16 right</td><td>20 dp both</td></tr>
+      <tr><td>Icon gutter</td><td class="was">48 dp + 12</td><td>24 dp + 16</td></tr>
+      <tr><td>Disabled</td><td class="was">alpha .5</td><td>alpha .38</td></tr>
+    </table>
+    <p>The icon gutter shrinks from a 48&nbsp;dp column to the icon&rsquo;s own 24&nbsp;dp. The wide column exists because <code>NavigationItem</code> draws a 40&nbsp;dp tinted circle; dropping the circle lets iconed and un-iconed rows share one text edge, which is what the ragged gutter was really about.</p>
+    <p><b>Compose:</b> <code>SettingRow</code> built on M3 <code>ListItem</code> &mdash; used zero times today &mdash; replacing <code>SettingItem</code>, <code>NavigationItem</code>, <code>LanguageConfigurable</code> and <code>LayoutConfigurable</code>.</p>
+  </div>
+</div>
+
+<h2 class="sec">The slider</h2>
+<p class="lede">The one you called ugly. Its title currently renders as a full-width uppercase <em>section header</em>, its subtitle is inset 12&nbsp;dp where everything else uses 16, its value column is a fixed 24.8%&nbsp;of the row whatever the content, and the row has no vertical padding at all.</p>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev">
+      <div class="label">Light</div>
+      <div class="shead">Feedback</div>
+      <div class="group">
+        <div class="row"><div class="body"><div class="ttl">Vibrate on keypress</div></div><div class="sw on"><i></i></div></div>
+        <div class="sl">
+          <div class="head"><div class="ttl">Vibration strength</div><div class="val">42&nbsp;ms</div></div>
+          <div class="track"><div class="fill" style="width:42%"></div><div class="knob" style="left:42%"></div></div>
+          <div class="ends"><span>Off</span><span>Default</span></div>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <div class="dev dark">
+      <div class="label">Dark</div>
+      <div class="shead">Feedback</div>
+      <div class="group">
+        <div class="row"><div class="body"><div class="ttl">Vibrate on keypress</div></div><div class="sw on"><i></i></div></div>
+        <div class="sl">
+          <div class="head"><div class="ttl">Vibration strength</div><div class="val">42&nbsp;ms</div></div>
+          <div class="track"><div class="fill" style="width:42%"></div><div class="knob" style="left:42%"></div></div>
+          <div class="ends"><span>Off</span><span>Default</span></div>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </div>
+  <div class="notes">
+    <h3>Title left, value right, track beneath</h3>
+    <p>The value moves to the end of the title line, in the accent colour and tabular figures so it does not jitter as it changes. That kills the fixed 24.8%&nbsp;column outright &mdash; a long value no longer squeezes the track, and a short one no longer strands white space.</p>
+    <p>The track spans the row. Ends are labelled where the extremes mean something (&ldquo;Off&rdquo;, &ldquo;Default&rdquo;) and omitted where they do not.</p>
+    <p>It sits <em>inside</em> the card, directly under the toggle that enables it, so the relationship is visible rather than implied by a section header.</p>
+    <table class="num">
+      <tr><th></th><th>Now</th><th>Kit</th></tr>
+      <tr><td>Title</td><td class="was">uppercase section header</td><td>row title, 16 sp</td></tr>
+      <tr><td>Value</td><td class="was">weight(0.33f), left</td><td>right, accent, tabular</td></tr>
+      <tr><td>Vertical padding</td><td class="was">0</td><td>14 / 18 dp</td></tr>
+      <tr><td>Subtitle inset</td><td class="was">12 dp</td><td>20 dp, as everything</td></tr>
+    </table>
+    <p><b>Compose:</b> rewrite <code>SettingSliderForDataStoreItem</code> (<code>Components.kt:619</code>). The tap-to-type-a-value affordance stays; it moves onto the value text, which is now where a value belongs.</p>
+  </div>
+</div>
+
+<h2 class="sec">Choice controls</h2>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev">
+      <div class="label">Light</div>
+      <div class="shead">Suggestion bar</div>
+      <div class="group">
+        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">Three alternatives</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Two alternatives and the typed word</div></div></div>
+      </div>
+      <div class="shead">Spacing</div>
+      <div class="group">
+        <div class="row two" style="display:block;padding-bottom:0">
+          <div class="body" style="padding-bottom:0"><div class="ttl">Automatic spaces</div></div>
+        </div>
+        <div class="dd"><span>After suggestions &amp; punctuation</span><span class="v">&#9662;</span></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <div class="dev dark">
+      <div class="label">Dark</div>
+      <div class="shead">Suggestion bar</div>
+      <div class="group">
+        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">Three alternatives</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Two alternatives and the typed word</div></div></div>
+      </div>
+      <div class="shead">Spacing</div>
+      <div class="group">
+        <div class="row two" style="display:block;padding-bottom:0">
+          <div class="body" style="padding-bottom:0"><div class="ttl">Automatic spaces</div></div>
+        </div>
+        <div class="dd"><span>After suggestions &amp; punctuation</span><span class="v">&#9662;</span></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </div>
+  <div class="notes">
+    <h3>Radio group and dropdown</h3>
+    <p>The radio sits in the leading slot at 22&nbsp;dp, sharing the row&rsquo;s text edge with an icon. Today it sits in the 48&nbsp;dp icon column, so every radio option is indented 80&nbsp;dp.</p>
+    <p>The dropdown keeps its own outline &mdash; it is an input, and an outline is how an input says so &mdash; but it inherits the row&rsquo;s 20&nbsp;dp side padding instead of the 16&nbsp;dp it uses today.</p>
+    <p><b>Compose:</b> <code>SettingRadio</code> and <code>DropDownPickerSettingItem</code>, both keeping their signatures. <code>SettingRadio</code> stops emitting a <code>ScreenTitle</code> for its own label.</p>
+  </div>
+</div>
+
+<h2 class="sec">Notices, dialogs, and the states nobody designed</h2>
+<p class="lede">The inventory reached fourteen <code>AlertDialog</code> call sites, five empty states and four progress states. None has a considered design today.</p>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev">
+      <div class="label">Light</div>
+      <div class="tip">Transformer&nbsp;LM is in alpha. Suggestions may be wrong more often than with the built-in dictionary.</div>
+      <div class="tip warn">This model has been fine-tuned on your own typing. Exporting it shares that data.</div>
+      <div class="dlg">
+        <h4>Remove polski?</h4>
+        <p>The layouts and the dictionary stay installed. You can add the language again at any time.</p>
+        <div class="btns"><button class="btn">Cancel</button><button class="btn fill">Remove</button></div>
+      </div>
+      <div class="empty"><div class="big">No blocked words</div><div class="sm">Words you block from suggestions appear here.</div></div>
+      <div class="prog"><i></i></div>
+      <div style="height:20px"></div>
+    </div>
+    <div class="dev dark">
+      <div class="label">Dark</div>
+      <div class="tip">Transformer&nbsp;LM is in alpha. Suggestions may be wrong more often than with the built-in dictionary.</div>
+      <div class="tip warn">This model has been fine-tuned on your own typing. Exporting it shares that data.</div>
+      <div class="dlg">
+        <h4>Remove polski?</h4>
+        <p>The layouts and the dictionary stay installed. You can add the language again at any time.</p>
+        <div class="btns"><button class="btn">Cancel</button><button class="btn fill">Remove</button></div>
+      </div>
+      <div class="empty"><div class="big">No blocked words</div><div class="sm">Words you block from suggestions appear here.</div></div>
+      <div class="prog"><i></i></div>
+      <div style="height:20px"></div>
+    </div>
+  </div>
+  <div class="notes">
+    <h3>Tip, warning, dialog, empty, progress</h3>
+    <p>Tips take the card&rsquo;s 12&nbsp;dp inset and a 16&nbsp;dp radius, so they read as a sibling of the groups rather than a foreign object. The warning variant is amber, not red &mdash; red is for destruction, and these are cautions.</p>
+    <p>Empty states say what would be here and how it gets here. The current ones are a <code>Tip</code> saying &ldquo;&hellip;none&rdquo; or nothing at all.</p>
+    <p>The destructive action is filled and last; cancel is quiet and first. That ordering is Android&rsquo;s, not iOS&rsquo;s.</p>
+    <p><b>Compose:</b> <code>Tip</code> and <code>WarningTip</code> keep their signatures; <code>AlertDialog</code> gains a shared wrapper so the fourteen call sites stop each choosing their own button order. <code>EmptyState</code> is new.</p>
+  </div>
+</div>
+
+<h2 class="sec">A language</h2>
+<p class="lede">Designed from what a language <em>is</em> in the data, not from what the screen shows today. A language carries an identity, three resource slots, one or more layouts, one multilingual flag, and a way to be removed &mdash; and when it is the <em>only</em> language, three of those controls have nothing to act on.</p>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev">
+      <div class="label">Light &mdash; the only language installed</div>
+      <div style="height:8px"></div>
+      <div class="lang">
+        <div class="hd">
+          <div class="n"><b>Polski</b><span>Polish &middot; pl &middot; 1&nbsp;layout</span></div>
+          <svg class="kebab" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>
+        </div>
+        <div class="grp">Layouts</div>
+        <div class="row"><div class="body"><div class="ttl">Polski / English (typograficzna)</div></div></div>
+        <div class="row add"><div class="body"><div class="ttl">Add layout</div></div></div>
+        <div class="grp">Language data</div>
+        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="res">polski.dict</div></div>
+        <div class="row"><div class="body"><div class="ttl">Prediction</div></div><div class="chip warn">Not installed</div></div>
+        <div class="row"><div class="body"><div class="ttl">Voice input</div></div><div class="chip">Built&#8209;in</div></div>
+        <div class="grp" style="color:var(--fg2)">Multilingual</div>
+        <div class="row two dis"><div class="body"><div class="ttl">Type in two languages at once</div><div class="sub">Add a second language to use this</div></div><div class="sw"><i></i></div></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <div class="dev dark">
+      <div class="label">Dark &mdash; the only language installed</div>
+      <div style="height:8px"></div>
+      <div class="lang">
+        <div class="hd">
+          <div class="n"><b>Polski</b><span>Polish &middot; pl &middot; 1&nbsp;layout</span></div>
+          <svg class="kebab" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>
+        </div>
+        <div class="grp">Layouts</div>
+        <div class="row"><div class="body"><div class="ttl">Polski / English (typograficzna)</div></div></div>
+        <div class="row add"><div class="body"><div class="ttl">Add layout</div></div></div>
+        <div class="grp">Language data</div>
+        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="res">polski.dict</div></div>
+        <div class="row"><div class="body"><div class="ttl">Prediction</div></div><div class="chip warn">Not installed</div></div>
+        <div class="row"><div class="body"><div class="ttl">Voice input</div></div><div class="chip">Built&#8209;in</div></div>
+        <div class="grp" style="color:var(--fg2)">Multilingual</div>
+        <div class="row two dis"><div class="body"><div class="ttl">Type in two languages at once</div><div class="sub">Add a second language to use this</div></div><div class="sw"><i></i></div></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </div>
+  <div class="notes">
+    <span class="tag">New component</span>
+    <h3>What a language actually needs</h3>
+    <p>The data says five things: a name, three resource slots (<code>LanguageOptions</code> &mdash; dictionary, transformer, voice input, each a nullable filename), a list of layouts, a multilingual flag, and deletion. That is the whole surface. Everything below follows from it.</p>
+    <p><b>Layouts come first.</b> They are what somebody opens this screen to change; the three model slots are plumbing that is correct by default. Today the order is reversed.</p>
+    <p><b>A slot has three states, not two.</b> A named file, a built&#8209;in fallback, or nothing at all. Today all three render as a filename or the word &ldquo;None&rdquo;, so &ldquo;none, and that is fine&rdquo; looks identical to &ldquo;none, and prediction is off.&rdquo; The chip carries the difference, and only the state that needs attention takes colour. The app already computes this distinction &mdash; <code>ConfirmResourceActionDialog</code> checks <code>hasBuiltInFallback</code> &mdash; but only after you tap.</p>
+    <p><b>With one language, three controls are inert.</b> The layout cannot be removed (there would be none), the language cannot be removed (there would be none), and multilingual typing needs a second language before it means anything. The card shows that, instead of offering controls that quietly do nothing: the multilingual row is disabled and says why, and the two removals are absent rather than greyed.</p>
+    <p><b>Destruction moves to the overflow.</b> A full&#8209;width filled red button is the loudest thing on the screen, and it is the action wanted least often.</p>
+    <p><b>Compose:</b> <code>LanguageSurface</code> is rebuilt in <code>pages/Languages.kt</code>. <code>LanguageConfigurable</code> (50&nbsp;dp) and <code>LayoutConfigurable</code> (44&nbsp;dp) are deleted &mdash; both become the standard 56&nbsp;dp row &mdash; and so is <code>ActionableItem</code>. <code>LanguageOptions</code> gains a per&#8209;slot state so the chip can tell a fallback from a gap.</p>
+    <table class="num">
+      <tr><th>Element</th><th>Today</th><th>Kit</th></tr>
+      <tr><td>Resource row height</td><td class="was">50&nbsp;dp</td><td>56&nbsp;dp</td></tr>
+      <tr><td>Layout row height</td><td class="was">44&nbsp;dp</td><td>56&nbsp;dp</td></tr>
+      <tr><td>Card side inset</td><td class="was">32&nbsp;dp</td><td>12&nbsp;dp</td></tr>
+      <tr><td>Gaps inside the card</td><td class="was">32, 24, 21, 10, 9, 4&nbsp;dp</td><td>one 8&nbsp;dp rhythm</td></tr>
+      <tr><td>Multilingual control</td><td class="was">checkbox</td><td>switch, with a reason</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2 class="sec">On the keyboard</h2>
+<p class="lede">These panels render in the <em>keyboard&rsquo;s</em> palette over somebody else&rsquo;s app, so they are drawn here on the keyboard&rsquo;s own ground rather than the settings ground. Every number below is measured from a 1080&nbsp;px capture at density&nbsp;3.</p>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev kbd">
+      <div class="label">Light</div>
+      <div class="wbar">
+        <div class="ib"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></div>
+        <div class="wt">All actions</div>
+        <div class="txtbtn">Edit</div>
+        <div class="ib"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 11l7-7 7 7"/></svg></div>
+      </div>
+      <div class="agrid">
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/></svg><div class="l">Emoji</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg><div class="l">Debug</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7L4 12l5 5M4 12h11a5 5 0 0 1 0 10"/></svg><div class="l">Undo</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7l5 5-5 5M20 12H9a5 5 0 0 0 0 10"/></svg><div class="l">Redo</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4"/></svg><div class="l">Text editor</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg><div class="l">Clipboard</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/><circle cx="12" cy="15" r="1.2"/></svg><div class="l">Theme</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/></svg><div class="l">Resize</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9zM12 12v7a2 2 0 0 0 4 0"/></svg><div class="l">One&#8209;handed</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><div class="l">Voice</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><div class="l">Language</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg><div class="l">Settings</div></div>
+      </div>
+    </div>
+    <div class="dev kbd dark">
+      <div class="label">Dark</div>
+      <div class="wbar">
+        <div class="ib"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></div>
+        <div class="wt">All actions</div>
+        <div class="txtbtn">Edit</div>
+        <div class="ib"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 11l7-7 7 7"/></svg></div>
+      </div>
+      <div class="agrid">
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/></svg><div class="l">Emoji</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg><div class="l">Debug</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7L4 12l5 5M4 12h11a5 5 0 0 1 0 10"/></svg><div class="l">Undo</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7l5 5-5 5M20 12H9a5 5 0 0 0 0 10"/></svg><div class="l">Redo</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4"/></svg><div class="l">Text editor</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg><div class="l">Clipboard</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/><circle cx="12" cy="15" r="1.2"/></svg><div class="l">Theme</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/></svg><div class="l">Resize</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9zM12 12v7a2 2 0 0 0 4 0"/></svg><div class="l">One&#8209;handed</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><div class="l">Voice</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><div class="l">Language</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg><div class="l">Settings</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="notes">
+    <span class="tag">Redesigned</span>
+    <h3>Action cards and the window bar</h3>
+    <p><b>The outer margin is smaller than the gutter.</b> Measured: cards sit 45&nbsp;px apart with 34&nbsp;px to the right screen edge. An inner gap wider than the outer one makes a grid read as clipped rather than inset. The kit puts 16&nbsp;dp outside and 8&nbsp;dp between, so the margin always wins.</p>
+    <p><b>The grid is not centred.</b> 120&nbsp;px on the left against 34&nbsp;px on the right, an 86&nbsp;px difference that needs no ruler to see. It comes from a symmetric <code>padding(8.dp)</code> applied inside a window that is already inset on one side in one&#8209;handed mode.</p>
+    <p><b>The tiles are enormous.</b> 93&nbsp;&times;&nbsp;86&nbsp;dp to carry a 24&nbsp;dp icon and one word, so six actions fill a panel that holds twelve at 76&nbsp;&times;&nbsp;72&nbsp;dp. A fixed 4&#8209;column grid also gives a round column pitch; <code>GridCells.Adaptive(98.dp)</code> distributes the remainder, so the pitch lands on no particular number and lines up with nothing else on screen.</p>
+    <p><b>Labels are set at 100% leading.</b> <code>Typography.Small.copy(lineHeight&nbsp;=&nbsp;12.sp)</code> at a 12&nbsp;sp size, so &ldquo;Clipboard Manager&rdquo; sets its two lines touching. Leading goes to 1.25, and the labels get shorter &mdash; the panel is already titled &ldquo;All actions&rdquo;, so &ldquo;Manager&rdquo; and &ldquo;Info&rdquo; add nothing.</p>
+    <p><b>The edit button was a 115&nbsp;dp outlined pill</b> &mdash; measured 345&nbsp;px wide, a third of the bar, carrying the same visual weight as the title beside it. An outline promises a primary action. It becomes a text button, which is what a secondary action in a title bar looks like.</p>
+    <p>One thing that turned out fine: the icons do <em>not</em> drift when a label wraps to two lines. Measured centres across a row of one&#8209; and two&#8209;line tiles were 568, 568 and 570&nbsp;px. The wrap&#8209;content <code>Column</code> keeps them put.</p>
+    <p><b>Compose:</b> <code>ActionItem</code> and <code>MoreActionsView</code> in <code>actions/MoreActions.kt</code>; <code>ActionWindowBar</code> in <code>ActionBar.kt:938</code>. The grid moves from <code>GridCells.Adaptive(98.dp)</code> to <code>GridCells.Fixed(4)</code>, and the <code>OutlinedButton</code> in <code>MoreActionsAction.WindowTitleBar</code> becomes a <code>TextButton</code>. <code>ActionsEditor</code> takes the same grid so the editor and the panel stay the same shape.</p>
+    <table class="num">
+      <tr><th>Metric</th><th>Measured today</th><th>Kit</th></tr>
+      <tr><td>Tile</td><td class="was">93 &times; 86&nbsp;dp</td><td>76 &times; 72&nbsp;dp</td></tr>
+      <tr><td>Columns</td><td class="was">adaptive, 3</td><td>fixed, 4</td></tr>
+      <tr><td>Gutter</td><td class="was">15&nbsp;dp</td><td>8&nbsp;dp</td></tr>
+      <tr><td>Outer margin</td><td class="was">40 / 11&nbsp;dp</td><td>16&nbsp;dp both sides</td></tr>
+      <tr><td>Label leading</td><td class="was">12&nbsp;sp on 12&nbsp;sp</td><td>1.25</td></tr>
+      <tr><td>Edit control</td><td class="was">115&nbsp;dp outlined</td><td>text button</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev kbd">
+      <div class="label">Today &mdash; a bare 22 &times; 40&nbsp;px glyph, no container</div>
+      <div class="kstrip">
+        <div class="oh bare"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></div>
+        <div class="keys">
+          <div class="krow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i></div>
+          <div class="krow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i></div>
+          <div class="krow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="dev kbd">
+      <div class="label">Kit &mdash; contained, centred in its gutter and on the rows</div>
+      <div class="kstrip">
+        <div class="oh"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></div>
+        <div class="keys">
+          <div class="krow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i></div>
+          <div class="krow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i></div>
+          <div class="krow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="notes">
+    <span class="tag">Redesigned</span>
+    <h3>The control that moves the keyboard left and right</h3>
+    <p><b>It is the only control on the keyboard with no container.</b> Its neighbours all sit in filled circles &mdash; the action&#8209;bar overflow measures 89&nbsp;px across, the expand and microphone buttons about 100 &mdash; while this one is a bare 22&nbsp;&times;&nbsp;40&nbsp;px stroke laid straight on the keyboard ground. It reads as decoration rather than a button.</p>
+    <p><b>It does not hold still.</b> Across three captures of the same session its centre sits at y&nbsp;180, y&nbsp;204 and y&nbsp;176 &mdash; it moves 28&nbsp;px between screens, because it is pinned to the top of a full&#8209;height column whose top depends on whether the action bar is expanded (<code>absolutePadding(top = if (isActionsExpanded) ActionBarHeight else 0.dp)</code>). The kit centres it on the letter rows, so it is the same distance from the thumb every time.</p>
+    <p><b>Nothing shares a left edge.</b> On the actions panel the chevron&rsquo;s stroke starts at x&nbsp;57, the back arrow&rsquo;s at 142, and the card grid at 120 &mdash; three different left edges in one view. The kit gives the gutter a single centreline and hangs the control on it.</p>
+    <p><b>In an action window it disappears.</b> The emoji and actions panels already carry a back arrow 96&nbsp;px away; two left&#8209;pointing glyphs in one view, one meaning &ldquo;go back&rdquo; and the other &ldquo;move the keyboard&rdquo;, is not a spacing problem. The panel covers the keyboard anyway, so there is nothing to move while it is open.</p>
+    <p><b>Compose:</b> <code>UixManager.OneHandedOptions</code>. The <code>Column</code> and its <code>Spacer(weight)</code> become one <code>Box</code> aligned <code>CenterStart</code> / <code>CenterEnd</code>; the 48&nbsp;dp hit target is kept and a <code>Surface</code> at <code>keyboardContainer</code> supplies the 40&nbsp;dp circle. Long&#8209;press&#8209;to&#8209;exit and <code>HideOneHandedExitButtonSetting</code> are unchanged.</p>
+  </div>
+</div>
+
+<h2 class="sec">What this kit does not answer</h2>
+<div class="item wide">
+  <div class="notes">
+    <p>Which screen each setting lives on &mdash; that is the arrangement document, already written, and it is what step&nbsp;5 lays out.</p>
+    <p>The rest of the in-keyboard panels. The actions grid, its window bar and the one&#8209;handed control are designed above; clipboard settings, the theme picker and the bug viewer still share <code>Components.kt</code> and inherit the row family unchanged. All of them need checking against a photo background, since they render over someone else&rsquo;s app.</p>
+    <p>Tablet and landscape. The capture was phone portrait only.</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
