@@ -1032,16 +1032,21 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 <div class="item wide">
   <div class="notes">
     <p>Which screen each setting lives on &mdash; that is the arrangement document, already written, and it is what step&nbsp;5 lays out.</p>
-    <p>The rest of the in-keyboard panels. The actions grid, its window bar, the
-    one&#8209;handed control, the emoji page, the text editor, keyboard modes and the
-    clipboard&rsquo;s notice and empty states are designed above; what is left
-    untouched is the clipboard&rsquo;s <em>clip rows</em>, the theme picker&rsquo;s
-    <em>swatch grid</em> and the bug viewer, whose own empty state keeps its
-    debug&#8209;styled label, which still share
-    <code>Components.kt</code> and inherit the row family unchanged. The theme panel
-    around that grid is not untouched: it took the shared title bar and its headings
-    moved to the section header. All of them need checking against a photo background, since they render
-    over someone else&rsquo;s app.</p>
+    <p><b>What is designed above:</b> the actions grid and its window bar, the
+    one&#8209;handed control, the emoji page, the text editor, keyboard modes, the
+    theme panel&rsquo;s title bar and headings, and the clipboard&rsquo;s notice and
+    empty states.</p>
+    <p><b>What is not:</b> three sets of items inside those panels, each of which
+    draws itself rather than inheriting anything. A <em>clip row</em>
+    (<code>ClipboardEntryView</code>) is a hand&#8209;built surface with its own pin
+    and remove controls. A <em>theme swatch</em> (<code>ThemePreview</code>) is a box
+    with a border and a rendering of the theme inside it. The <em>bug viewer</em> is
+    monospace text and text buttons, and keeps its own debug&#8209;styled empty state,
+    being a developer surface. None of the three is a settings row, so none of them
+    inherits the row family; they were left because nothing in this pass needed them,
+    not because they were checked and passed.</p>
+    <p>All of these render over someone else&rsquo;s app, and none has been checked
+    against a photo background.</p>
     <p>Tablet and landscape. The capture was phone portrait only.</p>
     <p><b>Three exceptions to the one&#8209;treatment&#8209;per&#8209;job rule, each with its reason.</b>
     They are listed rather than left for a reader to find and take for oversights.</p>
