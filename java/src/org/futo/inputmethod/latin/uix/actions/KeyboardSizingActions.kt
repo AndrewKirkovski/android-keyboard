@@ -101,6 +101,16 @@ val KeyboardModeAction = Action(
                                 Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.action_keyboard_modes_go_back))
                             }
                         }
+                        // This panel keeps the keyboard visible, so the shared
+                        // ActionWindowBar -- which is what draws every other
+                        // panel's title -- is not rendered for it (UixManager.kt:842).
+                        // Without this the screen was the only one with no title at
+                        // all, and the "Resize keyboard" button on the right read as
+                        // one.
+                        Text(
+                            windowName(),
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
                         Spacer(Modifier.weight(1.0f))
                         TextButton(onClick = {
                             manager.showResizer()
