@@ -111,6 +111,20 @@ opening the panel on a phone at 1080px rather than by reading the code.
 - **Keyboard modes says which screen it is.** The shared window bar is only drawn
   when the keyboard is hidden, and this panel keeps it visible, so the screen had
   a back arrow and a Resize keyboard button with nothing between them.
+- **The theme panel has a header.** Same cause, and it had it worse: no bar at
+  all, only a floating close button in a circle sitting over the keyboard's
+  top-left key. `ActionWindow.showTitleBarAboveKeyboard` gives a panel its bar
+  while the keyboard is up; it defaults to false, so nothing else changes.
+- **The text editor is made of the keyboard's keys.** Its arrows were `primary`,
+  its clipboard keys `primaryContainer`, its modifiers `secondaryContainer` --
+  keyboard-scheme colours, so the file passes any check that greps for the
+  scheme, and the panel still looked like a different product from the keys
+  under it. It now uses the three treatments `BasicThemeProvider` gives the keys
+  themselves, and follows a theme that turns key borders off.
+- **One way of showing what is selected.** There were five: a filled glyph, a
+  tinted glyph, a pill, a border, a filled card. The panels now use the one the
+  keyboard already puts on a latched key, which is the only one that survives a
+  theme where the accent and the text colour are the same.
 
 ### Smaller changes
 
