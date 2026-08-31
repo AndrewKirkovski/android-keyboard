@@ -3,32 +3,18 @@ package org.futo.inputmethod.latin.uix.settings.pages
 import android.icu.text.Transliterator
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -39,6 +25,10 @@ import org.futo.inputmethod.latin.uix.SettingsTextEdit
 import org.futo.inputmethod.latin.uix.settings.BottomSpacer
 import org.futo.inputmethod.latin.uix.settings.NavigationItem
 import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
+import org.futo.inputmethod.latin.uix.settings.ScreenTitle
+import org.futo.inputmethod.latin.uix.settings.SettingSectionHeader
+import org.futo.inputmethod.latin.uix.settings.SettingsCard
+import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.settings.SettingsMenus
 import org.futo.inputmethod.latin.uix.settings.UserSetting
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
@@ -127,7 +117,14 @@ fun SearchScreen(navController: NavHostController = rememberNavController()) {
 
     LazyColumn {
         item {
-            Box(Modifier.padding(8.dp)) {
+            ScreenTitle(
+                stringResource(R.string.settings_search_menu_title),
+                showBack = true,
+                navController = navController
+            )
+        }
+        item {
+            Box(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 SettingsTextEdit(textFieldValue, icon = {
                     Icon(
                         Icons.Default.Search,
@@ -137,59 +134,27 @@ fun SearchScreen(navController: NavHostController = rememberNavController()) {
             }
         }
 
+        // Both of these were italic titleMedium, which is the only italic text in
+        // the app, and italic is not a weight the type scale has.
         if(query.isBlank()) {
             item {
-                Text(
-                    stringResource(R.string.settings_search_enter_your_search),
-                    style = MaterialTheme.typography.titleMedium.copy(fontStyle = FontStyle.Italic),
-                    color = MaterialTheme.colorScheme.outline,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                )
+                SettingsEmptyState(stringResource(R.string.settings_search_enter_your_search))
             }
         } else if(results.isEmpty()) {
             item {
-                Text(
-                    stringResource(R.string.settings_search_no_options_found),
-                    style = MaterialTheme.typography.titleMedium.copy(fontStyle = FontStyle.Italic),
-                    color = MaterialTheme.colorScheme.outline,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                )
+                SettingsEmptyState(stringResource(R.string.settings_search_no_options_found))
             }
         } else {
             results.forEach {
                 val menu = it.first
                 val settings = it.second
-                item {
-                    val nav = LocalNavController.current
-                    Row(Modifier
-                        .clickable {
-                            nav!!.navigate(menu.navPath)
-                        }
-                        .padding(16.dp)) {
-                        Text(
-                            stringResource(menu.title),
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier
-                                .align(CenterVertically)
-                                .weight(1.0f)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Icon(Icons.Default.ArrowForward, contentDescription = null)
-                    }
-                }
-                items(settings) {
-                    it.component()
-                }
-                item {
-                    Spacer(Modifier.height(8.dp))
-                    HorizontalDivider()
-                }
+                // The screen a result belongs to is a section header, as it is on
+                // every other screen that groups rows. It used to be a bespoke
+                // clickable row with a forward arrow, and the rows beneath it were
+                // drawn straight onto the background with a divider between groups
+                // -- the shape the rest of the app was moved off.
+                item { SettingSectionHeader(stringResource(menu.title)) }
+                item { SettingsCard(rows = settings.map { setting -> setting.component }) }
             }
 
             item { BottomSpacer() }
