@@ -406,7 +406,7 @@ fun ConfirmResourceActionDialog(
 
     AlertDialog(
         title = {
-            Text(text = "${locale.displayLanguage} - ${resourceKind.kindTitle(LocalResources.current)}")
+            Text(text = "${Subtypes.getLocaleDisplayName(locale, locale)} - ${resourceKind.kindTitle(LocalResources.current)}")
         },
         text = {
             if (isCurrentlySet) {
@@ -486,7 +486,7 @@ fun ConfirmDeleteLanguageDialog(
             Text(
                 text = stringResource(
                     R.string.language_settings_remove_language_title,
-                    locale.displayLanguage
+                    Subtypes.getLocaleDisplayName(locale, locale)
                 )
             )
         },
@@ -494,7 +494,7 @@ fun ConfirmDeleteLanguageDialog(
             Text(
                 text = stringResource(
                     R.string.language_settings_remove_language_body,
-                    locale.displayLanguage
+                    Subtypes.getLocaleDisplayName(locale, locale)
                 )
             )
         },

@@ -154,14 +154,15 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 }
 
 /* app bar — the One UI signature: a large title with room above it */
-.appbar { padding: 28px 24px 20px; }
-.appbar .t { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+.appbar { padding: 16px 16px; display: flex; gap: 18px; align-items: center; }
+.appbar .t { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.21; }
 .appbar.collapsed { padding: 12px 16px; display: flex; gap: 18px; align-items: center; border-bottom: 1px solid var(--line); }
-.appbar.collapsed .t { font-size: 17px; font-weight: 500; letter-spacing: 0; }
+.appbar.collapsed .t { font-size: 16px; font-weight: 400; letter-spacing: 0; }
 .back { width: 24px; height: 24px; flex: none; }
 
 /* section header — One UI: accent-coloured, sentence case, no rail */
 .shead { font-size: 13px; font-weight: 700; color: var(--acc); padding: 24px 24px 8px; letter-spacing: 0.01em; }
+.glabel { font-size: 16px; color: var(--fg); padding: 12px 20px 0; }
 
 /* the card group: rows live inside a rounded card on the tinted ground */
 .group { background: var(--card); border-radius: 22px; margin: 0 12px 8px; overflow: hidden; }
@@ -173,26 +174,26 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 .row .body { flex: 1; min-width: 0; padding: 10px 0; }
 .row .ttl { font-size: 16px; font-weight: 400; }
 .row .sub { font-size: 13px; line-height: 1.35; color: var(--fg2); margin-top: 2px; }
-.row.dis { opacity: .38; }
+.row.dis { opacity: .5; }
 .row .chev { width: 20px; height: 20px; color: var(--fg2); flex: none; }
 
 /* switch — One UI's is a rounded pill with a large travel */
-.sw { width: 46px; height: 28px; border-radius: 14px; background: var(--track); position: relative; flex: none; transition: background .15s; }
-.sw i { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.28); transition: left .15s; }
+.sw { width: 52px; height: 32px; border-radius: 16px; background: var(--track); position: relative; flex: none; transition: background .15s; }
+.sw i { position: absolute; top: 8px; left: 8px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.28); transition: all .15s; }
 .sw.on { background: var(--acc); }
-.sw.on i { left: 21px; }
+.sw.on i { top: 4px; left: 24px; width: 24px; height: 24px; }
 
 /* radio */
-.rd { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--fg2); flex: none; position: relative; }
+.rd { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--fg2); flex: none; position: relative; }
 .rd.on { border-color: var(--acc); }
 .rd.on::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--acc); }
 
 /* THE SLIDER — title and value on one line, track beneath, full row width */
-.sl { padding: 14px 20px 18px; }
+.sl { padding: 12px 20px; }
 .sl .head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
 .sl .head .ttl { font-size: 16px; }
 .sl .head .val { font-size: 15px; font-weight: 500; color: var(--acc); font-variant-numeric: tabular-nums; }
-.sl .track { height: 4px; border-radius: 2px; background: var(--track); margin-top: 14px; position: relative; }
+.sl .track { height: 4px; border-radius: 2px; background: var(--track); margin-top: 8px; position: relative; }
 .sl .fill { position: absolute; inset: 0 auto 0 0; border-radius: 2px; background: var(--acc); }
 .sl .knob { position: absolute; top: 50%; width: 20px; height: 20px; border-radius: 50%; background: var(--acc); transform: translate(-50%,-50%); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
 .sl .ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--fg2); margin-top: 10px; }
@@ -202,24 +203,25 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 /* the sheet the picker opens */
 .sheet { margin: 8px 0 0; background: var(--card); border-radius: 26px 26px 0 0; padding: 8px 0 12px; }
 .sheet .grab { width: 32px; height: 4px; border-radius: 2px; background: var(--track); margin: 4px auto 8px; }
-.sheet h5 { margin: 0; padding: 8px 20px 12px; font-size: 17px; font-weight: 500; }
+.sheet h5 { margin: 0; padding: 8px 20px 12px; font-size: 20px; font-weight: 500; }
 .sheet .row { min-height: 56px; }
 .sheet .row + .row { box-shadow: none; }
 
 /* tip */
-.tip { margin: 8px 12px; background: color-mix(in srgb, var(--acc) 12%, transparent); border-radius: 16px; padding: 14px 18px; font-size: 14px; line-height: 1.45; }
-.tip.warn { background: color-mix(in srgb, #d08700 20%, transparent); }
+.tip { margin: 4px 12px; background: color-mix(in srgb, var(--acc) 12%, transparent); border-radius: 16px; padding: 12px 16px; font-size: 13px; line-height: 1.45; }
+.tip.warn { background: #f9dedc; color: #410e0b; }
+.dev.dark .tip.warn { background: #8c1d18; color: #f9dedc; }
 
 /* dialog */
 .dlg { margin: 12px; background: var(--card); border-radius: 26px; padding: 24px; }
-.dlg h4 { margin: 0 0 8px; font-size: 19px; font-weight: 500; }
-.dlg p { margin: 0 0 20px; font-size: 14px; color: var(--fg2); line-height: 1.45; }
+.dlg h4 { margin: 0 0 8px; font-size: 24px; font-weight: 400; line-height: 1.33; }
+.dlg p { margin: 0 0 20px; font-size: 13px; color: var(--fg2); line-height: 1.45; }
 .dlg .btns { display: flex; justify-content: flex-end; gap: 8px; }
 .btn { border: 0; background: transparent; color: var(--acc); font: inherit; font-size: 14px; font-weight: 500; padding: 10px 16px; border-radius: 20px; cursor: pointer; font-family: var(--device); }
 .btn.fill { background: var(--acc); color: #fff; }
 
 /* empty + progress */
-.empty { padding: 40px 24px; text-align: center; color: var(--fg2); }
+.empty { padding: 32px 24px; text-align: center; color: var(--fg2); font-size: 13px; }
 .empty .big { font-size: 15px; color: var(--fg); margin-bottom: 4px; }
 .empty .sm { font-size: 13px; }
 .prog { height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; margin: 0 20px; }
@@ -233,10 +235,10 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 .lang { background: var(--card); border-radius: 22px; margin: 0 12px 8px; overflow: hidden; }
 .lang .hd { display: flex; align-items: flex-start; gap: 16px; padding: 18px 20px 16px; }
 .lang .hd .n { flex: 1; min-width: 0; }
-.lang .hd .n b { display: block; font-size: 21px; font-weight: 500; letter-spacing: -0.01em; }
+.lang .hd .n b { display: block; font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
 .lang .hd .n span { font-size: 13px; color: var(--fg2); font-variant-numeric: tabular-nums; }
 .lang .hd .kebab { width: 24px; height: 24px; flex: none; color: var(--fg2); }
-.lang .grp { font-size: 12px; font-weight: 700; color: var(--acc); padding: 6px 20px 6px; letter-spacing: .02em; box-shadow: inset 0 1px 0 var(--line); }
+.lang .grp { font-size: 13px; font-weight: 700; color: var(--acc); padding: 6px 20px 6px; letter-spacing: .02em; box-shadow: inset 0 1px 0 var(--line); }
 .lang .row { padding: 0 20px; }
 .lang .row + .row { box-shadow: none; }
 .lang .add { color: var(--acc); }
@@ -292,8 +294,17 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 
 <header class="top">
   <h1>Keyboard settings &mdash; component kit</h1>
-  <p>The vocabulary the settings app is rebuilt from, in the Samsung One&nbsp;UI idiom. Every specimen below is at a true 360&nbsp;dp width in Roboto, so it can be held next to the phone. Light on the left, dark on the right.</p>
-  <p>Each entry names the Compose composable it maps to, so implementation is mechanical rather than interpretive. Numbers marked <span class="mono" style="text-decoration:line-through">like this</span> are what the app uses today.</p>
+  <p>The vocabulary the settings app is rebuilt from, in the Samsung One&nbsp;UI idiom. Every settings specimen below is at a true 360&nbsp;dp width in Roboto, so it can be held next to the phone; the keyboard sections are drawn at the same 360 for comparability, while their measurements come off a 411&nbsp;dp phone, so read those as proportions rather than as the drawn pixels. Light on the left, dark on the right.</p>
+  <p>Each entry names the Compose composable it maps to, so implementation is mechanical rather than interpretive.</p>
+  <p class="tense"><b>How to read the tense.</b> This was written as a brief, before the
+  work, and most of it has since been built. So: numbers marked
+  <span class="mono" style="text-decoration:line-through">like this</span>, the
+  <span class="mono">Now</span> column of every table, and every paragraph that opens by
+  naming a problem are <b>measurements of the app as it stood on 30&nbsp;August&nbsp;2026</b>
+  &mdash; history, not a description of what ships. The <span class="mono">Kit</span> column
+  is what the app does now, except where a row says the value was tried and reverted. Where
+  a section describes something that was built differently from the way it was first drawn,
+  it says so.</p>
   <p class="prov">Reference for the settings rebuild &mdash; the target the Compose
   work is measured against, not a description of what ships today. Every entry
   names the composable and file it maps to. Numbers marked
@@ -307,8 +318,8 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 <div class="item wide">
   <div class="notes">
     <span class="tag">Spacing</span>
-    <h3>One scale, eight steps</h3>
-    <p>A 4&nbsp;dp base. Nothing in the kit uses a value outside it &mdash; that single constraint removes the raggedness, because a gap can no longer be 9 or 19 or 21&nbsp;dp because someone typed it.</p>
+    <h3>One scale, six steps and seven names</h3>
+    <p>A 4&nbsp;dp base: <code>xs</code>&nbsp;4, <code>s</code>&nbsp;8, <code>m</code>&nbsp;12, <code>l</code>&nbsp;16, <code>xl</code>&nbsp;24, <code>xxl</code>&nbsp;32, with seven named tokens for the places a name reads better than a step &mdash; <code>cardInset</code>, <code>cardGap</code>, <code>rowInset</code>, <code>rowHeight</code>, <code>rowHeightTwoLine</code>, <code>iconSlot</code>, <code>iconGap</code>. A gap can no longer be 9 or 19 or 21&nbsp;dp because someone typed it. Radii are not on this scale and were never meant to be: a 22&nbsp;dp card and a 26&nbsp;dp dialog are shapes, not spacing.</p>
     <table class="num">
       <tr><th>Step</th><th>Value</th><th>Used for</th></tr>
       <tr><td>1</td><td>4 dp</td><td>title&ndash;subtitle</td></tr>
@@ -328,7 +339,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
   <div class="notes">
     <span class="tag">Colour</span>
     <h3>A tinted ground, so cards can sit on it</h3>
-    <p>This is the one palette change the One&nbsp;UI idiom forces. Today the app paints <code>background</code> and <code>surface</code> the same value (<code>#FAF9F6</code>), which is correct for a flat list and impossible for grouped cards &mdash; a white card on a white ground is invisible. The ground moves down and the card takes the old value.</p>
+    <p>This is the one palette change the One&nbsp;UI idiom forces. Today the app paints <code>background</code> and <code>surface</code> the same value (<code>#FAF9F6</code>), which is correct for a flat list and impossible for grouped cards &mdash; a white card on a white ground is invisible. The ground moves down to <code>#F4F3EF</code> and the card takes <code>#FFFFFF</code>; the old <code>#FAF9F6</code> becomes <code>surfaceContainerLow</code>.</p>
     <div class="swatches">
       <div class="sw-chip"><b style="background:#f4f3ef"></b>#f4f3ef<br>ground</div>
       <div class="sw-chip"><b style="background:#ffffff"></b>#ffffff<br>card</div>
@@ -346,29 +357,30 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 <div class="item wide">
   <div class="notes">
     <span class="tag">Type</span>
-    <h3>Six roles, one system</h3>
-    <p>The app currently runs two type systems in parallel: a hand-rolled <code>Typography</code> object used 58&nbsp;times under <code>settings/</code>, against 9&nbsp;uses of <code>MaterialTheme.typography</code>. Four of the hand-rolled styles set line-height equal to font-size &mdash; 100%&nbsp;leading. These six replace both.</p>
+    <h3>Seven roles, one system</h3>
+    <p>The app currently runs two type systems in parallel: a hand-rolled <code>Typography</code> object used 58&nbsp;times under <code>settings/</code>, against 9&nbsp;uses of <code>MaterialTheme.typography</code>. Five of the hand-rolled styles set line-height equal to font-size &mdash; 100%&nbsp;leading. These seven replace both.</p>
     <table class="num">
       <tr><th>Role</th><th>Size / line</th><th>Weight</th><th>M3 slot</th></tr>
-      <tr><td>Large title</td><td>30 / 34</td><td>700</td><td><code>headlineMedium</code></td></tr>
-      <tr><td>Collapsed title</td><td>17 / 22</td><td>500</td><td><code>titleMedium</code></td></tr>
-      <tr><td>Section header</td><td>13 / 18</td><td>700, accent</td><td><code>labelMedium</code></td></tr>
+      <tr><td>Large title</td><td>28 / 34</td><td>600</td><td><code>headlineMedium</code></td></tr>
+      <tr><td>Card title</td><td>20 / 26</td><td>500</td><td><code>titleMedium</code></td></tr>
+      <tr><td>Section header</td><td>13 / 16</td><td>700, accent</td><td><code>labelMedium</code></td></tr>
       <tr><td>Row title</td><td>16 / 22</td><td>400</td><td><code>bodyLarge</code></td></tr>
       <tr><td>Row subtitle</td><td>13 / 18</td><td>400, secondary</td><td><code>bodyMedium</code></td></tr>
       <tr><td>Control value</td><td>15 / 20</td><td>500, accent</td><td><code>labelLarge</code></td></tr>
+      <tr><td>Caption</td><td>12 / 15</td><td>400</td><td><code>labelSmall</code></td></tr>
     </table>
     <p>Row title drops from weight&nbsp;500 to 400. At 16&nbsp;sp against a 13&nbsp;sp secondary subtitle the hierarchy is already carried by size and colour; the extra weight was doing the work colour should do, and made every row shout equally.</p>
   </div>
 </div>
 
 <h2 class="sec">App bar</h2>
-<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement across 69&nbsp;call sites. <code>LargeTopAppBar</code> is used zero times today.</p>
+<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement across 53&nbsp;call sites. <code>LargeTopAppBar</code> is used zero times today.</p>
 
 <div class="item">
   <div class="pair">
     <div class="dev">
       <div class="label">Light &mdash; expanded</div>
-      <div class="appbar"><div class="t">Text &amp; corrections</div></div>
+      <div class="appbar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg><div class="t">Text &amp; corrections</div></div>
       <div class="shead">As you type</div>
       <div class="group">
         <div class="row"><div class="body"><div class="ttl">Auto-capitalization</div></div><div class="sw on"><i></i></div></div>
@@ -388,9 +400,9 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
   </div>
   <div class="notes">
     <h3>Large collapsing title</h3>
-    <p>Expanded: 30&nbsp;sp, 28&nbsp;dp of space above it. The generous space is the point &mdash; it puts the title where a thumb is not, and the content where it is.</p>
-    <p>Collapsed: 17&nbsp;sp with the back arrow, 45&nbsp;dp tall, a hairline beneath. It appears on scroll, which the app already does; what it does not do is use a real app bar to do it.</p>
-    <p><b>Compose:</b> <code>Scaffold</code> + <code>LargeTopAppBar</code> with <code>enterAlwaysScrollBehavior</code>, replacing <code>ScreenTitle(showBack = true)</code> at its 26&nbsp;call sites. The other 43&nbsp;call sites are section headers and become the component below.</p>
+    <p>Expanded: 28&nbsp;sp, with 16&nbsp;dp of space above it and 16 below. The generous space is the point &mdash; it puts the title where a thumb is not, and the content where it is.</p>
+    <p>Collapsed: the row title at 16&nbsp;sp with the back arrow, 49&nbsp;dp tall &mdash; 12&nbsp;dp above and below a 24&nbsp;dp icon, and a hairline beneath. It appears on scroll, which the app already does; what it does not do is use a real app bar to do it.</p>
+    <p><b>Compose:</b> <code>Scaffold</code> + <code>LargeTopAppBar</code> with <code>enterAlwaysScrollBehavior</code> &mdash; asked for, not built. <code>ScreenTitle</code> keeps its 28&nbsp;<code>showBack = true</code> call sites and hands the title to <code>CollapsedScreenTitle</code> through a scroll anchor instead. The other 25&nbsp;call sites are section headers and become the component below.</p>
   </div>
 </div>
 
@@ -428,7 +440,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
   <div class="notes">
     <h3>Grouping you can see</h3>
     <p>The card is what makes grouping legible without a divider for every row. Rows inside one card belong together; the 8&nbsp;dp of ground between cards says the next group is a different subject.</p>
-    <p>The section header is accent-coloured and sentence case. The current one is uppercase, letterspaced, and carries a 3&times;14&nbsp;dp accent rail &mdash; three devices doing one job. Colour alone is enough when the card already provides the boundary.</p>
+    <p>The section header is accent-coloured and sentence case. The current one is uppercase, letterspaced, and carries an accent rail &mdash; three devices doing one job. Colour alone is enough when the card already provides the boundary.</p>
     <table class="num">
       <tr><th></th><th>Now</th><th>Kit</th></tr>
       <tr><td>Card radius</td><td class="was">none</td><td>22 dp</td></tr>
@@ -436,7 +448,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       <tr><td>Header case</td><td class="was">UPPER, 0.08em</td><td>Sentence, accent</td></tr>
       <tr><td>Space above header</td><td class="was">28 dp</td><td>24 dp</td></tr>
     </table>
-    <p><b>Compose:</b> <code>SectionHeader</code> (new) and <code>SettingGroup</code> (new, a <code>Card</code>), replacing <code>ScreenTitle(showBack = false)</code>.</p>
+    <p><b>Compose:</b> <code>SettingSectionHeader</code> and <code>SettingsCard</code> &mdash; a <code>Surface</code> rather than a <code>Card</code> &mdash; replacing <code>ScreenTitle(showBack = false)</code>, with <code>SettingsCardItem</code> for the lists that have to stay lazy.</p>
   </div>
 </div>
 
@@ -455,7 +467,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
           <div class="body"><div class="ttl">Resize keyboard</div><div class="sub">Size, one-handed, floating, split</div></div>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </div>
-        <div class="row dis"><div class="body"><div class="ttl">Vibration strength</div></div><div class="sw"><i></i></div></div>
+        <div class="row two dis"><div class="body"><div class="ttl">Multilingual Typing</div><div class="sub">Add a second language to use this</div></div><div class="sw"><i></i></div></div>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -469,7 +481,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
           <div class="body"><div class="ttl">Resize keyboard</div><div class="sub">Size, one-handed, floating, split</div></div>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </div>
-        <div class="row dis"><div class="body"><div class="ttl">Vibration strength</div></div><div class="sw"><i></i></div></div>
+        <div class="row two dis"><div class="body"><div class="ttl">Multilingual Typing</div><div class="sub">Add a second language to use this</div></div><div class="sw"><i></i></div></div>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -483,15 +495,15 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       <tr><td>With subtitle</td><td class="was">68&ndash;76</td><td>72 dp</td></tr>
       <tr><td>Side padding</td><td class="was">20 left / 16 right</td><td>20 dp both</td></tr>
       <tr><td>Icon gutter</td><td class="was">48 dp + 12</td><td>24 dp + 16</td></tr>
-      <tr><td>Disabled</td><td class="was">alpha .5</td><td>alpha .38</td></tr>
+      <tr><td>Disabled</td><td class="was">alpha .5</td><td>alpha .38 &mdash; asked, not built, the row still fades to .5</td></tr>
     </table>
-    <p>The icon gutter shrinks from a 48&nbsp;dp column to the icon&rsquo;s own 24&nbsp;dp. The wide column exists because <code>NavigationItem</code> draws a 40&nbsp;dp tinted circle; dropping the circle lets iconed and un-iconed rows share one text edge, which is what the ragged gutter was really about.</p>
-    <p><b>Compose:</b> <code>SettingRow</code> built on M3 <code>ListItem</code> &mdash; used zero times today &mdash; replacing <code>SettingItem</code>, <code>NavigationItem</code>, <code>LanguageConfigurable</code> and <code>LayoutConfigurable</code>.</p>
+    <p>The icon gutter shrinks from a 48&nbsp;dp column to the icon&rsquo;s own 24&nbsp;dp. The wide column existed because <code>NavigationItem</code> drew a 40&nbsp;dp tinted circle. The circle is gone and <code>NavigationItem</code> delegates to <code>SettingItem</code> with a bare 24&nbsp;dp icon, so iconed and un-iconed rows share one text edge, which is what the ragged gutter was really about.</p>
+    <p><b>Compose:</b> a new <code>SettingRow</code> on M3 <code>ListItem</code> &mdash; used zero times today &mdash; replacing <code>SettingItem</code>, <code>NavigationItem</code>, <code>LanguageConfigurable</code> and <code>LayoutConfigurable</code>. Not built that way: <code>SettingItem</code> was rewritten in place to the two heights, <code>NavigationItem</code> now delegates to it, <code>LanguageConfigurable</code> is deleted, and <code>LayoutConfigurable</code> survives at <code>Languages.kt:103</code> with no call sites left. <code>ListItem</code> is still used zero times.</p>
   </div>
 </div>
 
 <h2 class="sec">The slider</h2>
-<p class="lede">The one you called ugly. Its title currently renders as a full-width uppercase <em>section header</em>, its subtitle is inset 12&nbsp;dp where everything else uses 16, its value column is a fixed 24.8%&nbsp;of the row whatever the content, and the row has no vertical padding at all.</p>
+<p class="lede">The one you called ugly. Its title currently renders as a full-width uppercase <em>section header</em>, its subtitle is inset 12&nbsp;dp where everything else uses 20, its value column is pinned to <code>weight(0.33f)</code> of the row whatever the content, and the row has no vertical padding at all.</p>
 
 <div class="item">
   <div class="pair">
@@ -501,9 +513,8 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       <div class="group">
         <div class="row"><div class="body"><div class="ttl">Vibrate on keypress</div></div><div class="sw on"><i></i></div></div>
         <div class="sl">
-          <div class="head"><div class="ttl">Vibration strength</div><div class="val">42&nbsp;ms</div></div>
+          <div class="head"><div class="ttl">Vibration</div><div class="val">42ms</div></div>
           <div class="track"><div class="fill" style="width:42%"></div><div class="knob" style="left:42%"></div></div>
-          <div class="ends"><span>Off</span><span>Default</span></div>
         </div>
       </div>
       <div style="height:12px"></div>
@@ -514,9 +525,8 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       <div class="group">
         <div class="row"><div class="body"><div class="ttl">Vibrate on keypress</div></div><div class="sw on"><i></i></div></div>
         <div class="sl">
-          <div class="head"><div class="ttl">Vibration strength</div><div class="val">42&nbsp;ms</div></div>
+          <div class="head"><div class="ttl">Vibration</div><div class="val">42ms</div></div>
           <div class="track"><div class="fill" style="width:42%"></div><div class="knob" style="left:42%"></div></div>
-          <div class="ends"><span>Off</span><span>Default</span></div>
         </div>
       </div>
       <div style="height:12px"></div>
@@ -524,17 +534,17 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
   </div>
   <div class="notes">
     <h3>Title left, value right, track beneath</h3>
-    <p>The value moves to the end of the title line, in the accent colour and tabular figures so it does not jitter as it changes. That kills the fixed 24.8%&nbsp;column outright &mdash; a long value no longer squeezes the track, and a short one no longer strands white space.</p>
-    <p>The track spans the row. Ends are labelled where the extremes mean something (&ldquo;Off&rdquo;, &ldquo;Default&rdquo;) and omitted where they do not.</p>
+    <p>The value moves to the end of the title line, in the accent colour and tabular figures so it does not jitter as it changes. That kills the fixed third outright &mdash; a long value no longer squeezes the track, and a short one no longer strands white space.</p>
+    <p>The track spans the row. End labels where the extremes mean something were asked for and are not built &mdash; there is no end-label parameter. &ldquo;Default&rdquo; is the value at &minus;1, the left end of the vibration slider&rsquo;s &minus;1 to 100 range, and it reads in the value slot like any other reading.</p>
     <p>It sits <em>inside</em> the card, directly under the toggle that enables it, so the relationship is visible rather than implied by a section header.</p>
     <table class="num">
       <tr><th></th><th>Now</th><th>Kit</th></tr>
       <tr><td>Title</td><td class="was">uppercase section header</td><td>row title, 16 sp</td></tr>
       <tr><td>Value</td><td class="was">weight(0.33f), left</td><td>right, accent, tabular</td></tr>
-      <tr><td>Vertical padding</td><td class="was">0</td><td>14 / 18 dp</td></tr>
+      <tr><td>Vertical padding</td><td class="was">0</td><td>12&nbsp;dp both &mdash; 14&nbsp;/&nbsp;18 asked, built symmetric</td></tr>
       <tr><td>Subtitle inset</td><td class="was">12 dp</td><td>20 dp, as everything</td></tr>
     </table>
-    <p><b>Compose:</b> rewrite <code>SettingSliderForDataStoreItem</code> (<code>Components.kt:619</code>). The tap-to-type-a-value affordance stays; it moves onto the value text, which is now where a value belongs.</p>
+    <p><b>Compose:</b> rewrite <code>SettingSliderForDataStoreItem</code> (<code>Components.kt:810</code>). The tap-to-type-a-value affordance stays; it moves onto the value text, which is now where a value belongs.</p>
   </div>
 </div>
 
@@ -545,51 +555,53 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
   <div class="pair">
     <div class="dev">
       <div class="label">Light</div>
-      <div class="shead">Suggestion bar</div>
+      <div class="glabel">Suggestion bar mode</div>
       <div class="group">
-        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">Three alternatives</div></div></div>
-        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Two alternatives and the typed word</div></div></div>
+        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">3 alternatives</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">2 alternatives</div></div></div>
       </div>
       <div class="shead">Spacing</div>
       <div class="group">
-        <div class="row two"><div class="body"><div class="ttl">Automatic spaces</div><div class="sub val">After suggestions and punctuation</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="row two"><div class="body"><div class="ttl">Automatic spaces mode</div><div class="sub val">Immediate space after suggestions &amp; punctuation</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
       </div>
       <div class="sheet">
         <div class="grab"></div>
-        <h5>Automatic spaces</h5>
-        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Never</div></div></div>
-        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">After suggestions and punctuation</div></div></div>
-        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">After suggestions only</div></div></div>
+        <h5>Automatic spaces mode</h5>
+        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">Immediate space after suggestions &amp; punctuation</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Immediate space after suggestions</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Delayed space after suggestions (legacy mode)</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Disabled (not recommended)</div></div></div>
       </div>
     </div>
     <div class="dev dark">
       <div class="label">Dark</div>
-      <div class="shead">Suggestion bar</div>
+      <div class="glabel">Suggestion bar mode</div>
       <div class="group">
-        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">Three alternatives</div></div></div>
-        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Two alternatives and the typed word</div></div></div>
+        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">3 alternatives</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">2 alternatives</div></div></div>
       </div>
       <div class="shead">Spacing</div>
       <div class="group">
-        <div class="row two"><div class="body"><div class="ttl">Automatic spaces</div><div class="sub val">After suggestions and punctuation</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="row two"><div class="body"><div class="ttl">Automatic spaces mode</div><div class="sub val">Immediate space after suggestions &amp; punctuation</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
       </div>
       <div class="sheet">
         <div class="grab"></div>
-        <h5>Automatic spaces</h5>
-        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Never</div></div></div>
-        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">After suggestions and punctuation</div></div></div>
-        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">After suggestions only</div></div></div>
+        <h5>Automatic spaces mode</h5>
+        <div class="row"><div class="rd on"></div><div class="body"><div class="ttl">Immediate space after suggestions &amp; punctuation</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Immediate space after suggestions</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Delayed space after suggestions (legacy mode)</div></div></div>
+        <div class="row"><div class="rd"></div><div class="body"><div class="ttl">Disabled (not recommended)</div></div></div>
       </div>
     </div>
   </div>
   <div class="notes">
     <span class="tag">Redesigned</span>
     <h3>Radio group and picker</h3>
-    <p><b>The dropdown stops being an outlined box.</b> An outline says &ldquo;input&rdquo;, and this is not one &mdash; it is a choice among a fixed list, and One&nbsp;UI states that as a row that opens a sheet. The box was also the only element on the screen with a border, so it read as a foreign object dropped into a card, and it wrapped to two lines because &ldquo;Immediate space after suggestions &amp; punctuation&rdquo; is 46&nbsp;characters and no box that width will hold it.</p>
+    <p><b>The dropdown stops being an outlined box.</b> An outline says &ldquo;input&rdquo;, and this is not one &mdash; it is a choice among a fixed list, and One&nbsp;UI states that as a row that opens a sheet. Beside the plain rows of a card the box read as a foreign object dropped into one, and it wrapped to two lines because &ldquo;Immediate space after suggestions &amp; punctuation&rdquo; is 47&nbsp;characters and no box that width will hold it.</p>
     <p><b>The current value becomes the subtitle.</b> That is the standard two&#8209;line row at 72&nbsp;dp, so the picker introduces no new height and no new left edge, and the value gets a full line to itself instead of competing with the label for one. It takes the accent, because it is the part that changes.</p>
     <p><b>The options move into a sheet</b>, where a long option has room to be read in full rather than truncated to fit a control. The sheet is radio rows from this same kit, so nothing new is invented for it.</p>
-    <p>The radio sits in the leading slot at 22&nbsp;dp, sharing the row&rsquo;s text edge with an icon. Today it sits in the 48&nbsp;dp icon column, so every radio option is indented 80&nbsp;dp.</p>
-    <p><b>Compose:</b> <code>DropDownPickerSettingItem</code> keeps its signature and stops rendering <code>DropDownPicker</code> as <code>subcontent</code>; it becomes a <code>SettingItem</code> whose subtitle is the current selection, with a <code>ModalBottomSheet</code> of <code>SettingRadio</code> rows. <code>SettingRadio</code> is unchanged apart from no longer emitting a section header for its own label.</p>
+    <p>The radio sits in the row&rsquo;s 24&nbsp;dp leading slot, sharing its text edge with an icon; M3&rsquo;s <code>RadioButton</code> draws a 20&nbsp;dp glyph inside it. Today it sits in the 48&nbsp;dp icon column, so every radio option is indented 80&nbsp;dp.</p>
+    <p><b>Compose:</b> <code>DropDownPickerSettingItem</code> keeps its signature and stops rendering <code>DropDownPicker</code> as <code>subcontent</code>; it becomes a <code>SettingItem</code> that passes the current selection as its own <code>subcontent</code>, with a <code>ModalBottomSheet</code> whose rows are <code>SettingItem</code> carrying a <code>RadioButton</code> in the icon slot rather than <code>SettingRadio</code> itself. <code>SettingRadio</code> is unchanged apart from no longer emitting a section header for its own label.</p>
     <table class="num">
       <tr><th></th><th>Today</th><th>Kit</th></tr>
       <tr><td>Control</td><td class="was">outlined box, 1&nbsp;dp border</td><td>row + sheet</td></tr>
@@ -601,43 +613,43 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 </div>
 
 <h2 class="sec">Notices, dialogs, and the states nobody designed</h2>
-<p class="lede">The inventory reached fourteen <code>AlertDialog</code> call sites, five empty states and four progress states. None had a considered design when this section was written; the empty state below was built from it, and is what every empty list in the app and on the keyboard&rsquo;s panels uses now.</p>
+<p class="lede">The inventory reached thirteen <code>AlertDialog</code> call sites, five empty states and ten progress indicators. None had a considered design when this section was written; the empty state below was built from it, and is what every empty list in the app and on the keyboard&rsquo;s panels uses now, apart from the bug viewer, which keeps its own debug-styled string.</p>
 
 <div class="item">
   <div class="pair">
     <div class="dev">
       <div class="label">Light</div>
-      <div class="tip">Transformer&nbsp;LM is in alpha. Suggestions may be wrong more often than with the built-in dictionary.</div>
-      <div class="tip warn">This model has been fine-tuned on your own typing. Exporting it shares that data.</div>
+      <div class="tip">Note: Transformer LM is in alpha state</div>
+      <div class="tip warn">Please consider pinning fewer actions. The suggestion bar will need to be shrunk to accommodate this many actions.</div>
       <div class="dlg">
-        <h4>Remove polski?</h4>
-        <p>The layouts and the dictionary stay installed. You can add the language again at any time.</p>
-        <div class="btns"><button class="btn">Cancel</button><button class="btn fill">Remove</button></div>
+        <h4>Delete Polish?</h4>
+        <p>Remove Polish, all of its associated layouts and custom resources?</p>
+        <div class="btns"><button class="btn">Cancel</button><button class="btn">Remove</button></div>
       </div>
-      <div class="empty"><div class="big">No blocked words</div><div class="sm">Words you block from suggestions appear here.</div></div>
+      <div class="empty">There are no blacklisted words.</div>
       <div class="prog"><i></i></div>
       <div style="height:20px"></div>
     </div>
     <div class="dev dark">
       <div class="label">Dark</div>
-      <div class="tip">Transformer&nbsp;LM is in alpha. Suggestions may be wrong more often than with the built-in dictionary.</div>
-      <div class="tip warn">This model has been fine-tuned on your own typing. Exporting it shares that data.</div>
+      <div class="tip">Note: Transformer LM is in alpha state</div>
+      <div class="tip warn">Please consider pinning fewer actions. The suggestion bar will need to be shrunk to accommodate this many actions.</div>
       <div class="dlg">
-        <h4>Remove polski?</h4>
-        <p>The layouts and the dictionary stay installed. You can add the language again at any time.</p>
-        <div class="btns"><button class="btn">Cancel</button><button class="btn fill">Remove</button></div>
+        <h4>Delete Polish?</h4>
+        <p>Remove Polish, all of its associated layouts and custom resources?</p>
+        <div class="btns"><button class="btn">Cancel</button><button class="btn">Remove</button></div>
       </div>
-      <div class="empty"><div class="big">No blocked words</div><div class="sm">Words you block from suggestions appear here.</div></div>
+      <div class="empty">There are no blacklisted words.</div>
       <div class="prog"><i></i></div>
       <div style="height:20px"></div>
     </div>
   </div>
   <div class="notes">
     <h3>Tip, warning, dialog, empty, progress</h3>
-    <p>Tips take the card&rsquo;s 12&nbsp;dp inset and a 16&nbsp;dp radius, so they read as a sibling of the groups rather than a foreign object. The warning variant is amber, not red &mdash; red is for destruction, and these are cautions.</p>
-    <p>Empty states say what would be here and how it gets here. The current ones are a <code>Tip</code> saying &ldquo;&hellip;none&rdquo; or nothing at all.</p>
-    <p>The destructive action is filled and last; cancel is quiet and first. That ordering is Android&rsquo;s, not iOS&rsquo;s.</p>
-    <p><b>Compose:</b> <code>Tip</code> and <code>WarningTip</code> keep their signatures; <code>AlertDialog</code> gains a shared wrapper so the fourteen call sites stop each choosing their own button order. <code>SettingsEmptyState</code> is new, and shipped.</p>
+    <p>Tips take the card&rsquo;s 12&nbsp;dp inset and a 16&nbsp;dp radius, so they read as a sibling of the groups rather than a foreign object. The warning variant was asked for in amber, on the argument that red is for destruction and these are cautions. It is built in red: <code>WarningTip</code> takes <code>errorContainer</code> on <code>onErrorContainer</code>, and amber &mdash; <code>tertiaryContainer</code> &mdash; is spent on the missing-resource chip instead.</p>
+    <p>Empty states say what would be here. The ones this replaced were a <code>Tip</code> saying &ldquo;&hellip;none&rdquo; or nothing at all. Saying how it gets here was asked for and is not built: <code>SettingsEmptyState</code> takes one string and centres one line of <code>bodyMedium</code>.</p>
+    <p>The destructive action is last and cancel is first, which is Android&rsquo;s ordering, not iOS&rsquo;s. Filling the destructive one was asked for and is not built &mdash; all thirteen dialogs give both actions a plain <code>TextButton</code>.</p>
+    <p><b>Compose:</b> <code>Tip</code> and <code>WarningTip</code> keep their signatures. The shared <code>AlertDialog</code> wrapper, so the call sites stop each choosing their own button order, is not built &mdash; all thirteen still declare their own buttons. <code>SettingsEmptyState</code> is new, and shipped.</p>
   </div>
 </div>
 
@@ -651,18 +663,18 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       <div style="height:8px"></div>
       <div class="lang">
         <div class="hd">
-          <div class="n"><b>Polski</b><span>Polish &middot; pl &middot; 1&nbsp;layout</span></div>
+          <div class="n"><b>Polski</b><span>1&nbsp;layout</span></div>
           <svg class="kebab" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>
         </div>
-        <div class="grp">Layouts</div>
+        <div class="grp">Keyboard Layouts</div>
         <div class="row"><div class="body"><div class="ttl">Polski / English (typograficzna)</div></div></div>
         <div class="row add"><div class="body"><div class="ttl">Add layout</div></div></div>
         <div class="grp">Language data</div>
-        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="res">polski.dict</div></div>
-        <div class="row"><div class="body"><div class="ttl">Prediction</div></div><div class="chip warn">Not installed</div></div>
-        <div class="row"><div class="body"><div class="ttl">Voice input</div></div><div class="chip">Built&#8209;in</div></div>
+        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="chip">polski.dict</div></div>
+        <div class="row"><div class="body"><div class="ttl">Transformer Model</div></div><div class="chip warn">(None)</div></div>
+        <div class="row"><div class="body"><div class="ttl">Voice Input Model</div></div><div class="chip warn">(None)</div></div>
         <div class="grp" style="color:var(--fg2)">Multilingual</div>
-        <div class="row two dis"><div class="body"><div class="ttl">Type in two languages at once</div><div class="sub">Add a second language to use this</div></div><div class="sw"><i></i></div></div>
+        <div class="row two dis"><div class="body"><div class="ttl">Multilingual Typing</div><div class="sub">Add a second language to use this</div></div><div class="sw"><i></i></div></div>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -671,18 +683,18 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       <div style="height:8px"></div>
       <div class="lang">
         <div class="hd">
-          <div class="n"><b>Polski</b><span>Polish &middot; pl &middot; 1&nbsp;layout</span></div>
+          <div class="n"><b>Polski</b><span>1&nbsp;layout</span></div>
           <svg class="kebab" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>
         </div>
-        <div class="grp">Layouts</div>
+        <div class="grp">Keyboard Layouts</div>
         <div class="row"><div class="body"><div class="ttl">Polski / English (typograficzna)</div></div></div>
         <div class="row add"><div class="body"><div class="ttl">Add layout</div></div></div>
         <div class="grp">Language data</div>
-        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="res">polski.dict</div></div>
-        <div class="row"><div class="body"><div class="ttl">Prediction</div></div><div class="chip warn">Not installed</div></div>
-        <div class="row"><div class="body"><div class="ttl">Voice input</div></div><div class="chip">Built&#8209;in</div></div>
+        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="chip">polski.dict</div></div>
+        <div class="row"><div class="body"><div class="ttl">Transformer Model</div></div><div class="chip warn">(None)</div></div>
+        <div class="row"><div class="body"><div class="ttl">Voice Input Model</div></div><div class="chip warn">(None)</div></div>
         <div class="grp" style="color:var(--fg2)">Multilingual</div>
-        <div class="row two dis"><div class="body"><div class="ttl">Type in two languages at once</div><div class="sub">Add a second language to use this</div></div><div class="sw"><i></i></div></div>
+        <div class="row two dis"><div class="body"><div class="ttl">Multilingual Typing</div><div class="sub">Add a second language to use this</div></div><div class="sw"><i></i></div></div>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -692,10 +704,10 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <h3>What a language actually needs</h3>
     <p>The data says five things: a name, three resource slots (<code>LanguageOptions</code> &mdash; dictionary, transformer, voice input, each a nullable filename), a list of layouts, a multilingual flag, and deletion. That is the whole surface. Everything below follows from it.</p>
     <p><b>Layouts come first.</b> They are what somebody opens this screen to change; the three model slots are plumbing that is correct by default. Today the order is reversed.</p>
-    <p><b>A slot has three states, not two.</b> A named file, a built&#8209;in fallback, or nothing at all. Today all three render as a filename or the word &ldquo;None&rdquo;, so &ldquo;none, and that is fine&rdquo; looks identical to &ldquo;none, and prediction is off.&rdquo; The chip carries the difference, and only the state that needs attention takes colour. The app already computes this distinction &mdash; <code>ConfirmResourceActionDialog</code> checks <code>hasBuiltInFallback</code> &mdash; but only after you tap.</p>
+    <p><b>A slot has three states, not two.</b> A named file, a built&#8209;in fallback, or nothing at all. All three render as a filename or the word &ldquo;None&rdquo;, so &ldquo;none, and that is fine&rdquo; looks identical to &ldquo;none, and prediction is off.&rdquo; The ask was for the chip to carry the difference, with only the state that needs attention taking colour. It is not built: a slot draws a filename chip or a &ldquo;(None)&rdquo; chip, and nothing tells a fallback from a gap. The app computes the distinction &mdash; <code>ConfirmResourceActionDialog</code> checks <code>hasBuiltInFallback</code> &mdash; but only after you tap.</p>
     <p><b>With one language, three controls are inert.</b> The layout cannot be removed (there would be none), the language cannot be removed (there would be none), and multilingual typing needs a second language before it means anything. The card shows that, instead of offering controls that quietly do nothing: the multilingual row is disabled and says why, and the two removals are absent rather than greyed.</p>
     <p><b>Destruction moves to the overflow.</b> A full&#8209;width filled red button is the loudest thing on the screen, and it is the action wanted least often.</p>
-    <p><b>Compose:</b> <code>LanguageSurface</code> is rebuilt in <code>pages/Languages.kt</code>. <code>LanguageConfigurable</code> (50&nbsp;dp) and <code>LayoutConfigurable</code> (44&nbsp;dp) are deleted &mdash; both become the standard 56&nbsp;dp row &mdash; and so is <code>ActionableItem</code>. <code>LanguageOptions</code> gains a per&#8209;slot state so the chip can tell a fallback from a gap.</p>
+    <p><b>Compose:</b> <code>LanguageSurface</code> is rebuilt in <code>pages/Languages.kt</code>. <code>LanguageConfigurable</code> (50&nbsp;dp) and <code>ActionableItem</code> are deleted and their rows become the standard 56&nbsp;dp row; <code>LayoutConfigurable</code> (44&nbsp;dp) survives at <code>Languages.kt:103</code> with no call sites left. <code>LanguageOptions</code> gaining a per&#8209;slot state, so the chip can tell a fallback from a gap, is not built &mdash; it is still three nullable filenames.</p>
     <table class="num">
       <tr><th>Element</th><th>Today</th><th>Kit</th></tr>
       <tr><td>Resource row height</td><td class="was">50&nbsp;dp</td><td>56&nbsp;dp</td></tr>
@@ -810,7 +822,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <span class="tag">Redesigned</span>
     <h3>The control that moves the keyboard left and right</h3>
     <p><b>It was the only control on the keyboard with no container.</b> Its neighbours all sat in filled circles &mdash; the action&#8209;bar overflow measures 89&nbsp;px across, the expand and microphone buttons about 100 &mdash; while this one was a bare stroke laid straight on the keyboard ground. It read as decoration rather than a button.</p>
-    <p><b>It does not hold still.</b> Across three captures of the same session its centre sits at y&nbsp;180, y&nbsp;204 and y&nbsp;176 &mdash; it moves 28&nbsp;px between screens, because it is pinned to the top of a full&#8209;height column whose top depends on whether the action bar is expanded (<code>absolutePadding(top = if (isActionsExpanded) ActionBarHeight else 0.dp)</code>). The kit centres it on the keyboard window less the navigation bar. That is stable against the action bar opening, which is what used to move it; it is not the centre of the letter rows, and expanding the bar still shifts the midpoint it is measured from.</p>
+    <p><b>It does not hold still.</b> Across three captures of the same session its centre sits at y&nbsp;180, y&nbsp;204 and y&nbsp;176 &mdash; it moves 28&nbsp;px between screens, because it is pinned to the top of a full&#8209;height column whose top moves with the action bar. The kit centres it on the keyboard window less the navigation bar. That is stable against the action bar opening, which is what used to move it; it is not the centre of the letter rows, and expanding the bar still shifts the midpoint it is measured from.</p>
     <p><b>Nothing shares a left edge.</b> On the actions panel the chevron&rsquo;s stroke starts at x&nbsp;57, the back arrow&rsquo;s at 142, and the card grid at 120 &mdash; three different left edges in one view. The kit gives the gutter a single centreline and hangs the control on it.</p>
     <p><b>In an action window it stays.</b> This section previously said the opposite &mdash; that a panel&rsquo;s own back arrow and this chevron are two left&#8209;pointing glyphs in one view, so the control should disappear while a panel is open. It was built that way and then reversed after use: a control that vanishes when a panel opens reads as the panel having broken it, and one&#8209;handed reach is exactly as awkward on a panel as it is on the keys. The two glyphs sit on different grounds &mdash; the back arrow on the panel, this on the keyboard&rsquo;s gutter &mdash; which is what separates them.</p>
     <p><b>It is narrower than its gutter.</b> 40&nbsp;dp against a gutter of about 51, which leaves roughly 11&nbsp;dp of empty ground between the control and the nearest key. Padding cannot buy that gap: the control is pinned to the screen edge and the keys start where the one&#8209;handed layout puts them, so padding grows the node without moving either edge. The touch target keeps its full 48&nbsp;dp height.</p>
@@ -878,8 +890,10 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     greps for the scheme, and the panel still looks like a different product from the
     keys underneath it. That is the trap: compiling against the keyboard&rsquo;s palette
     is not the same as using it.</p>
-    <p><b>The keyboard has exactly three key treatments</b>, and
-    <code>BasicThemeProvider</code> names them: an ordinary key is
+    <p><b>A panel of keys needs three of the keyboard&rsquo;s treatments, and a fourth
+    for a latched one.</b> <code>KeyVisualStyle</code> has eight values and
+    <code>BasicThemeProvider</code> gives every one of them a style; three carry the
+    panel. An ordinary key is
     <code>keyboardContainer</code>, a functional key is
     <code>keyboardContainerVariant</code>, and the one accent key &mdash; enter, except in
     expert mode, where it takes the functional colour like everything else &mdash; is
@@ -942,9 +956,12 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     fails on <code>DefaultLight</code>, where <code>primary</code> and
     <code>onSurface</code> are two near&#8209;blacks, and on
     High&nbsp;Contrast&nbsp;Yellow, where they are both white. The emoji category row
-    keeps its pill and changes its ink, and the modes panel takes the same pill.</p>
+    keeps its fully round pill and changes its ink; the modes panel takes the same pair
+    on a 12&nbsp;dp marker, so the colour is shared and the shape is not.</p>
     <p><b>One exception, and it is not an oversight.</b> A theme swatch keeps its
-    4&nbsp;dp <code>inversePrimary</code> border. Every other selected item is marked by
+    4&nbsp;dp border, drawn in <code>primary</code>: <code>inversePrimary</code> was the
+    first choice, no palette in the fork defines that role, and the border marking the
+    theme in use came out Material&rsquo;s baseline purple on every one of them. Every other selected item is marked by
     tinting it, and a swatch <em>is</em> a block of colour &mdash; tinting it would
     misreport the theme it is offering. A border is the only marker that does not
     lie about its own content, so the rule is: tint what is a control, outline what
