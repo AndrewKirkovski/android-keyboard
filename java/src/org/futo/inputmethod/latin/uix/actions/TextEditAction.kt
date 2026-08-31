@@ -143,8 +143,9 @@ fun Modifier.repeatablyClickableAction(repeatable: Boolean = true, onTrigger: (B
 /**
  * The three key treatments the keyboard itself draws, so a panel built out of
  * keys matches the keys under it. [BasicThemeProvider] builds the keyboard's own
- * from exactly these roles: an ordinary key, a functional key, and the accent it
- * gives the enter key. It also drops both fills to transparent on a theme with
+ * from exactly these roles: an ordinary key, a functional key, and the pair it
+ * puts on a latched one -- KeyVisualStyle.StickyOn, which is secondary rather
+ * than the enter key's primary. It also drops both fills to transparent on a theme with
  * key borders off, which is why this reads the provider rather than the colour
  * scheme alone -- a panel that ignored it would draw filled boxes over a
  * keyboard that draws none.
@@ -167,8 +168,8 @@ private fun panelKeyColors(): PanelKeyColors {
         key = if (borders) scheme.keyboardContainer else Color.Transparent,
         functionalKey = if (borders) scheme.keyboardContainerVariant else Color.Transparent,
         onKey = if (borders) scheme.onKeyboardContainer else scheme.onBackground,
-        accent = scheme.primary,
-        onAccent = scheme.onPrimary
+        accent = scheme.secondary,
+        onAccent = scheme.onSecondary
     )
 }
 

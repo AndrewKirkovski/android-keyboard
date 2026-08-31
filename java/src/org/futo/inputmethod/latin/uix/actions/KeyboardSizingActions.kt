@@ -51,11 +51,13 @@ import org.futo.inputmethod.latin.uix.theme.Typography
  * where it was used -- these four glyphs are told apart by their silhouette, and filling
  * one in flattens the detail on the one tile the user is looking for.
  *
- * The marker is instead a low-alpha container behind the tile plus full-strength
- * content, which is what the app already does for a chosen item wherever a radio button
- * does not fit: the emoji category row (EmojiAction.kt) and the option list a settings
- * dropdown opens (Components.kt). Horizontally inset so it does not run flush to the
- * screen edge; the vertical inset stays small because the whole panel is 54dp.
+ * The marker is instead the filled `secondary` / `onSecondary` pair the emoji category
+ * row uses, which is also what the keyboard itself puts on a latched key
+ * (KeyVisualStyle.StickyOn). A first pass used `outline` at 10% and measured between
+ * 1.08 and 1.22 to 1 against the panel on all nineteen presets -- a container nobody
+ * can see, leaving the content alpha as the only signal. Horizontally inset so it does
+ * not run flush to the screen edge; the vertical inset stays small because the whole
+ * panel is 54dp.
  */
 @Composable
 internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator: KeyboardSizingCalculator, mode: KeyboardMode, isChecked: Boolean) {
@@ -84,9 +86,11 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
                 }
             }
         },
-        contentColor = MaterialTheme.colorScheme.onBackground.copy(
-            alpha = if(isChecked) 1.0f else 0.6f
-        )
+        contentColor = if(isChecked) {
+            MaterialTheme.colorScheme.onSecondary
+        } else {
+            MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+        }
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -101,7 +105,7 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
                         .matchParentSize()
                         .padding(horizontal = 6.dp, vertical = 3.dp)
                         .background(
-                            MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                            MaterialTheme.colorScheme.secondary,
                             RoundedCornerShape(12.dp)
                         )
                 )

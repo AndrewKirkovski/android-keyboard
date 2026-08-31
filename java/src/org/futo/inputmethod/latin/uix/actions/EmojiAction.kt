@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -799,10 +800,10 @@ private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: Mutable
         // Every dp here comes out of the grid below, so the field is kept to
         // roughly one emoji row.
         .padding(horizontal = Spacing.s, vertical = Spacing.xs)
-        // One height for both states, so tapping the field does not resize it.
-        // The editor underneath is an AndroidView with its own intrinsic height,
-        // which is taller than this and was taking the grid's room with it.
-        .height(SEARCH_FIELD_HEIGHT)
+        // A floor rather than a fixed height: the same in both states, so
+        // tapping the field does not resize it, but it grows with the font scale
+        // instead of cutting the text off at 44dp.
+        .heightIn(min = SEARCH_FIELD_HEIGHT)
         .clip(RoundedCornerShape(Spacing.xl))
         .background(LocalKeyboardScheme.current.keyboardContainer)
 
