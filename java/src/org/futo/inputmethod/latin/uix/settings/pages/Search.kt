@@ -134,8 +134,9 @@ fun SearchScreen(navController: NavHostController = rememberNavController()) {
             }
         }
 
-        // Both of these were italic titleMedium, which is the only italic text in
-        // the app, and italic is not a weight the type scale has.
+        // Both of these were italic titleMedium, and italic is not a weight the
+        // type scale has. They were the last of it on a settings surface -- not in
+        // the app, which still italicises a verbatim suggestion on the strip.
         if(query.isBlank()) {
             item {
                 SettingsEmptyState(stringResource(R.string.settings_search_enter_your_search))

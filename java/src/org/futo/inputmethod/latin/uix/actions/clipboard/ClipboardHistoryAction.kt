@@ -15,6 +15,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -62,8 +63,6 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
@@ -118,12 +117,12 @@ import org.futo.inputmethod.latin.uix.setSetting
 import org.futo.inputmethod.latin.uix.settings.SettingSlider
 import org.futo.inputmethod.latin.uix.settings.SettingToggleDataStore
 import org.futo.inputmethod.latin.uix.settings.SettingToggleRaw
+import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.settings.UserSetting
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.pages.ParagraphText
 import org.futo.inputmethod.latin.uix.settings.pages.PaymentSurface
 import org.futo.inputmethod.latin.uix.settings.pages.PaymentSurfaceHeading
-import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleDataStore
@@ -910,6 +909,20 @@ ${if(clipboardFileSwap.exists()) { clipboardFileSwap.readText() } else { "File d
 
                 clipboardHistory.clear()
                 clipboardHistory.addAll(data)
+
+                // Older builds wrote an empty state into the history itself: a
+                // pinned entry at timestamp 0 reading "Clipboard entries will
+                // appear here". It is no longer created, but anyone who used
+                // clipboard history before this build has it saved, and being
+                // pinned it survives pruning forever -- so their history is never
+                // empty, they never see the empty state, and the clear button
+                // offers to unpin it rather than to switch the feature off.
+                clipboardHistory.removeAll {
+                    it.timestamp == 0L
+                            && it.pinned
+                            && it.text == "Clipboard entries will appear here"
+                }
+
                 pruneOldItems()
             }
             // Nothing is put in the history to say the history is empty. There
@@ -1007,6 +1020,24 @@ ${if(clipboardFileSwap.exists()) { clipboardFileSwap.readText() } else { "File d
  *
  * Only these states. A list of clips fills from the top, which is where a list belongs.
  */
+/**
+ * The app's empty state, centred in the strip the way a notice card is.
+ *
+ * [ClipboardNotice] centres its card because this panel ends where the keyboard
+ * begins and a lone element at the top of it leaves the bottom half visibly
+ * blank. An empty state is a lone element by definition, so it takes the same
+ * treatment; the clip grid still fills from the top, because a list does.
+ */
+@Composable
+private fun ClipboardEmptyState(text: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        SettingsEmptyState(text)
+    }
+}
+
 @Composable
 private fun ClipboardNotice(content: @Composable () -> Unit) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -1222,6 +1253,11 @@ val ClipboardHistoryAction = Action(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         val searchQuery = searchText.value
                         if(searching.value && searchQuery.isBlank()) {
+                            // Searching, nothing typed yet. This drew nothing at
+                            // all until now, which is the state the rest of this
+                            // commit set out to remove; the settings search page
+                            // answers the same one the same way.
+                            ClipboardEmptyState(stringResource(R.string.action_clipboard_manager_enter_your_search))
                             return
                         }
 
@@ -1251,15 +1287,17 @@ val ClipboardHistoryAction = Action(
                         // drew a blank rectangle and left the reader to work out
                         // whether it was empty or broken. Both use the app's empty
                         // state, which is what a list with nothing in it looks like
-                        // everywhere else -- and which is not italic, the last of
-                        // that in the app.
+                        // everywhere else -- and which is not italic. That was the
+                        // last italic text on a settings surface, not in the app:
+                        // the suggestion strip still italicises a verbatim
+                        // suggestion, and always has.
                         if(clipboardHistoryManager.clipboardHistory.isEmpty()) {
-                            SettingsEmptyState(stringResource(R.string.action_clipboard_manager_no_clips_yet))
+                            ClipboardEmptyState(stringResource(R.string.action_clipboard_manager_no_clips_yet))
                             return
                         }
 
                         if(clipboardList.isEmpty() && searching.value && searchQuery.isNotEmpty()) {
-                            SettingsEmptyState(stringResource(R.string.action_clipboard_manager_no_clips_found))
+                            ClipboardEmptyState(stringResource(R.string.action_clipboard_manager_no_clips_found))
                             return
                         }
 
