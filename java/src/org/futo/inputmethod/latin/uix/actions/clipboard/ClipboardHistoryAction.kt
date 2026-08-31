@@ -123,6 +123,7 @@ import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.pages.ParagraphText
 import org.futo.inputmethod.latin.uix.settings.pages.PaymentSurface
 import org.futo.inputmethod.latin.uix.settings.pages.PaymentSurfaceHeading
+import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.settings.userSettingToggleDataStore
@@ -448,14 +449,6 @@ fun ClipboardEntryViewPreview() {
         }
     }
 }
-
-val DefaultClipboardEntry = ClipboardEntry(
-    timestamp = 0L,
-    pinned = true,
-    text = "Clipboard entries will appear here",
-    uri = null,
-    mimeTypes = listOf()
-)
 
 const val ClipboardFileName = "clipboard.json"
 val Context.clipboardFile get() = File(filesDir, ClipboardFileName)
@@ -918,9 +911,14 @@ ${if(clipboardFileSwap.exists()) { clipboardFileSwap.readText() } else { "File d
                 clipboardHistory.clear()
                 clipboardHistory.addAll(data)
                 pruneOldItems()
-            } else {
-                clipboardHistory.add(DefaultClipboardEntry)
             }
+            // Nothing is put in the history to say the history is empty. There
+            // used to be: a pinned entry reading "Clipboard entries will appear
+            // here", which is a hardcoded English string, sits in the user's
+            // clipboard as though they had copied it, and can be pinned, pasted
+            // and deleted like a real clip. The panel has an empty state now, and
+            // it also covers the case this never did -- a history that had clips
+            // in it and does not any more.
 
             clipboardLoaded = true
             clipboardIOFailureReason = ""
@@ -1133,8 +1131,14 @@ val ClipboardHistoryAction = Action(
                             )
                         }
                     }) {
+                        // A trash glyph, not a close one. Everything behind this
+                        // button is destructive -- clear the unpinned clips, unpin
+                        // all of them, or switch history off -- and it sits two
+                        // icons from the back arrow that really does dismiss the
+                        // panel. Same correction the emoji page's clear-recents
+                        // button needed.
                         Icon(
-                            painterResource(id = R.drawable.close),
+                            painterResource(id = R.drawable.trash),
                             contentDescription = stringResource(R.string.action_clipboard_manager_clear_clipboard)
                         )
                     }
@@ -1242,16 +1246,20 @@ val ClipboardHistoryAction = Action(
                             sorted
                         }
 
-                        if(clipboardList.isEmpty() && searching.value && searchQuery.isNotEmpty() && clipboardHistoryManager.clipboardHistory.isNotEmpty()) {
-                            Text(
-                                stringResource(R.string.action_clipboard_manager_no_clips_found),
-                                style = Typography.Body.Medium.copy(fontStyle = FontStyle.Italic),
-                                color = MaterialTheme.colorScheme.outline,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth()
-                            )
+                        // Two empty states, and until now only the second one
+                        // existed: with history on and nothing copied yet the panel
+                        // drew a blank rectangle and left the reader to work out
+                        // whether it was empty or broken. Both use the app's empty
+                        // state, which is what a list with nothing in it looks like
+                        // everywhere else -- and which is not italic, the last of
+                        // that in the app.
+                        if(clipboardHistoryManager.clipboardHistory.isEmpty()) {
+                            SettingsEmptyState(stringResource(R.string.action_clipboard_manager_no_clips_yet))
+                            return
+                        }
+
+                        if(clipboardList.isEmpty() && searching.value && searchQuery.isNotEmpty()) {
+                            SettingsEmptyState(stringResource(R.string.action_clipboard_manager_no_clips_found))
                             return
                         }
 
