@@ -118,6 +118,7 @@ import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.theme.LocalCompatEmojiFamily
 import org.futo.inputmethod.latin.uix.theme.LocalCompatEmojiTypeface
+import org.futo.inputmethod.latin.uix.theme.app.Spacing
 import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.uix.theme.emojiNeedsCompat
 import org.futo.inputmethod.latin.uix.theme.emojiShouldShow
@@ -509,7 +510,9 @@ fun Emojis(
                         }
                     }
                 }
-                .padding(8.dp, 0.dp)
+                // Inside the panel now, so the heading and the last row are not
+                // flush against its edges -- the vertical inset was 0.
+                .padding(Spacing.s, Spacing.s)
         )
 
         Box(Modifier.matchParentSize().background(
@@ -608,7 +611,9 @@ fun EmojiNavigation(
             .fillMaxWidth()
             .height(48.dp)
     ) {
-        Row(modifier = Modifier.padding(2.dp, 0.dp)) {
+        // The same side inset as the panel above it, so the ABC key, the panel
+        // edge and the first emoji share one left edge.
+        Row(modifier = Modifier.padding(Spacing.s, 0.dp)) {
             if(showKeys) {
                 LettersKey(onExit)
             }
@@ -843,9 +848,16 @@ fun EmojiGrid(
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .weight(1.0f)
+                // Inset from the keyboard's edges rather than flush against them.
+                // The 9dp radius sat on a surface touching both sides, so the
+                // corners had nothing to round against. 12dp is on the 4dp scale
+                // and, with a margin, is a shape you can actually see.
+                // The bottom inset is the gap to the category bar, which the two
+                // of them previously did without entirely.
+                .padding(start = Spacing.s, end = Spacing.s, bottom = Spacing.s)
                 .background(
                     LocalKeyboardScheme.current.keyboardContainer,
-                    RoundedCornerShape(9.dp)
+                    RoundedCornerShape(Spacing.m)
                 ),
             emojis = emojiList,
             onClick = onClick,
@@ -1208,24 +1220,41 @@ val EmojiAction = Action(
                         ActionHeaderSearch(searchText, Modifier.weight(1.0f))
                     }
                 } else {
-                    super.WindowTitleBar(rowScope)
-                    Surface(
-                        color = LocalKeyboardScheme.current.keyboardContainer,
-                        contentColor = LocalKeyboardScheme.current.onKeyboardContainer,
-                        shape = RoundedCornerShape(24.dp),
-                        modifier = Modifier
-                            .minimumInteractiveComponentSize()
-                            .padding(2.dp)
-                            .width(128.dp),
-                        onClick = { searching.value = true }
-                    ) {
-                        Box(modifier = Modifier.padding(8.dp), contentAlignment = Alignment.CenterStart) {
-                            Row {
-                                Icon(Icons.Default.Search, contentDescription = null)
-                                Text(
-                                    stringResource(R.string.action_emoji_search_for_emojis), style = Typography.SmallMl, modifier = Modifier
-                                        .alpha(0.75f)
-                                        .align(Alignment.CenterVertically))
+                    with(rowScope) {
+                        // The base bar draws the title and then a weighted spacer,
+                        // which left the field a fixed 128dp -- fine at full width,
+                        // and wider than the space that exists once the header is
+                        // narrowed by one-handed mode. The title is drawn the same
+                        // way here, and the weight goes to the field, so the field
+                        // is what gives when the header is small.
+                        Text(
+                            windowName(),
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Surface(
+                            color = LocalKeyboardScheme.current.keyboardContainer,
+                            contentColor = LocalKeyboardScheme.current.onKeyboardContainer,
+                            shape = RoundedCornerShape(Spacing.xl),
+                            modifier = Modifier
+                                .minimumInteractiveComponentSize()
+                                .weight(1.0f)
+                                .padding(horizontal = Spacing.s)
+                                .align(Alignment.CenterVertically),
+                            onClick = { searching.value = true }
+                        ) {
+                            Box(
+                                modifier = Modifier.padding(horizontal = Spacing.m),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                // The glyph and the word were flush against each
+                                // other.
+                                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+                                    Icon(Icons.Default.Search, contentDescription = null)
+                                    Text(
+                                        stringResource(R.string.action_emoji_search_for_emojis), style = Typography.SmallMl, modifier = Modifier
+                                            .alpha(0.75f)
+                                            .align(Alignment.CenterVertically))
+                                }
                             }
                         }
                     }

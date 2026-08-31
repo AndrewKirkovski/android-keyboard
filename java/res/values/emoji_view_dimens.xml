@@ -34,5 +34,15 @@
     <dimen name="emoji_picker_skin_tone_circle_radius">6dp</dimen>
     <dimen name="emoji_picker_category_name_height">24dp</dimen>
     <dimen name="emoji_picker_category_name_padding_top">4dp</dimen>
-    <dimen name="emoji_picker_emoji_view_padding">2dp</dimen>
+    <!-- Subtracted from the cell in EmojiView.onMeasure, after which draw() scales
+         the glyph to fill whatever is left. So this, and not the text size, is what
+         sets how large an emoji appears. The cell is 42dp (EmojiAction.emojiWidth):
+         at 2dp the glyph was 40dp, 95% of its cell, with nothing between one emoji
+         and the next. At 12dp it is 30dp, a little over two thirds of the cell,
+         with air around it in both directions.
+
+         EMOJI_DRAW_TEXT_SIZE_DP is not the lever. It sizes the offscreen bitmap the
+         glyph is rendered into, which draw() then scales to the view; lowering it
+         costs resolution and changes nothing on screen. -->
+    <dimen name="emoji_picker_emoji_view_padding">12dp</dimen>
 </resources>
