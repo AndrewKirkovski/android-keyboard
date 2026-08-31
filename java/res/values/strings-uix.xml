@@ -73,9 +73,9 @@
     <string name="action_clipboard_manager_search">Search clipboard&#8230;</string>
     <string name="action_clipboard_manager_enter_your_search">Enter a search term…</string>
     <string name="action_clipboard_manager_no_clips_found">No results found</string>
-    <string name="action_clipboard_manager_error_device_locked_title">Device Locked</string>
+    <string name="action_clipboard_manager_error_device_locked_title">Device locked</string>
     <string name="action_clipboard_manager_error_device_locked_text">Please unlock your device to access clipboard history</string>
-    <string name="action_clipboard_manager_error_general_title">Clipboard Error</string>
+    <string name="action_clipboard_manager_error_general_title">Clipboard error</string>
     <string name="action_clipboard_manager_error_general_text">The clipboard history could not be saved or loaded. It may be corrupted. You can try deleting it, or restarting the keyboard. Please report this as a bug. Reason: %1$s</string>
     <string name="action_clipboard_manager_delete_corrupted_clipboard_text">Delete the clipboard? ALL items will be lost.</string>
     <!-- Must be fairly short -->
@@ -84,9 +84,9 @@
     <string name="action_clipboard_manager_inspect_error_via_bugs_action">Inspect error in Bug Viewer</string>
     <!-- Must be fairly short -->
     <string name="action_clipboard_manager_delete_corrupted_clipboard_button">Delete</string>
-    <string name="action_clipboard_manager_error_clipboard_history_disabled_title">Clipboard History Inactive</string>
+    <string name="action_clipboard_manager_error_clipboard_history_disabled_title">Clipboard history is off</string>
     <string name="action_clipboard_manager_error_clipboard_history_disabled_text_v2">To save clipboard items, you can enable clipboard history. This will keep up to <xliff:g id="numItems" example="25">%1$s</xliff:g> items for <xliff:g id="numDays" example="3">%2$s</xliff:g> days (pinned items are exempt). You can configure this in settings.</string>
-    <string name="action_clipboard_manager_enable_clipboard_history_button">Enable Clipboard History</string>
+    <string name="action_clipboard_manager_enable_clipboard_history_button">Enable clipboard history</string>
     <!-- This message is shown when we're typing in a text field does not support image insertion ("app" refers to the external app that is providing the text field) -->
     <string name="action_clipboard_manager_error_app_image_insertion_unsupported">App does not support image insertion</string>
     <string name="action_clipboard_manager_settings_title">Clipboard Manager Settings</string>
@@ -104,13 +104,13 @@
     <string name="action_clipboard_manager_settings_show_quick_clips">Show recently copied text in suggestion bar</string>
 
     <!-- For keyboard modes action -->
-    <string name="action_keyboard_modes_title">Keyboard Modes</string>
+    <string name="action_keyboard_modes_title">Keyboard modes</string>
     <string name="action_keyboard_modes_go_back">Go back</string>
-    <string name="action_keyboard_modes_resize_keyboard">Resize Keyboard</string>
+    <string name="action_keyboard_modes_resize_keyboard">Resize keyboard</string>
     <!-- This string must be super short (below 10 chars if possible). The title for standard QWERTYUIOP keyboard mode, filling full screen width. -->
     <string name="action_keyboard_modes_standard">Standard</string>
     <!-- This string must be super short (below 10 chars if possible). The title for one-handed QWERTYUIOP keyboard mode, filling 2/3 screen width on one side -->
-    <string name="action_keyboard_modes_one_handed">One Hand</string>
+    <string name="action_keyboard_modes_one_handed">One-handed</string>
     <!-- This string must be super short (below 10 chars if possible). The title for split QWERT - - YUIOP keyboard mode, with gap in middle -->
     <string name="action_keyboard_modes_split">Split</string>
     <!-- This string must be super short (below 10 chars if possible). The title for free-form draggable and resizable QWERTYUIOP keyboard mode. -->
