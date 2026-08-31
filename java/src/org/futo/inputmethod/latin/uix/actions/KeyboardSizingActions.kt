@@ -106,9 +106,10 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
         ) {
             // The full width of the tile, behind the content rather than around
             // it. Both halves of that matter. In one-handed mode the tile is 87dp,
-            // and insetting the box the label sits in cost it 12 of those; the
-            // longest English label is 75dp at this phone's font scale, so it
-            // clipped. Insetting only the marker instead leaves the label hanging
+            // and insetting the box the label sits in cost it 12 of those, leaving
+            // 75; "One-handed" is 77dp at the default font scale and 84 at the 1.1
+            // this phone is set to, so it clipped. Insetting only the marker
+            // instead leaves the label hanging
             // off both ends of it, in a colour chosen to sit on the marker. The row
             // carries the margin.
             if(isChecked) {
@@ -130,7 +131,7 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
                 )
                 // Shrinks to fit rather than wrapping. The tile is 87dp wide in
                 // one-handed mode at 411dp, and the longest of these four labels
-                // -- Lithuanian "Pluduriuojanti" -- is 95dp at the phone's own
+                // -- Lithuanian "Pluduriuojanti" (Plūduriuojanti) -- is 95dp at the phone's own
                 // font scale of 1.1. A second line does not fit in a 54dp tile,
                 // so wrapping means a cut label; this way it is whole at 14sp
                 // wherever it fits and down to 10sp where it does not. Below that

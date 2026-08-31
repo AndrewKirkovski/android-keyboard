@@ -113,9 +113,15 @@ fun ActionItem(action: Action, modifier: Modifier = Modifier, dragIcon: Boolean 
                         // Wrapped inside a column narrower than the tile, a label
                         // broke inside a word that would have fitted the tile.
                         modifier = Modifier.fillMaxWidth(),
-                        // 1.25, not the 12sp on 14sp this inherited, which set
-                        // a two-line label with its lines touching.
-                        style = Typography.Small.copy(lineHeight = 17.5.sp),
+                        // 12sp on 14sp, which sets two lines close enough to
+                        // touch -- and stays, because the tile cannot afford the
+                        // alternative. The slot left by a 24dp icon in an 84dp
+                        // tile is 52dp; three lines at the 1.25 the kit asks for
+                        // need 52.5, so raising the leading clips a three-line
+                        // label at every font scale, and vertical overflow cuts
+                        // rather than ellipsising. It needs shorter labels or a
+                        // taller tile first.
+                        style = Typography.Small.copy(lineHeight = 12.sp),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
@@ -170,11 +176,12 @@ fun MoreActionsView() {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxWidth()
-            // Outer margin wider than the gutter. Equal ones read as a grid that
-            // has been cut off rather than inset, which is the whole reason this
-            // panel was measured in the first place -- it had 45px between the
-            // cards and 34 to the screen edge.
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            // 8dp all round, equal to the gutter. The kit asks for 16 at the
+            // sides so the margin beats the gap between cards, and 16 costs each
+            // tile 4dp of width: at that width "Paste from clipboard" and "Voice
+            // input" take a third line in one-handed mode, which the tile is not
+            // tall enough to show.
+            .padding(8.dp),
         columns = GridCells.Fixed(4),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
