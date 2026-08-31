@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -86,24 +84,30 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
                 }
             }
         },
+        // Full strength either way. Dimming the unselected tiles to 60% put a
+        // 14sp label under 4.5:1 on seven of the light presets, and it was saying
+        // what the filled pill already says.
         contentColor = if(isChecked) {
             MaterialTheme.colorScheme.onSecondary
         } else {
-            MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            MaterialTheme.colorScheme.onBackground
         }
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            // Behind the content rather than around it. Insetting the box the label
-            // sits in costs the label 12dp, and in one-handed mode the whole tile is
-            // 76dp -- which is where "One-handed" started coming out as "One-hande".
+            // The full width of the tile, behind the content rather than around
+            // it. Both halves of that matter: insetting the box the label sits in
+            // costs the label 12dp, and in one-handed mode the tile is 76dp against
+            // a 68dp label; insetting only the marker leaves the label hanging off
+            // both ends of it, in a colour chosen to sit on the marker. The row
+            // itself carries the margin instead.
             if(isChecked) {
                 Box(
                     modifier = Modifier
                         .matchParentSize()
-                        .padding(horizontal = 6.dp, vertical = 3.dp)
+                        .padding(vertical = 3.dp)
                         .background(
                             MaterialTheme.colorScheme.secondary,
                             RoundedCornerShape(12.dp)
@@ -145,24 +149,27 @@ val KeyboardModeAction = Action(
             @Composable
             override fun WindowContents(keyboardShown: Boolean) {
                 val currMode = sizeCalculator.getSavedSettings().currentMode
+                // The one panel that still builds its own header rather than
+                // setting showTitleBarAboveKeyboard. The shared bar always draws a
+                // back arrow, and the resize tutorial needs that one arrow gone so
+                // the only way on is the button beside it. Everything else here
+                // matches the shared bar exactly -- same glyph, same title style --
+                // so the two read as one thing.
                 Column {
                     Row(Modifier.height(ActionBarHeight)) {
-                        // Hide the back button in the resize tutorial
                         if(manager.getTutorialMode() != TutorialMode.ResizerTutorial) {
                             IconButton(onClick = {
                                 manager.closeActionWindow()
                             }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.action_keyboard_modes_go_back))
+                                Icon(
+                                    painter = painterResource(R.drawable.arrow_left_26),
+                                    contentDescription = stringResource(R.string.action_keyboard_modes_go_back)
+                                )
                             }
                         }
-                        // This panel keeps the keyboard visible, so the shared
-                        // ActionWindowBar -- which is what draws every other
-                        // panel's title -- is not rendered for it (UixManager.kt:842).
-                        // Without this the screen was the only one with no title at
-                        // all, and the "Resize keyboard" button on the right read as
-                        // one.
                         Text(
                             windowName(),
+                            style = Typography.Body.MediumMl,
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
                         Spacer(Modifier.weight(1.0f))
@@ -180,7 +187,10 @@ val KeyboardModeAction = Action(
                             Text(stringResource(R.string.action_keyboard_modes_resize_keyboard), style = Typography.Body.MediumMl)
                         }
                     }
-                    Row {
+                    // The margin the marker used to carry. Here it costs each tile
+                    // 3dp rather than 12, and keeps the outer two off the screen
+                    // edges they would otherwise run flush to.
+                    Row(Modifier.padding(horizontal = 6.dp)) {
                         KeyboardMode(
                             R.drawable.keyboard_regular,
                             stringResource(R.string.action_keyboard_modes_standard),
