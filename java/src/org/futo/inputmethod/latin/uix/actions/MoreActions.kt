@@ -52,9 +52,11 @@ import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
 import org.futo.inputmethod.latin.uix.LocalManager
 import org.futo.inputmethod.latin.uix.getSettingBlocking
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
+import org.futo.inputmethod.latin.uix.settings.SettingSectionHeader
 import org.futo.inputmethod.latin.uix.settings.WarningTip
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.theme.Typography
+import org.futo.inputmethod.latin.uix.theme.app.Spacing
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
@@ -244,7 +246,13 @@ fun ActionsEditor(header: @Composable () -> Unit) {
                                     WarningTip(stringResource(R.string.action_editor_warning_too_many_pinned))
                                 }
                             }
-                            Text(it.category.name(resources), modifier = Modifier.padding(top = 24.dp), style = Typography.Heading.MediumMl, color = LocalContentColor.current.copy(alpha = 0.6f))
+                            // The app's section header, not a heading of this
+                            // screen's own. It was the last place still labelling a
+                            // group with a large dimmed heading -- which reads as a
+                            // title for the screen rather than for the group under
+                            // it, and is a third treatment beside the one every
+                            // settings page and the theme panel use.
+                            SettingSectionHeader(it.category.name(resources))
 
                             if(actionMap[it.category]?.isEmpty() == true && it.category != ActionCategory.entries.last()) {
                                 TextButton(onClick = {
@@ -283,7 +291,20 @@ fun ActionEditor() {
         shape = RoundedCornerShape(32.dp, 32.dp, 0.dp, 0.dp)
     ) {
         ActionsEditor {
-            ScreenTitle(title = stringResource(R.string.action_editor_edit_actions))
+            // Not ScreenTitle: with no back arrow that resolves to the section
+            // header, which is what the groups under it now use, so the screen
+            // and its first group read as the same thing. This is the treatment
+            // every other panel's title has, from ActionWindowBar.
+            Text(
+                stringResource(R.string.action_editor_edit_actions),
+                style = Typography.Body.MediumMl,
+                modifier = Modifier.padding(
+                    start = Spacing.xl,
+                    end = Spacing.rowInset,
+                    top = Spacing.xl,
+                    bottom = Spacing.s
+                )
+            )
         }
     }
 }
