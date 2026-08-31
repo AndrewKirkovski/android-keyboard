@@ -43,6 +43,7 @@ import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -188,6 +189,7 @@ private val UixLocaleFollowsSubtypeLocale = true
 private val CONTROL_RADIUS = 24.dp
 private val CONTROL_PADDING = 12.dp
 private val CONTROL_GAP = 20.dp
+private val CONTROL_WIDTH = 40.dp
 
 @Composable
 fun navBarHeight(): Dp = with(LocalDensity.current) {
@@ -1187,12 +1189,13 @@ class UixManager(private val latinIME: LatinIME) {
         val containerColor = LocalKeyboardScheme.current.keyboardContainer
         val contentColor = LocalKeyboardScheme.current.onKeyboardContainer
 
-        // Not while an action window is open. Those panels carry their own back
-        // arrow, and a second left-pointing chevron a hundred pixels below it --
-        // one meaning "go back", the other "move the keyboard" -- is not a
-        // spacing problem. There is also nothing to move while one is open: the
-        // panel is what the screen is showing.
-        if (currWindowAction.value == null) Box(Modifier.matchParentSize()) {
+        // Shown over the action panels as well as the keyboard. It briefly was
+        // not: the kit argued that a panel's own back arrow and this chevron are
+        // two left-pointing glyphs in one view. In use that reads the other way
+        // round -- the control vanishing when a panel opens looks like the panel
+        // broke it, and one-handed reach is exactly as awkward on a panel as it
+        // is on the keys.
+        Box(Modifier.matchParentSize()) {
             Column(
                 modifier = Modifier
                     .matchParentSize()
@@ -1218,6 +1221,14 @@ class UixManager(private val latinIME: LatinIME) {
                 // and the other was a bare glyph.
                 Column(
                     modifier = Modifier
+                        // Narrower than the gutter it sits in, which is what puts
+                        // air between it and the keys. Padding cannot do this:
+                        // the control is pinned to the screen edge and the
+                        // keyboard's position comes from the one-handed layout,
+                        // so padding only grows this node without moving either
+                        // edge. The height stays 48dp, and the misclick this
+                        // started from was vertical anyway.
+                        .width(CONTROL_WIDTH)
                         // Square against the screen edge it sits on and rounded
                         // on the inner side only, so it reads as attached to the
                         // edge rather than floating a hairline off it. The corner
@@ -1245,7 +1256,8 @@ class UixManager(private val latinIME: LatinIME) {
                     // than capability.
                     Box(
                         modifier = Modifier
-                            .size(48.dp)
+                            .fillMaxWidth()
+                            .height(48.dp)
                             .clip(CircleShape)
                             .combinedClickable(
                                 // IconButton sets these itself; combinedClickable does not,
@@ -1285,7 +1297,8 @@ class UixManager(private val latinIME: LatinIME) {
                         // rather than an IconButton with its own metrics.
                         Box(
                             modifier = Modifier
-                                .size(48.dp)
+                                .fillMaxWidth()
+                                .height(48.dp)
                                 .clip(CircleShape)
                                 .combinedClickable(
                                     role = Role.Button,
