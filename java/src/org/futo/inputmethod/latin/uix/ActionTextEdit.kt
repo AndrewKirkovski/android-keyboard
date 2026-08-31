@@ -276,9 +276,8 @@ private fun GenericEditTextCompose(
     )
 
     val fgColor = LocalContentColor.current
-    val primaryColor = MaterialTheme.colorScheme.primary
 
-    LaunchedEffect(fgColor, primaryColor) {
+    LaunchedEffect(fgColor) {
         editText.setTextColor(fgColor.toArgb())
         editText.setHintTextColor(fgColor.copy(alpha = 0.7f).toArgb())
         // A wash of the text colour rather than the accent, for the reason the
