@@ -19,7 +19,7 @@
     <string name="action_cursor_right_title">Arrow Right</string>
 
     <!-- For emoji menu action -->
-    <string name="action_emoji_title">Emojis</string>
+    <string name="action_emoji_title">Emoji</string>
     <!-- Refers to the most recently used emojis -->
     <string name="action_emoji_category_most_recently_used">Recent</string>
     <string name="action_emoji_category_smileys_emotion">Smileys &amp; Emotion</string>
