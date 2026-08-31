@@ -35,11 +35,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -388,7 +390,11 @@ fun Emojis(
     var activePopup: PopupInfo? by rememberSaveable { mutableStateOf(null) }
     var popupIsActive by rememberSaveable { mutableStateOf(false) }
 
-    val color = LocalKeyboardScheme.current.onKeyboardContainer
+    // Colours the category headings and the ASCII emoticons. The grid is on the
+    // window's own ground rather than on a container, so it takes the surface's
+    // text colour: High Contrast Yellow, for one, has a black onKeyboardContainer
+    // to go with its yellow keys, and a black keyboard surface behind them.
+    val color = LocalKeyboardScheme.current.onSurface
 
     var wideEmojiWidth by remember { mutableIntStateOf(100) }
     val emojiTypeface = LocalCompatEmojiTypeface.current
@@ -513,8 +519,10 @@ fun Emojis(
                         }
                     }
                 }
-                // Inside the panel now, so the heading and the last row are not
-                // flush against its edges -- the vertical inset was 0.
+                // The same side inset the search field and the category row take, so
+                // the field, the first emoji and the ABC key share a left edge. The
+                // vertical inset was 0, which put the first category heading against
+                // the search field and the last row against the category bar.
                 .padding(Spacing.s, Spacing.xs)
         )
 
@@ -614,8 +622,8 @@ fun EmojiNavigation(
             .fillMaxWidth()
             .height(48.dp)
     ) {
-        // The same side inset as the panel above it, so the ABC key, the panel
-        // edge and the first emoji share one left edge.
+        // The same side inset as the grid above it, so the ABC key, the search
+        // field and the first emoji share one left edge.
         Row(modifier = Modifier.padding(Spacing.s, 0.dp)) {
             if(showKeys) {
                 LettersKey(onExit)
@@ -678,29 +686,34 @@ private fun EmojiCategoriesContainer(
 
     val resources = LocalResources.current
 
-    LazyRow(state = listState, modifier = modifier.padding(8.dp, 0.dp)) {
+    LazyRow(state = listState, modifier = modifier.padding(Spacing.s, 0.dp)) {
         items(categories) {
             val localizedTitle = localizedCategoryNameMap[it.title]?.let { resources.getString(it) } ?: it.title
+            val isActive = it == activeCategoryItem
+            // secondary/onSecondary is what the keyboard already uses to say "this
+            // one is on" -- the latched key style, and the toggled Ctrl and Shift
+            // keys on the text editor panel. The circle was the right idea in the
+            // wrong ink: a 10% wash of the outline colour, which nothing else uses
+            // for state. A defined pair also survives themes that an accent colour
+            // does not, since a theme is free to set primary to its text colour.
             IconButton(
-                onClick = { goToCategory(it) }, modifier = if (it == activeCategoryItem) {
+                onClick = { goToCategory(it) }, modifier = if (isActive) {
                     Modifier.background(
-                        MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                        MaterialTheme.colorScheme.secondary,
                         shape = RoundedCornerShape(100)
                     )
                 } else {
                     Modifier
                 }.clearAndSetSemantics {
                     contentDescription = resources.getString(R.string.action_emoji_jump_to_category, localizedTitle)
-                    toggleableState = ToggleableState(it == activeCategoryItem)
+                    toggleableState = ToggleableState(isActive)
                 }
             ) {
-                val color = MaterialTheme.colorScheme.onBackground.copy(
-                    alpha = if (it == activeCategoryItem) {
-                        1.0f
-                    } else {
-                        0.6f
-                    }
-                )
+                val color = if (isActive) {
+                    MaterialTheme.colorScheme.onSecondary
+                } else {
+                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                }
 
                 val icon = iconMap[it.title]
                 if(icon != null) {
@@ -774,10 +787,10 @@ private fun LettersKey(onExit: () -> Unit) {
  * buttons, which is the least room on the screen and a fixed width in it. Here it
  * has the panel's full width, and it sits with the thing it filters.
  *
- * It cannot use `ActionHeaderSearch`: that draws itself in `keyboardContainer`,
- * which is the colour of the panel it would now be sitting on, so it would be
- * invisible. On the panel the field takes the dimmer surface instead, which is
- * the same relationship the field had to the window bar before.
+ * It is drawn in `keyboardContainer`, which is what every other container on a
+ * keyboard surface takes -- `ActionHeaderSearch`, the tiles on the actions panel,
+ * the keys themselves. It is the only container on this page: the emoji below it
+ * are glyphs on the bare surface.
  */
 @Composable
 private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: MutableState<String>) {
@@ -791,40 +804,48 @@ private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: Mutable
         // which is taller than this and was taking the grid's room with it.
         .height(SEARCH_FIELD_HEIGHT)
         .clip(RoundedCornerShape(Spacing.xl))
-        .background(LocalKeyboardScheme.current.keyboardSurfaceDim)
+        .background(LocalKeyboardScheme.current.keyboardContainer)
 
-    if (searching.value) {
-        Box(
-            modifier = field.padding(horizontal = Spacing.m),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            ActionTextEditor(
-                text = searchText,
-                placeholder = stringResource(R.string.action_emoji_search_for_emojis),
-                // Its default is fillMaxSize(). In the window bar that was
-                // harmless, because the bar is a fixed-height row. Here the field
-                // is the first child of the panel's column, so filling meant
-                // taking the whole panel and leaving the grid nothing -- tapping
-                // search made every emoji disappear.
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-    } else {
-        // A button until it is tapped, so the keyboard is not hosting a focused
-        // text field nobody asked for every time the emoji panel opens.
-        Row(
-            modifier = field
-                .clickable { searching.value = true }
-                .padding(horizontal = Spacing.m),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Spacing.xs)
-        ) {
-            Icon(Icons.Default.Search, contentDescription = null)
-            Text(
-                stringResource(R.string.action_emoji_search_for_emojis),
-                style = Typography.SmallMl,
-                modifier = Modifier.alpha(0.75f)
-            )
+    // ActionTextEditor draws itself in LocalContentColor, and the ambient one here
+    // belongs to the surface behind the field, not to the field. A theme is free to
+    // pair its container with a different text colour -- High Contrast Yellow puts
+    // black on its yellow keys and white on its black surface.
+    CompositionLocalProvider(
+        LocalContentColor provides LocalKeyboardScheme.current.onKeyboardContainer
+    ) {
+        if (searching.value) {
+            Box(
+                modifier = field.padding(horizontal = Spacing.m),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                ActionTextEditor(
+                    text = searchText,
+                    placeholder = stringResource(R.string.action_emoji_search_for_emojis),
+                    // Its default is fillMaxSize(). In the window bar that was
+                    // harmless, because the bar is a fixed-height row. Here the field
+                    // is the first child of the panel's column, so filling meant
+                    // taking the whole panel and leaving the grid nothing -- tapping
+                    // search made every emoji disappear.
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        } else {
+            // A button until it is tapped, so the keyboard is not hosting a focused
+            // text field nobody asked for every time the emoji panel opens.
+            Row(
+                modifier = field
+                    .clickable { searching.value = true }
+                    .padding(horizontal = Spacing.m),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Spacing.xs)
+            ) {
+                Icon(Icons.Default.Search, contentDescription = null)
+                Text(
+                    stringResource(R.string.action_emoji_search_for_emojis),
+                    style = Typography.SmallMl,
+                    modifier = Modifier.alpha(0.75f)
+                )
+            }
         }
     }
 }
@@ -908,21 +929,17 @@ fun EmojiGrid(
     }
 
     Column {
+        // No panel behind the grid. The actions panel and the clipboard panel both
+        // draw their items as containers and leave the window's own ground showing;
+        // this page instead laid a full-width slab of keyboardContainer over it,
+        // which is the key colour, so every emoji sat on one enormous key while
+        // being drawn as though it were not a key at all. The slab also rounded its
+        // bottom corners over the part-row that tells you the grid scrolls, which
+        // made scrolling read as damage.
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1.0f)
-                // Inset from the keyboard's edges rather than flush against them.
-                // The 9dp radius sat on a surface touching both sides, so the
-                // corners had nothing to round against. 12dp is on the 4dp scale
-                // and, with a margin, is a shape you can actually see.
-                // The bottom inset is the gap to the category bar, which the two
-                // of them previously did without entirely.
-                .padding(start = Spacing.s, end = Spacing.s, bottom = Spacing.s)
-                .background(
-                    LocalKeyboardScheme.current.keyboardContainer,
-                    RoundedCornerShape(Spacing.m)
-                )
         ) {
             EmojiSearchBar(searching, searchText)
 
