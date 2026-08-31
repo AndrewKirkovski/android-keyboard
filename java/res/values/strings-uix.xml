@@ -22,11 +22,11 @@
     <string name="action_emoji_title">Emoji</string>
     <!-- Refers to the most recently used emojis -->
     <string name="action_emoji_category_most_recently_used">Recent</string>
-    <string name="action_emoji_category_smileys_emotion">Smileys &amp; Emotion</string>
-    <string name="action_emoji_category_people_body">People &amp; Body</string>
-    <string name="action_emoji_category_animals_nature">Animals &amp; Nature</string>
-    <string name="action_emoji_category_food_drink">Food &amp; Drink</string>
-    <string name="action_emoji_category_travel_places">Travel &amp; Places</string>
+    <string name="action_emoji_category_smileys_emotion">Smileys &amp; emotion</string>
+    <string name="action_emoji_category_people_body">People &amp; body</string>
+    <string name="action_emoji_category_animals_nature">Animals &amp; nature</string>
+    <string name="action_emoji_category_food_drink">Food &amp; drink</string>
+    <string name="action_emoji_category_travel_places">Travel &amp; places</string>
     <string name="action_emoji_category_activities">Activities</string>
     <string name="action_emoji_category_objects">Objects</string>
     <string name="action_emoji_category_symbols">Symbols</string>
@@ -76,16 +76,21 @@
     <string name="action_clipboard_manager_error_device_locked_title">Device locked</string>
     <string name="action_clipboard_manager_error_device_locked_text">Please unlock your device to access clipboard history</string>
     <string name="action_clipboard_manager_error_general_title">Clipboard error</string>
-    <string name="action_clipboard_manager_error_general_text">The clipboard history could not be saved or loaded. It may be corrupted. You can try deleting it, or restarting the keyboard. Please report this as a bug. Reason: %1$s</string>
+    <!-- The three buttons under this card are Inspect, Retry and Delete, so the copy
+         no longer repeats them. Restarting the keyboard is the one step no button offers. -->
+    <string name="action_clipboard_manager_error_general_text">The clipboard history could not be saved or loaded, and may be corrupted. Restarting the keyboard may help. Reason: %1$s</string>
     <string name="action_clipboard_manager_delete_corrupted_clipboard_text">Delete the clipboard? ALL items will be lost.</string>
     <!-- Must be fairly short -->
     <string name="action_clipboard_manager_retry_saving_loading">Retry</string>
     <!-- Must be fairly short -->
-    <string name="action_clipboard_manager_inspect_error_via_bugs_action">Inspect error in Bug Viewer</string>
+    <!-- Names the panel this opens, so it has to spell it the way that panel does. -->
+    <string name="action_clipboard_manager_inspect_error_via_bugs_action">Inspect error in Bug viewer</string>
     <!-- Must be fairly short -->
     <string name="action_clipboard_manager_delete_corrupted_clipboard_button">Delete</string>
     <string name="action_clipboard_manager_error_clipboard_history_disabled_title">Clipboard history is off</string>
-    <string name="action_clipboard_manager_error_clipboard_history_disabled_text_v2">To save clipboard items, you can enable clipboard history. This will keep up to <xliff:g id="numItems" example="25">%1$s</xliff:g> items for <xliff:g id="numDays" example="3">%2$s</xliff:g> days (pinned items are exempt). You can configure this in settings.</string>
+    <!-- The heading above already says the feature is off and the button below already
+         says how to turn it on, so this only has to say what it does and what it keeps. -->
+    <string name="action_clipboard_manager_error_clipboard_history_disabled_text_v2">Keeps what you copy so you can paste it later. Up to <xliff:g id="numItems" example="25">%1$s</xliff:g> items for <xliff:g id="numDays" example="3">%2$s</xliff:g> days; pinned items are kept.</string>
     <string name="action_clipboard_manager_enable_clipboard_history_button">Enable clipboard history</string>
     <!-- This message is shown when we're typing in a text field does not support image insertion ("app" refers to the external app that is providing the text field) -->
     <string name="action_clipboard_manager_error_app_image_insertion_unsupported">App does not support image insertion</string>
