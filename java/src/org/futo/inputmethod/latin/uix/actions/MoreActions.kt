@@ -40,8 +40,8 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,14 +64,17 @@ fun ActionItem(action: Action, modifier: Modifier = Modifier, dragIcon: Boolean 
     Surface(color = LocalKeyboardScheme.current.keyboardContainer,
         modifier = modifier
             .fillMaxWidth()
-            .height(92.dp),
+            .height(84.dp),
         shape = RoundedCornerShape(16.dp)
     ) {
         CompositionLocalProvider(LocalContentColor provides LocalKeyboardScheme.current.onKeyboardContainer) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp)
+                    // Tight, because the label needs every dp of the tile: at four
+                    // columns the longest names wrap, and each dp of inset costs a
+                    // character on the line.
+                    .padding(4.dp)
             ) {
 
                 if (dragIcon) {
@@ -88,7 +91,7 @@ fun ActionItem(action: Action, modifier: Modifier = Modifier, dragIcon: Boolean 
                 Column(
                     modifier = Modifier
                         .align(Center)
-                        .padding(horizontal = 2.dp)
+                        .fillMaxWidth()
                 ) {
                     Spacer(modifier = Modifier.weight(1.0f))
                     Icon(
@@ -103,11 +106,13 @@ fun ActionItem(action: Action, modifier: Modifier = Modifier, dragIcon: Boolean 
 
                     Text(
                         stringResource(id = action.name),
-                        modifier = Modifier.align(
-                            CenterHorizontally
-                        ),
+                        // Laid out at the tile's width and centred by textAlign,
+                        // rather than shrink-wrapped by align(CenterHorizontally).
+                        // Wrapped inside a column narrower than the tile, a label
+                        // broke inside a word that would have fitted the tile.
+                        modifier = Modifier.fillMaxWidth(),
                         style = Typography.Small.copy(lineHeight = 12.sp),
-                        maxLines = 2,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
                     )
@@ -150,8 +155,8 @@ fun MoreActionsView() {
             .fillMaxWidth()
             .padding(8.dp),
         columns = GridCells.Fixed(4),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(actions, key = { it.name }) {
             ActionItem(it, Modifier.clickable {
@@ -204,8 +209,8 @@ fun ActionsEditor(header: @Composable () -> Unit) {
             .padding(8.dp, 0.dp),
         state = lazyListState,
         columns = GridCells.Fixed(4),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
         items(list, key = { it.toKey() }, span = {
