@@ -772,7 +772,7 @@ private fun LettersKey(onExit: () -> Unit) {
  * buttons, which is the least room on the screen and a fixed width in it. Here it
  * has the panel's full width, and it sits with the thing it filters.
  *
- * It cannot use [ActionHeaderSearch]: that draws itself in `keyboardContainer`,
+ * It cannot use `ActionHeaderSearch`: that draws itself in `keyboardContainer`,
  * which is the colour of the panel it would now be sitting on, so it would be
  * invisible. On the panel the field takes the dimmer surface instead, which is
  * the same relationship the field had to the window bar before.
@@ -1280,34 +1280,30 @@ val EmojiAction = Action(
                 // is not here any more -- it is on the panel, where it has width and
                 // sits with the emoji it filters. That also means this bar no longer
                 // swaps itself out while searching.
-                run {
-                    super.WindowTitleBar(rowScope)
+                super.WindowTitleBar(rowScope)
 
-                    IconButton(onClick = {
-                        manager.requestDialog(
-                            resources.getString(R.string.action_emoji_clear_recent_emojis_question),
-                            listOf(
-                                DialogRequestItem(resources.getString(R.string.action_emoji_clear_recent_emojis_cancel)) {},
-                                DialogRequestItem(resources.getString(R.string.action_emoji_clear_recent_emojis_clear)) {
-                                    runBlocking {
-                                        manager.getContext().resetRecentEmojis()
-                                    }
-                                    manager.closeActionWindow()
-                                },
-                            ),
-                            {}
-                        )
-                    }) {
-                        // Not a close glyph. This clears the recent emoji, and it
-                        // sits a few pixels from the back arrow that does close the
-                        // panel -- an X there reads as "dismiss" and instead throws
-                        // away the list you use most. trash is what Languages uses
-                        // to remove something.
-                        Icon(painterResource(id = R.drawable.trash), contentDescription = stringResource(
-                            R.string.action_emoji_clear_recent_emojis_content_description
-                        ))
-                    }
-
+                IconButton(onClick = {
+                    manager.requestDialog(
+                        resources.getString(R.string.action_emoji_clear_recent_emojis_question),
+                        listOf(
+                            DialogRequestItem(resources.getString(R.string.action_emoji_clear_recent_emojis_cancel)) {},
+                            DialogRequestItem(resources.getString(R.string.action_emoji_clear_recent_emojis_clear)) {
+                                runBlocking {
+                                    manager.getContext().resetRecentEmojis()
+                                }
+                                manager.closeActionWindow()
+                            },
+                        ),
+                        {}
+                    )
+                }) {
+                    // Not a close glyph. This clears the recent emoji, and it sits a
+                    // few pixels from the back arrow that does close the panel -- an
+                    // X there reads as "dismiss" and instead throws away the list you
+                    // use most. trash is what Languages uses to remove something.
+                    Icon(painterResource(id = R.drawable.trash), contentDescription = stringResource(
+                        R.string.action_emoji_clear_recent_emojis_content_description
+                    ))
                 }
             }
         }
