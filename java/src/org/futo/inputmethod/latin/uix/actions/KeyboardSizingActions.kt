@@ -89,19 +89,24 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
         )
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 6.dp, vertical = 3.dp)
-                .background(
-                    if(isChecked) {
-                        MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
-                    } else {
-                        Color.Transparent
-                    },
-                    RoundedCornerShape(12.dp)
-                ),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
+            // Behind the content rather than around it. Insetting the box the label
+            // sits in costs the label 12dp, and in one-handed mode the whole tile is
+            // 76dp -- which is where "One-handed" started coming out as "One-hande".
+            if(isChecked) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .padding(horizontal = 6.dp, vertical = 3.dp)
+                        .background(
+                            MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                            RoundedCornerShape(12.dp)
+                        )
+                )
+            }
+
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     painterResource(iconRes),
