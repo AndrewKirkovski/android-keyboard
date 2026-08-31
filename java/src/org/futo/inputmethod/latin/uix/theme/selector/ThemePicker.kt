@@ -60,7 +60,7 @@ import org.futo.inputmethod.latin.uix.THEME_KEY
 import org.futo.inputmethod.latin.uix.actions.BugInfo
 import org.futo.inputmethod.latin.uix.actions.BugViewerState
 import org.futo.inputmethod.latin.uix.setSetting
-import org.futo.inputmethod.latin.uix.settings.ScreenTitle
+import org.futo.inputmethod.latin.uix.settings.SettingSectionHeader
 import org.futo.inputmethod.latin.uix.settings.SettingToggleDataStore
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.theme.ZipThemes
@@ -374,7 +374,11 @@ fun ThemePicker(
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             val yourThemes: LazyGridScope.() -> Unit = {
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                    ScreenTitle(stringResource(R.string.theme_settings_custom_themes))
+                    // The label above a group of rows, the same one the settings screens
+                    // use. It arrived here through ScreenTitle, which forwards to it
+                    // when there is no back arrow -- and evaluates a NavController on
+                    // the way, which over the keyboard has nothing to navigate.
+                    SettingSectionHeader(stringResource(R.string.theme_settings_custom_themes))
                 }
 
                 items(customThemes.size) {
@@ -401,7 +405,7 @@ fun ThemePicker(
 
             val builtInThemes: LazyGridScope.() -> Unit = {
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                    ScreenTitle(stringResource(R.string.theme_settings_default_themes))
+                    SettingSectionHeader(stringResource(R.string.theme_settings_default_themes))
                 }
                 items(assetThemes) { name ->
                     ZipThemePreview(name, isSelected = currentTheme == name.toSetting(), modifier = Modifier, onLongClick = {}) {
