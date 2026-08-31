@@ -79,8 +79,47 @@ beside the app. It is the target the Compose work is measured against, in both
 light and dark, with every entry naming the composable and file it maps to and
 carrying the measurement it replaces.
 
+### The keyboard's own panels
+
+The settings redesign stopped at the app boundary. Everything the keyboard draws
+over someone else's app — all actions, emoji, clipboard, themes, keyboard modes,
+the one-handed control — had never been looked at. Each of the below was found by
+opening the panel on a phone at 1080px rather than by reading the code.
+
+- **All actions holds twelve tiles in one view.** `GridCells.Adaptive(98.dp)`
+  yields three columns at 411dp, so twelve actions needed four rows where the
+  panel has room for two and a half, and the last row was cut through its labels.
+  It is `Fixed(4)` now, and the label is laid out at the tile's width rather than
+  shrink-wrapped inside a narrower column — which is why "Language switch key"
+  used to break mid-word while the longer "Clipboard manager" did not.
+- **The theme panel shows themes.** It reused the settings screen's picker
+  unchanged. "Your themes", its two buttons and a heading are together taller than
+  the strip the panel gets above the keyboard, so every built-in thumbnail began
+  below the fold and the panel opened with no theme in sight.
+- **The emoji page is on one spacing scale.** It had four different horizontal
+  insets down it. Emoji were drawn at 40dp in a 42dp cell:
+  `emoji_picker_emoji_view_padding` is what sets that, since `EmojiView` scales
+  the glyph to fill whatever the cell leaves, and the text size only decides the
+  resolution it is rendered at. Search moved off a fixed 128dp pill in the window
+  bar and onto the panel, where it has width and sits with what it filters.
+- **Clear-recents is not an X.** It wore `R.drawable.close` a few pixels from the
+  back arrow that closes the panel, so the destructive control had the dismiss
+  icon and the dismiss control sat beside it.
+- **Sentence case reached the panels.** They still said "Clipboard History
+  Inactive" above a button reading "Enable Clipboard History", from a keyboard
+  whose settings rows had already stopped doing that.
+- **Keyboard modes says which screen it is.** The shared window bar is only drawn
+  when the keyboard is hidden, and this panel keeps it visible, so the screen had
+  a back arrow and a Resize keyboard button with nothing between them.
+
 ### Smaller changes
 
+- **The one-handed control is one control.** The switch-hands chevron sat at the
+  top of the empty gutter and the exit button at the bottom, both bare glyphs
+  next to a mic button that has a container. They now share one, centred in the
+  gutter, square against the screen edge it touches and rounded on the inner
+  side, with 20dp between two buttons that mean "nudge the keyboard across" and
+  "leave one-handed mode".
 - **Hide the one-handed exit button.** It sits inside the arc a thumb sweeps
   while typing one-handed, so it gets caught by accident. A setting under
   Keyboard → Resize hides it, and a long press on the switch-hands chevron
