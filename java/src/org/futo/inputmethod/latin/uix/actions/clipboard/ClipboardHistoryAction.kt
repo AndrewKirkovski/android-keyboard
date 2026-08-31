@@ -457,8 +457,10 @@ fun ClipboardEntryViewPreview() {
  * empty, they never see the empty state, and the clear button offers to unpin an
  * entry they never made rather than to switch the feature off.
  *
- * Matched on all three of its fields. A user cannot produce one: every entry the
- * app creates is stamped with the current time, and pinning re-stamps.
+ * Matched on all three of its fields, and it takes all three. A clip's timestamp
+ * is the one the system reports for the clip where there is one, so a zero is not
+ * quite impossible; what a user cannot do is copy that exact sentence, have the
+ * system report zero for it, and pin it -- and pinning re-stamps anyway.
  */
 private fun ClipboardEntry.isTheOldEmptyStateEntry(): Boolean =
     timestamp == 0L && pinned && text == "Clipboard entries will appear here"

@@ -995,9 +995,11 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <p>The rest of the in-keyboard panels. The actions grid, its window bar, the
     one&#8209;handed control, the emoji page, the text editor, keyboard modes and the
     clipboard&rsquo;s notice and empty states are designed above; what is left
-    untouched is the clipboard&rsquo;s <em>clip rows</em>, the theme picker and the bug
-    viewer, which still share <code>Components.kt</code> and inherit the row family
-    unchanged. All of them need checking against a photo background, since they render
+    untouched is the clipboard&rsquo;s <em>clip rows</em>, the theme picker&rsquo;s
+    <em>swatch grid</em> and the bug viewer, which still share
+    <code>Components.kt</code> and inherit the row family unchanged. The theme panel
+    around that grid is not untouched: it took the shared title bar and its headings
+    moved to the section header. All of them need checking against a photo background, since they render
     over someone else&rsquo;s app.</p>
     <p>Tablet and landscape. The capture was phone portrait only.</p>
     <p><b>Three exceptions to the one&#8209;treatment&#8209;per&#8209;job rule, each with its reason.</b>
