@@ -15,19 +15,24 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -110,7 +115,6 @@ import org.futo.inputmethod.latin.uix.getSettingBlocking
 import org.futo.inputmethod.latin.uix.getUnlockedSetting
 import org.futo.inputmethod.latin.uix.isDirectBootUnlocked
 import org.futo.inputmethod.latin.uix.setSetting
-import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.latin.uix.settings.SettingSlider
 import org.futo.inputmethod.latin.uix.settings.SettingToggleDataStore
 import org.futo.inputmethod.latin.uix.settings.SettingToggleRaw
@@ -992,6 +996,34 @@ ${if(clipboardFileSwap.exists()) { clipboardFileSwap.readText() } else { "File d
 
 }
 
+/**
+ * Holds the panel's three one-card states: device locked, clipboard error, history off.
+ *
+ * A settings screen can leave the space under a lone card empty, because a screen
+ * continues past the fold and the card is only the first thing on it. This panel is a
+ * strip that ends where the keyboard begins, so the card was the only thing in it and
+ * the bottom half was visibly blank. Centred instead, the way the one-handed control's
+ * two buttons were. The scroll stays for the short strips that landscape and small
+ * screens leave: heightIn sits inside it so the column is at least as tall as the strip
+ * and Center has room to work, while taller content still scrolls from the top.
+ *
+ * Only these states. A list of clips fills from the top, which is where a list belongs.
+ */
+@Composable
+private fun ClipboardNotice(content: @Composable () -> Unit) {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .heightIn(min = maxHeight),
+            verticalArrangement = Arrangement.Center
+        ) {
+            content()
+        }
+    }
+}
+
 fun String.toFNV1aHash(): Long {
     val fnvPrime: Long = 1099511628211L
     var hash: Long = -3750763034362895579L
@@ -1116,7 +1148,7 @@ val ClipboardHistoryAction = Action(
                 val resources = LocalResources.current
                 val clipboardHistory = useDataStore(ClipboardHistoryEnabled, blocking = true)
                 if(!unlocked) {
-                    ScrollableList {
+                    ClipboardNotice {
                         PaymentSurface(isPrimary = true) {
                             PaymentSurfaceHeading(title = stringResource(R.string.action_clipboard_manager_error_device_locked_title))
 
@@ -1124,7 +1156,7 @@ val ClipboardHistoryAction = Action(
                         }
                     }
                 } else if(clipboardHistoryManager.clipboardIOFailure.value) {
-                    ScrollableList {
+                    ClipboardNotice {
                         PaymentSurface(isPrimary = true) {
                             PaymentSurfaceHeading(title = stringResource(R.string.action_clipboard_manager_error_general_title))
                             ParagraphText(
@@ -1164,7 +1196,7 @@ val ClipboardHistoryAction = Action(
                         }
                     }
                 } else if(!clipboardHistory.value) {
-                    ScrollableList {
+                    ClipboardNotice {
                         PaymentSurface(isPrimary = true) {
                             PaymentSurfaceHeading(title = stringResource(R.string.action_clipboard_manager_error_clipboard_history_disabled_title))
                             ParagraphText(stringResource(R.string.action_clipboard_manager_error_clipboard_history_disabled_text_v2,
