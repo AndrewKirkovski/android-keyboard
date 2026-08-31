@@ -788,10 +788,12 @@ private fun LettersKey(onExit: () -> Unit) {
  * buttons, which is the least room on the screen and a fixed width in it. Here it
  * has the panel's full width, and it sits with the thing it filters.
  *
- * It is drawn in `keyboardContainer`, which is what every other container on a
- * keyboard surface takes -- `ActionHeaderSearch`, the tiles on the actions panel,
- * the keys themselves. The emoji below it are glyphs on the bare surface, and the
- * only other container on the page is the pill behind the selected category.
+ * It is drawn in `keyboardContainer`, which is what a container that is not
+ * carrying a state takes -- `ActionHeaderSearch`, the tiles on the actions panel,
+ * the keys themselves. The emoji below it are glyphs on the bare surface. The two
+ * other containers on this page are both carrying one, and take the pair that
+ * says so: `secondary` behind the selected category, `keyboardPress` under the
+ * skin-tone popup.
  */
 @Composable
 private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: MutableState<String>) {

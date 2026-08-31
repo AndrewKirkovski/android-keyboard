@@ -118,9 +118,9 @@ fun ActionItem(action: Action, modifier: Modifier = Modifier, dragIcon: Boolean 
                         // alternative. The slot left by a 24dp icon in an 84dp
                         // tile is 52dp; three lines at the 1.25 the kit asks for
                         // need 52.5, so raising the leading clips a three-line
-                        // label at every font scale, and vertical overflow cuts
-                        // rather than ellipsising. It needs shorter labels or a
-                        // taller tile first.
+                        // label at the default font scale and every scale above
+                        // it, and vertical overflow cuts rather than ellipsising.
+                        // It needs shorter labels or a taller tile first.
                         style = Typography.Small.copy(lineHeight = 12.sp),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
@@ -177,10 +177,12 @@ fun MoreActionsView() {
         modifier = Modifier
             .fillMaxWidth()
             // 8dp all round, equal to the gutter. The kit asks for 16 at the
-            // sides so the margin beats the gap between cards, and 16 costs each
-            // tile 4dp of width: at that width "Paste from clipboard" and "Voice
-            // input" take a third line in one-handed mode, which the tile is not
-            // tall enough to show.
+            // sides so the margin beats the gap between cards, and that is worth
+            // doing -- but 16 costs each tile 4dp, which puts "Paste from
+            // clipboard" and "Voice input" onto a third line one-handed. Three
+            // lines fit at this leading, so it is a worse-looking panel rather
+            // than a broken one, and the version that has been looked at on the
+            // phone is this one. Worth taking once someone can see the result.
             .padding(8.dp),
         columns = GridCells.Fixed(4),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
