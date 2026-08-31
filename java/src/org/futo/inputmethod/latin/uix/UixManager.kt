@@ -31,6 +31,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -1175,62 +1176,96 @@ class UixManager(private val latinIME: LatinIME) {
     private fun BoxScope.OneHandedOptions(size: OneHandedKeyboardSize) = with(LocalDensity.current) {
         val hideExitButton = useDataStore(HideOneHandedExitButtonSetting)
 
+        val containerColor = LocalKeyboardScheme.current.keyboardContainer
+        val contentColor = LocalKeyboardScheme.current.onKeyboardContainer
+
         Box(Modifier.matchParentSize()) {
-            Column(modifier = Modifier
-                .matchParentSize()
-                .absolutePadding(
-                    top = if (isActionsExpanded.value) ActionBarHeight else 0.dp
-                ), horizontalAlignment = when(size.direction) {
-                // Aligned opposite of the keyboard
-                OneHandedDirection.Left -> Alignment.End
-                OneHandedDirection.Right -> Alignment.Start
-            }) {
-                // Switching hands on tap, leaving one-handed mode on long press. The
-                // long press matters when the exit button below is hidden: it keeps a
-                // one-gesture way out, so hiding the button costs convenience rather
-                // than capability.
-                Box(
+            Column(
+                modifier = Modifier
+                    .matchParentSize()
+                    // Excluded so that centring is measured against the strip the
+                    // user actually sees, not the part behind the nav bar.
+                    .absolutePadding(bottom = navBarHeight()),
+                horizontalAlignment = when(size.direction) {
+                    // Aligned opposite of the keyboard
+                    OneHandedDirection.Left -> Alignment.End
+                    OneHandedDirection.Right -> Alignment.Start
+                },
+                // Centred rather than pinned to the ends. The exit button used to
+                // sit at the bottom of the strip, which is where a thumb travels
+                // while typing one-handed, and the switch control at the top, level
+                // with whatever panel was open -- so the two controls read as
+                // belonging to different things and the middle was dead space.
+                verticalArrangement = Arrangement.Center
+            ) {
+                // One container holding both, the way Gboard's sidebar and Samsung
+                // Keyboard group theirs. The colours are the ones ActionItemSmall
+                // uses for the mic button, which in this mode sits immediately
+                // beside this control -- previously one of the two was contained
+                // and the other was a bare glyph.
+                Column(
                     modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .combinedClickable(
-                            // IconButton sets these itself; combinedClickable does not,
-                            // so without them the control stops announcing as a button
-                            // and the long press is an unlabelled custom action.
-                            role = Role.Button,
-                            onLongClickLabel = stringResource(R.string.one_handed_mode_exit),
-                            onClick = {
-                                latinIME.sizingCalculator.editSavedSettings {
-                                    it.copy(oneHandedDirection = it.oneHandedDirection.opposite)
-                                }
-                            },
-                            onLongClick = {
-                                latinIME.sizingCalculator.exitOneHandedMode()
-                            }
-                        ),
-                    contentAlignment = Alignment.Center
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(containerColor),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(painterResource(when(size.direction) {
-                        // Show opposite icon
-                        OneHandedDirection.Left -> R.drawable.chevron_right
-                        OneHandedDirection.Right -> R.drawable.chevron_left
-                    }), contentDescription = stringResource(R.string.one_handed_mode_switch_hand)
-                    )
-                }
+                    // Switching hands on tap, leaving one-handed mode on long press. The
+                    // long press matters when the exit button below is hidden: it keeps a
+                    // one-gesture way out, so hiding the button costs convenience rather
+                    // than capability.
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .combinedClickable(
+                                // IconButton sets these itself; combinedClickable does not,
+                                // so without them the control stops announcing as a button
+                                // and the long press is an unlabelled custom action.
+                                role = Role.Button,
+                                onLongClickLabel = stringResource(R.string.one_handed_mode_exit),
+                                onClick = {
+                                    latinIME.sizingCalculator.editSavedSettings {
+                                        it.copy(oneHandedDirection = it.oneHandedDirection.opposite)
+                                    }
+                                },
+                                onLongClick = {
+                                    latinIME.sizingCalculator.exitOneHandedMode()
+                                }
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(painterResource(when(size.direction) {
+                            // Show opposite icon
+                            OneHandedDirection.Left -> R.drawable.chevron_right
+                            OneHandedDirection.Right -> R.drawable.chevron_left
+                        }), contentDescription = stringResource(R.string.one_handed_mode_switch_hand),
+                            tint = contentColor
+                        )
+                    }
 
-                Spacer(Modifier.weight(1.0f))
-
-                // Sits low on the keyboard's inner edge, which is exactly where a thumb
-                // travels while typing one-handed, so it is easy to hit by accident.
-                if(!hideExitButton.value) {
-                    IconButton(onClick = {
-                        latinIME.sizingCalculator.exitOneHandedMode()
-                    }) {
-                        Icon(painterResource(R.drawable.maximize), contentDescription = stringResource(R.string.one_handed_mode_exit))
+                    if(!hideExitButton.value) {
+                        // The same shape and touch target as the control above it,
+                        // rather than an IconButton with its own metrics.
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .combinedClickable(
+                                    role = Role.Button,
+                                    onClick = {
+                                        latinIME.sizingCalculator.exitOneHandedMode()
+                                    }
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.maximize),
+                                contentDescription = stringResource(R.string.one_handed_mode_exit),
+                                tint = contentColor
+                            )
+                        }
                     }
                 }
-
-                Spacer(Modifier.height(navBarHeight()))
             }
         }
     }
