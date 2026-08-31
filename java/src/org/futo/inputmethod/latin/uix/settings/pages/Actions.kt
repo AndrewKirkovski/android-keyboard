@@ -33,9 +33,10 @@ val ActionsScreen = UserSettingsMenu(
     title = R.string.settings_title_actions,
     navPath = "actions", registerNavPath = true,
     settings = listOf(
-        // No header over the first card. Every other screen opens straight into
-        // its rows, and ScreenTitle here rendered a second large title under the
-        // app bar, which read as a second screen name rather than a group label.
+        // No header over the first card, as on most screens -- Home, Feedback and
+        // Text & corrections are the three that open with one. ScreenTitle here
+        // rendered a second large title under the app bar, which read as a second
+        // screen name rather than a group label.
         UserSetting(
             name = R.string.action_settings_quick_option_enable_action_key,
             subtitle = R.string.settings_sub_action_key

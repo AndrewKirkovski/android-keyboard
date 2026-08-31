@@ -287,9 +287,9 @@ private fun GenericEditTextCompose(
         // looked exactly like text you had not.
         editText.highlightColor = fgColor.copy(alpha = 0.3f).toArgb()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // The caret follows the text rather than the accent. These fields sit
-            // on keyboardContainer, and on High Contrast Yellow primary is white
-            // against a yellow field -- an invisible caret in a text field.
+            // The caret follows the text rather than the accent. The keyboard's own
+            // fields sit on keyboardContainer, and on High Contrast Yellow primary
+            // is white against a yellow field -- an invisible caret in a text field.
             editText.textCursorDrawable?.setTint(fgColor.toArgb())
             editText.textSelectHandle?.setTint(fgColor.toArgb())
             editText.textSelectHandleLeft?.setTint(fgColor.toArgb())

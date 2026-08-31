@@ -186,6 +186,11 @@ private val UixLocaleFollowsSubtypeLocale = true
 // are very different -- one nudges the keyboard across, the other leaves
 // one-handed mode -- so they are given room between them rather than being
 // stacked flush.
+// One density for every scrim the keyboard raises. The dialog used 66% and the
+// action editor 25%, over the same keys, so the same gesture dimmed by two
+// different amounts depending on what it opened.
+const val SCRIM_ALPHA = 0.5f
+
 private val CONTROL_RADIUS = 24.dp
 private val CONTROL_PADDING = 12.dp
 private val CONTROL_GAP = 20.dp
@@ -920,7 +925,7 @@ class UixManager(private val latinIME: LatinIME) {
             if (activeDialogRequest.value != null) {
                 Box(modifier = Modifier.matchParentSize()) {
                     Surface(
-                        color = Color.Black.copy(alpha = 0.66f),
+                        color = LocalKeyboardScheme.current.scrim.copy(alpha = SCRIM_ALPHA),
                         modifier = Modifier
                             .matchParentSize()
                             .pointerInput(Unit) {
@@ -1009,7 +1014,8 @@ class UixManager(private val latinIME: LatinIME) {
     @Composable
     fun InputDarkener(darken: Boolean, onClose: () -> Unit) {
         val color by animateColorAsState(
-            if (darken) Color.Black.copy(alpha = 0.25f) else Color.Transparent
+            if (darken) LocalKeyboardScheme.current.scrim.copy(alpha = SCRIM_ALPHA)
+            else Color.Transparent
         )
 
         LaunchedEffect(darken) {

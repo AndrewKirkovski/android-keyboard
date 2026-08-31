@@ -1083,8 +1083,15 @@ private fun CandidateItem(modifier: Modifier, it: SuggestedWordInfo, listener: S
     val color = LocalKeyboardScheme.current.onSurface
     val textStyle =
         suggestionStylePrimary.copy(color = color).withCustomFont()
+    // onSurfaceVariant at full strength rather than onSurface at half. This is 8sp,
+    // so it is held to the 4.5:1 text threshold, and halving the alpha halved
+    // whatever ratio the theme had achieved -- which is what the TODO here asked
+    // about. The variant role is the palette's own answer to "quieter than the
+    // text beside it".
     val descTextStyle =
-        suggestionStyleCandidateDescription.copy(color = color.copy(alpha = 0.5f)).withCustomFont() // TODO: High contrast for high contrast theme
+        suggestionStyleCandidateDescription.copy(
+            color = LocalKeyboardScheme.current.onSurfaceVariant
+        ).withCustomFont()
     Row(
         modifier
             .width(width)
@@ -1386,7 +1393,11 @@ fun BoxScope.ActionBarWithExpandableCandidates(
 
     if(canShowSuggest) {
         Surface(
-            Modifier.fillMaxWidth().padding(0.dp, ActionBarHeight, 0.dp, 0.dp)
+            // Sits over the keys, so it takes the keyboard's ground. Left to
+            // default this was colorScheme.surface, which on Sunflower is a
+            // near-white slab over a tan keyboard.
+            color = LocalKeyboardScheme.current.keyboardSurfaceDim,
+            modifier = Modifier.fillMaxWidth().padding(0.dp, ActionBarHeight, 0.dp, 0.dp)
                 .heightIn(max = with(density) { keyboardOffset?.intValue?.toDp() ?: 0.dp })
                 .safeKeyboardPadding()
         ) {

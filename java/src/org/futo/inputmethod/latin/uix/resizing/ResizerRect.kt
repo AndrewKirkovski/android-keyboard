@@ -90,7 +90,9 @@ fun BoxScope.ResizerRect(onDragged: (DragDelta) -> Boolean, showResetApply: Bool
 
     Box(Modifier
         .matchParentSize()
-        .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), shape)
+        // Every preset sets background = surface, so dimming with it lightened the
+        // keys on a light theme instead of darkening them.
+        .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f), shape)
         .border(
             3.dp, if (!wasAccepted.value) {
                 MaterialTheme.colorScheme.error
@@ -119,7 +121,8 @@ fun BoxScope.ResizerRect(onDragged: (DragDelta) -> Boolean, showResetApply: Bool
         .clip(shape)
     ) {
         val primaryColor = MaterialTheme.colorScheme.primary
-        val primaryInverseColor = MaterialTheme.colorScheme.inversePrimary
+        // primaryContainer rather than inversePrimary, which no preset defines.
+    val primaryInverseColor = MaterialTheme.colorScheme.primaryContainer
         val errorColor = MaterialTheme.colorScheme.error
         val radius = with(LocalDensity.current) { 24.dp.toPx() }
 

@@ -1052,7 +1052,7 @@ fun ScrollableList(modifier: Modifier = Modifier, spacing: Dp = 0.dp, horizontal
         }
 
         // Only a screen title registers itself, and only screens have one -- the panels
-        // that render inside the keyboard use ScreenTitle as a section header, which does
+        // that render inside the keyboard call SettingSectionHeader directly, which does
         // not. So this appears on settings screens and nowhere else.
         AnimatedVisibility(
             visible = anchor.scrolledAway,
@@ -1138,10 +1138,10 @@ fun NavigationItem(title: String, style: NavigationItemStyle, navigate: () -> Un
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            // Every navigation row gets the chevron. The three Home* styles rendered
-            // nothing at all, so on the busiest screen in the app no row said it led
-            // anywhere -- the circle behind the icon had been carrying that, and the
-            // circle is gone.
+            // The Home* styles get the chevron too. They rendered nothing at all, so
+            // on the busiest screen in the app no row said it led anywhere -- the
+            // circle behind the icon had been carrying that, and the circle is gone.
+            // MiscNoArrow still draws none, which is the point of it.
             NavigationItemStyle.HomePrimary,
             NavigationItemStyle.HomeSecondary,
             NavigationItemStyle.HomeTertiary -> Icon(
@@ -1390,10 +1390,10 @@ fun<T> DropDownPicker(
  * A choice among a fixed list: a row that opens a sheet.
  *
  * It used to render an outlined box inside the row. An outline says "input", and this is
- * not one -- it was also the only bordered element on any settings screen, so it read as
- * a foreign object dropped into a card, and it wrapped to two lines because "Immediate
- * space after suggestions & punctuation" is 46 characters and no box that width holds
- * it. The control came out near 96dp beside a 72dp row.
+ * not one -- next to the plain rows of a card it read as a foreign object dropped into
+ * one, and it wrapped to two lines because "Immediate space after suggestions &
+ * punctuation" is 47 characters and no box that width holds it. The control came out
+ * near 96dp beside a 72dp row.
  *
  * The current value is the row's subtitle instead, in the accent because it is the part
  * that changes. That makes this the standard two-line row -- no new height and no new

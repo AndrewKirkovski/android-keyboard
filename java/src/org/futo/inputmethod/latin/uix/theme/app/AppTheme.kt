@@ -32,7 +32,7 @@ import org.futo.inputmethod.latin.uix.theme.LocalCompatEmojiTypeface
  * The app used to render in whichever *keyboard* theme the user had picked, which is
  * why it never looked designed: a palette tuned for a 360dp strip sitting over someone
  * else's app, often with a photograph behind it, was being asked to carry a full-screen
- * scrolling text surface as well. Dark mode was not a mode, it was eighteen arbitrary
+ * scrolling text surface as well. Dark mode was not a mode, it was nineteen arbitrary
  * palettes recoloured, and contrast was unknowable in advance because the palette was
  * user-supplied.
  *
@@ -137,14 +137,15 @@ private val AppDarkColors = darkColorScheme(
 // --------------------------------------------------------------------------------- //
 
 /**
- * Size and opacity carry the hierarchy, not weight: a row title and its subtitle differ
- * by three points and by 30% opacity, and both are regular. The old pairing was 16sp/400
+ * Size and colour carry the hierarchy, not weight: a row title and its subtitle differ
+ * by three points and by the step from onSurface to onSurfaceVariant, and both are
+ * regular. The old pairing was 16sp/400
  * over 14sp/400 -- two points of size and nothing else -- so a three-line subtitle
  * visually outweighed the row it belonged to.
  *
  * This replaces the parallel scale in theme/Type.kt, which defined ten styles of which
  * five set lineHeight equal to fontSize. 100% leading crushes any string that wraps, and
- * with 541 UIX strings across 91 locales most of them wrap somewhere.
+ * with 544 UIX strings across 91 locales most of them wrap somewhere.
  *
  * The family stays the platform sans deliberately. Those same locales include
  * Devanagari, Arabic, Thai, Khmer, CJK and Cyrillic; a display face without full
@@ -248,7 +249,7 @@ object Spacing {
     /** Side padding inside a row, measured from the card's edge to the text. */
     val rowInset = 20.dp
 
-    /** The two row heights. Everything is one of these; there is no third. */
+    /** The two heights a SettingItem takes. */
     val rowHeight = 56.dp
     val rowHeightTwoLine = 72.dp
 

@@ -82,7 +82,6 @@ import org.futo.inputmethod.latin.uix.DynamicThemeProvider
 import org.futo.inputmethod.latin.uix.DynamicThemeProviderOwner
 import org.futo.inputmethod.latin.uix.ExampleListener
 import org.futo.inputmethod.latin.uix.KeyboardLayoutPreview
-import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
 import org.futo.inputmethod.latin.uix.LocalThemeProvider
 import org.futo.inputmethod.latin.uix.THEME_KEY
 import org.futo.inputmethod.latin.uix.getSetting
@@ -94,6 +93,7 @@ import org.futo.inputmethod.latin.uix.theme.GenericPalette
 import org.futo.inputmethod.latin.uix.theme.ZipThemes
 import org.futo.inputmethod.latin.uix.theme.ThemeDecodingContext
 import org.futo.inputmethod.latin.uix.theme.TonalPalette
+import org.futo.inputmethod.latin.uix.theme.UixThemeWrapper
 import org.futo.inputmethod.latin.uix.theme.presets.DefaultDarkScheme
 import org.futo.inputmethod.v2keyboard.LayoutManager
 import java.io.ByteArrayOutputStream
@@ -556,43 +556,49 @@ internal fun ThemeEditor(
                                     }
 
                                     Column {
+                                        // UixThemeWrapper rather than the two locals
+                                        // by hand: it also hands MaterialTheme the
+                                        // scheme, so a composable in here that reads
+                                        // MaterialTheme.colorScheme sees the theme
+                                        // being previewed and not the settings app's.
                                         CompositionLocalProvider(
-                                            LocalThemeProvider provides themeProvider.value,
-                                            LocalKeyboardScheme provides theme
+                                            LocalThemeProvider provides themeProvider.value
                                         ) {
-                                            val suggestedWords = remember {
-                                                val suggestedWordsForActionBar = arrayListOf(
-                                                    SuggestedWords.SuggestedWordInfo(
-                                                        resources.getString(R.string.theme_customizer_adjust_background_image_hint),
-                                                        "",
-                                                        100,
-                                                        1,
-                                                        null,
+                                            UixThemeWrapper(theme) {
+                                                val suggestedWords = remember {
+                                                    val suggestedWordsForActionBar = arrayListOf(
+                                                        SuggestedWords.SuggestedWordInfo(
+                                                            resources.getString(R.string.theme_customizer_adjust_background_image_hint),
+                                                            "",
+                                                            100,
+                                                            1,
+                                                            null,
+                                                            0,
+                                                            0
+                                                        ),
+                                                    )
+                                                    SuggestedWords(
+                                                        suggestedWordsForActionBar,
+                                                        suggestedWordsForActionBar,
+                                                        suggestedWordsForActionBar[0],
+                                                        true,
+                                                        true,
+                                                        false,
                                                         0,
                                                         0
-                                                    ),
+                                                    )
+                                                }
+                                                ActionBar(
+                                                    words = suggestedWords,
+                                                    suggestionStripListener = ExampleListener(),
+                                                    onActionActivated = { },
+                                                    onActionAltActivated = { },
+                                                    inlineSuggestions = listOf(),
+                                                    isActionsExpanded = false,
+                                                    toggleActionsExpanded = { },
                                                 )
-                                                SuggestedWords(
-                                                    suggestedWordsForActionBar,
-                                                    suggestedWordsForActionBar,
-                                                    suggestedWordsForActionBar[0],
-                                                    true,
-                                                    true,
-                                                    false,
-                                                    0,
-                                                    0
-                                                )
+                                                Spacer(Modifier.Companion.height(4.dp))
                                             }
-                                            ActionBar(
-                                                words = suggestedWords,
-                                                suggestionStripListener = ExampleListener(),
-                                                onActionActivated = { },
-                                                onActionAltActivated = { },
-                                                inlineSuggestions = listOf(),
-                                                isActionsExpanded = false,
-                                                toggleActionsExpanded = { },
-                                            )
-                                            Spacer(Modifier.Companion.height(4.dp))
                                         }
                                         KeyboardLayoutPreview(
                                             RichInputMethodManager.getInstance().currentSubtype.keyboardLayoutSetName,

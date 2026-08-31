@@ -152,7 +152,7 @@ fun FloatingPreEditView(
                 pos?.let { IntOffset(it.x.roundToInt(), it.y.roundToInt() - height) }
                     ?: IntOffset.Companion.Zero
             }
-            .background(Color.Companion.Gray.copy(alpha = 0.7f))
+            .background(LocalKeyboardScheme.current.surface)
             .clickable {
                 // Reject editing if there are already any Chinese characters in here. Only Pinyin editing supported
                 if (preedit.entries.all { it.normalized.all { it in 'a'..'z' || it in 'A'..'Z' || it == ' ' } }) {
@@ -167,7 +167,14 @@ fun FloatingPreEditView(
                 preedit.entries.forEach {
                     Text(
                         it.text, style = Typography.SmallMl.copy(
-                            color = if (it.highlighted) Color.Companion.Black else Color.Companion.DarkGray
+                            // The same pair the editing branch above uses. This
+                            // was Black on DarkGray over a grey plate, which on a
+                            // dark theme was dark text on dark ground.
+                            color = if (it.highlighted) {
+                                LocalKeyboardScheme.current.onSurface
+                            } else {
+                                LocalKeyboardScheme.current.onSurfaceVariant
+                            }
                         ), maxLines = 1, overflow = TextOverflow.Companion.Visible
                     )
                 }

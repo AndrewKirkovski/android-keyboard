@@ -107,8 +107,11 @@ fun ThemePreview(colors: KeyboardColorScheme, name: String, loading: Boolean, is
         Dp.Hairline
     }
 
+    // primary, not inversePrimary: neither the keyboard presets nor the settings
+    // app's palette defines that role, so the border marking the theme in use came
+    // out Material's baseline purple on every one of them.
     val borderColor = if (isSelected) {
-        currColors.inversePrimary
+        currColors.primary
     } else {
         currColors.outline
     }
@@ -431,7 +434,7 @@ fun ThemePicker(
                 // The keyboard-preview FAB floats over this grid -- Scaffold's inner
                 // padding does not account for it -- so the last row scrolled under it
                 // and the button sat on top of a theme tile. There is no Scaffold and
-                // no FAB in the keyboard's own panel, where 88dp is a tenth of the
+                // no FAB in the keyboard's own panel, where 88dp is over half the
                 // space the panel has.
                 contentPadding = PaddingValues(bottom = if (inKeyboard) 0.dp else 88.dp),
                 columns = GridCells.Adaptive(minSize = 172.dp),

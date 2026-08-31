@@ -217,7 +217,28 @@ fun extendedDarkColorScheme(
             onSurfaceVariant           = onSurfaceVariant,
             surfaceContainerHighest    = surfaceContainerHighest,
             background                 = surface,
-            onBackground               = onSurface
+            onBackground               = onSurface,
+
+            // Everything below is a role a preset does not take an argument for.
+            // Left out, Material fills them from its own baseline palette -- a
+            // purple-tinted grey that belongs to no theme in the fork -- and any
+            // composable that reads one gets that instead of the keyboard's
+            // colours. That is how the clipboard panel came to draw lilac cards
+            // on Sunflower and the selected-theme border came out Material
+            // purple. Each is mapped to the nearest colour the preset does
+            // supply, so a role that is read is at least the theme's.
+            surfaceVariant             = keyboardContainerVariant,
+            surfaceBright              = surface,
+            surfaceDim                 = keyboardSurfaceDim,
+            surfaceContainer           = keyboardContainer,
+            surfaceContainerHigh       = keyboardContainer,
+            surfaceContainerLow        = keyboardSurface,
+            surfaceContainerLowest     = keyboardSurface,
+            inversePrimary             = primaryContainer,
+            inverseSurface             = onSurface,
+            inverseOnSurface           = surface,
+            // A scrim is black in both polarities; naming it here says so.
+            scrim                      = Color.Black
         ),
 
         ExtraColors(
@@ -308,7 +329,28 @@ fun extendedLightColorScheme(
             onSurfaceVariant           = onSurfaceVariant,
             surfaceContainerHighest    = surfaceContainerHighest,
             background                 = surface,
-            onBackground               = onSurface
+            onBackground               = onSurface,
+
+            // Everything below is a role a preset does not take an argument for.
+            // Left out, Material fills them from its own baseline palette -- a
+            // purple-tinted grey that belongs to no theme in the fork -- and any
+            // composable that reads one gets that instead of the keyboard's
+            // colours. That is how the clipboard panel came to draw lilac cards
+            // on Sunflower and the selected-theme border came out Material
+            // purple. Each is mapped to the nearest colour the preset does
+            // supply, so a role that is read is at least the theme's.
+            surfaceVariant             = keyboardContainerVariant,
+            surfaceBright              = surface,
+            surfaceDim                 = keyboardSurfaceDim,
+            surfaceContainer           = keyboardContainer,
+            surfaceContainerHigh       = keyboardContainer,
+            surfaceContainerLow        = keyboardSurface,
+            surfaceContainerLowest     = keyboardSurface,
+            inversePrimary             = primaryContainer,
+            inverseSurface             = onSurface,
+            inverseOnSurface           = surface,
+            // A scrim is black in both polarities; naming it here says so.
+            scrim                      = Color.Black
         ),
 
         ExtraColors(

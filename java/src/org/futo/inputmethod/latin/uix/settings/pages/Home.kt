@@ -194,9 +194,9 @@ val HomeScreenLite = UserSettingsMenu(
         }),
         //}
 
-        // MiscNoArrow draws no circle behind the icon, so these two keep the
-        // quieter weight the style gives them while their titles start on the
-        // same left edge as every row above.
+        // MiscNoArrow is the quiet style -- no icon and no chevron -- so these two
+        // sit under the destinations without competing with them, and their titles
+        // start on the same left edge as every row above.
     )
 )
 

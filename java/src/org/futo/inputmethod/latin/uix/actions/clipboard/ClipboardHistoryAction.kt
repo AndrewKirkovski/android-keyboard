@@ -42,7 +42,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -99,6 +98,7 @@ import org.futo.inputmethod.latin.uix.Action
 import org.futo.inputmethod.latin.uix.ActionHeaderSearch
 import org.futo.inputmethod.latin.uix.ActionWindow
 import org.futo.inputmethod.latin.uix.DialogRequestItem
+import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
 import org.futo.inputmethod.latin.uix.PersistentActionState
 import org.futo.inputmethod.latin.uix.PersistentStateInitialization
 import org.futo.inputmethod.latin.uix.QuickClip
@@ -272,10 +272,24 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
 
     val shape = RoundedCornerShape(8.dp)
 
+    // keyboardContainer is the fork's "a container carrying no state" colour --
+    // the same one the emoji search bar, the action items and the tiles in All
+    // actions wear. surfaceContainer, which this used to read, is not among the
+    // roles extendedLightColorScheme forwards, so every preset got Material's
+    // baseline lilac instead of the theme's own container.
+    val scheme = LocalKeyboardScheme.current
     val color = if(clipboardEntry.pinned) {
-        MaterialTheme.colorScheme.primaryContainer
+        scheme.primaryContainer
     } else {
-        MaterialTheme.colorScheme.surfaceContainer
+        scheme.keyboardContainer
+    }
+    // Named rather than derived: contentColorFor knows Material's own container
+    // pairs, and keyboardContainer is not one of them, so it would match nothing
+    // and fall through to whatever LocalContentColor happened to be.
+    val onColor = if(clipboardEntry.pinned) {
+        scheme.onPrimaryContainer
+    } else {
+        scheme.onKeyboardContainer
     }
 
     val mainModifier = modifier
@@ -353,9 +367,12 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
                             stringResource(R.string.action_clipboard_manager_pin_item)
                         },
                         tint = if(clipboardEntry.pinned) {
-                            contentColorFor(color)
+                            onColor
                         } else {
-                            contentColorFor(color).copy(alpha = 0.5f)
+                            // Full strength. At 16dp this is a non-text element
+                            // against a 3:1 threshold, and half of it did not
+                            // clear that on the light presets.
+                            scheme.onSurfaceVariant
                         },
                         modifier = Modifier.size(16.dp).rotate(
                             if(clipboardEntry.pinned) { 0f } else { 45f }
@@ -371,7 +388,7 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
                     Icon(
                         painterResource(id = R.drawable.close),
                         contentDescription = stringResource(R.string.action_clipboard_manager_remove_item),
-                        tint = contentColorFor(color),
+                        tint = onColor,
                         modifier = Modifier.size(16.dp)
                     )
                 }

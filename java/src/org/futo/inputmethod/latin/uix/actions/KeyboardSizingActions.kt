@@ -61,7 +61,7 @@ import org.futo.inputmethod.latin.uix.theme.Typography
  * 1.08 and 1.22 to 1 against the panel on all nineteen presets -- a container nobody
  * can see, leaving the content alpha as the only signal. It fills the width of its
  * tile -- the row carries the margin that keeps the outer two off the screen edges --
- * and its vertical inset stays small, because the whole panel is 54dp.
+ * and its vertical inset stays small, because the tile it sits in is only 54dp.
  */
 @Composable
 internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator: KeyboardSizingCalculator, mode: KeyboardMode, isChecked: Boolean) {

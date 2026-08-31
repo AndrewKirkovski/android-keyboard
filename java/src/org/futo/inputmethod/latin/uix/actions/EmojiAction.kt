@@ -528,8 +528,10 @@ fun Emojis(
                 .padding(Spacing.s, Spacing.xs)
         )
 
+        // A dimmer is a scrim, not a surface: background is surface on every
+        // preset, so this used to lighten the grid on a light theme.
         Box(Modifier.matchParentSize().background(
-            MaterialTheme.colorScheme.background.copy(alpha = blockerAlpha * 0.5f)
+            MaterialTheme.colorScheme.scrim.copy(alpha = blockerAlpha * 0.5f)
         ))
 
         val posX = (activePopup?.x ?: 0) - popupSize.width / 2
@@ -710,10 +712,14 @@ private fun EmojiCategoriesContainer(
                     toggleableState = ToggleableState(isActive)
                 }
             ) {
+                // Full strength either way, for the reason the keyboard-mode
+                // tiles are (KeyboardSizingActions.kt): 60% put the glyph under
+                // its contrast threshold on the light presets, and the filled
+                // pill already says which category is selected.
                 val color = if (isActive) {
                     MaterialTheme.colorScheme.onSecondary
                 } else {
-                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                    MaterialTheme.colorScheme.onSurfaceVariant
                 }
 
                 val icon = iconMap[it.title]
