@@ -123,6 +123,7 @@ import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.theme.LocalCompatEmojiFamily
 import org.futo.inputmethod.latin.uix.theme.LocalCompatEmojiTypeface
 import org.futo.inputmethod.latin.uix.theme.app.Spacing
+import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.uix.theme.emojiNeedsCompat
 import org.futo.inputmethod.latin.uix.theme.emojiShouldShow
@@ -923,12 +924,14 @@ fun EmojiGrid(
                 } ?: listOf(item.emoji.description)
             }.take(30).distinctBy { it.emoji.emoji }
 
-        if(emojiList.isEmpty()) {
-            // Note: this gets matched and auto translated by localizedCategoryNameMap, don't
-            // update this string without also updating it there
-            emojiList = emojiList + listOf(CategoryItem("No results found"))
-        }
     }
+
+    // A search that found nothing used to be told by pushing a category into the
+    // grid whose title happened to read "No results found" -- so the message was
+    // drawn as a section heading, left-aligned at 16sp, exactly like "Smileys &
+    // emotion" above it. It is the app's empty state now, the same one the
+    // clipboard and the settings search use.
+    val noResults = searching.value && searchText.value.isNotEmpty() && emojiList.isEmpty()
 
     Column {
         // No panel behind the grid. The actions panel and the clipboard panel both
@@ -945,16 +948,20 @@ fun EmojiGrid(
         ) {
             EmojiSearchBar(searching, searchText)
 
-            Emojis(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1.0f),
-                emojis = emojiList,
-                onClick = onClick,
-                emojiMap = emojiMap,
-                currentCategory = currentCategory,
-                jumpCategory = jumpCategory
-            )
+            if(noResults) {
+                SettingsEmptyState(stringResource(R.string.action_emoji_search_no_results_found))
+            } else {
+                Emojis(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1.0f),
+                    emojis = emojiList,
+                    onClick = onClick,
+                    emojiMap = emojiMap,
+                    currentCategory = currentCategory,
+                    jumpCategory = jumpCategory
+                )
+            }
         }
 
         if(!searching.value) {

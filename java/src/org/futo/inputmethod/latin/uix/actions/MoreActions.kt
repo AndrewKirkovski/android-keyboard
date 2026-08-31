@@ -53,6 +53,7 @@ import org.futo.inputmethod.latin.uix.LocalManager
 import org.futo.inputmethod.latin.uix.getSettingBlocking
 import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.SettingSectionHeader
+import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.settings.WarningTip
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.theme.Typography
@@ -149,7 +150,11 @@ fun MoreActionsView() {
     }
 
     if(actions.isEmpty()) {
-        ScreenTitle(stringResource(R.string.action_editor_warning_no_actions))
+        // Not ScreenTitle: with no back arrow that is the accent section header,
+        // so a grid with nothing in it was announced by what looks like the label
+        // of a group that follows. This is what a list with nothing in it looks
+        // like everywhere else in the app.
+        SettingsEmptyState(stringResource(R.string.action_editor_warning_no_actions))
     }
 
     LazyVerticalGrid(
