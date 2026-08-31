@@ -181,6 +181,14 @@ val LocalNavController = compositionLocalOf<NavHostController?> {
 
 private val UixLocaleFollowsSubtypeLocale = true
 
+// The one-handed control's container. It holds two 48dp targets whose meanings
+// are very different -- one nudges the keyboard across, the other leaves
+// one-handed mode -- so they are given room between them rather than being
+// stacked flush.
+private val CONTROL_RADIUS = 24.dp
+private val CONTROL_PADDING = 12.dp
+private val CONTROL_GAP = 20.dp
+
 @Composable
 fun navBarHeight(): Dp = with(LocalDensity.current) {
     if(SupportsNavbarExtension) {
@@ -1210,8 +1218,25 @@ class UixManager(private val latinIME: LatinIME) {
                 // and the other was a bare glyph.
                 Column(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(containerColor),
+                        // Square against the screen edge it sits on and rounded
+                        // on the inner side only, so it reads as attached to the
+                        // edge rather than floating a hairline off it. The corner
+                        // names follow layout direction, the same way the
+                        // horizontalAlignment above does, so the two agree.
+                        .clip(
+                            when (size.direction) {
+                                OneHandedDirection.Left -> RoundedCornerShape(
+                                    topStart = CONTROL_RADIUS, topEnd = 0.dp,
+                                    bottomEnd = 0.dp, bottomStart = CONTROL_RADIUS
+                                )
+                                OneHandedDirection.Right -> RoundedCornerShape(
+                                    topStart = 0.dp, topEnd = CONTROL_RADIUS,
+                                    bottomEnd = CONTROL_RADIUS, bottomStart = 0.dp
+                                )
+                            }
+                        )
+                        .background(containerColor)
+                        .padding(vertical = CONTROL_PADDING),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Switching hands on tap, leaving one-handed mode on long press. The
@@ -1249,6 +1274,13 @@ class UixManager(private val latinIME: LatinIME) {
                     }
 
                     if(!hideExitButton.value) {
+                        // Two 48dp targets flush against each other, where the
+                        // lower one leaves one-handed mode altogether, is a
+                        // misclick that costs more than it should. Inside the
+                        // spacer, not before the block, so the gap goes away with
+                        // the button it separates.
+                        Spacer(Modifier.height(CONTROL_GAP))
+
                         // The same shape and touch target as the control above it,
                         // rather than an IconButton with its own metrics.
                         Box(
