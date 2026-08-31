@@ -1251,15 +1251,13 @@ val ClipboardHistoryAction = Action(
                 } else {
                     
                     Column(modifier = Modifier.fillMaxWidth()) {
+                        // Searching with nothing typed shows the clips, unfiltered.
+                        // It used to return early and draw nothing -- and an empty
+                        // state here would only repeat the field's own placeholder
+                        // two inches above it. The filter below already passes
+                        // everything for a blank query, which is also what the
+                        // emoji page does in the same state.
                         val searchQuery = searchText.value
-                        if(searching.value && searchQuery.isBlank()) {
-                            // Searching, nothing typed yet. This drew nothing at
-                            // all until now, which is the state the rest of this
-                            // commit set out to remove; the settings search page
-                            // answers the same one the same way.
-                            ClipboardEmptyState(stringResource(R.string.action_clipboard_manager_enter_your_search))
-                            return
-                        }
 
                         val showPinnedOnTop = useDataStoreValue(ClipboardShowPinnedOnTop)
                         val clipboardList = run {
