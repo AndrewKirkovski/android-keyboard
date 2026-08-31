@@ -1179,7 +1179,12 @@ class UixManager(private val latinIME: LatinIME) {
         val containerColor = LocalKeyboardScheme.current.keyboardContainer
         val contentColor = LocalKeyboardScheme.current.onKeyboardContainer
 
-        Box(Modifier.matchParentSize()) {
+        // Not while an action window is open. Those panels carry their own back
+        // arrow, and a second left-pointing chevron a hundred pixels below it --
+        // one meaning "go back", the other "move the keyboard" -- is not a
+        // spacing problem. There is also nothing to move while one is open: the
+        // panel is what the screen is showing.
+        if (currWindowAction.value == null) Box(Modifier.matchParentSize()) {
             Column(
                 modifier = Modifier
                     .matchParentSize()
