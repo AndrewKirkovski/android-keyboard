@@ -22,6 +22,18 @@ val ThemeAction = Action(
         object : ActionWindow() {
             override val onlyShowAboveKeyboard: Boolean = true
 
+            // Keeping the keyboard up meant the shared title bar was skipped, so this
+            // was the one panel with neither its name nor a back arrow -- all it had was
+            // the round close button the suggestion strip lends a docked window, sitting
+            // over the top-left key. The bar is drawn outside the panel's content box,
+            // so the window grows upward to fit it rather than taking the room the
+            // thumbnails need.
+            override val showTitleBarAboveKeyboard: Boolean = true
+
+            // The bar's back arrow is now what closes the panel, and it is where every
+            // other panel puts that.
+            override val showCloseButton: Boolean = false
+
             @Composable
             override fun windowName(): String {
                 return stringResource(R.string.settings_action_theme_switcher)
