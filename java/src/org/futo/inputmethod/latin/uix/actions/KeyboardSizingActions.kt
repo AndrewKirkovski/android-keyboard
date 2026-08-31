@@ -105,11 +105,12 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
             contentAlignment = Alignment.Center
         ) {
             // The full width of the tile, behind the content rather than around
-            // it. Both halves of that matter: insetting the box the label sits in
-            // costs the label 12dp, and in one-handed mode the tile is 76dp against
-            // a 68dp label; insetting only the marker leaves the label hanging off
-            // both ends of it, in a colour chosen to sit on the marker. The row
-            // itself carries the margin instead.
+            // it. Both halves of that matter. In one-handed mode the tile is 87dp,
+            // and insetting the box the label sits in cost it 12 of those; the
+            // longest English label is 75dp at this phone's font scale, so it
+            // clipped. Insetting only the marker instead leaves the label hanging
+            // off both ends of it, in a colour chosen to sit on the marker. The row
+            // carries the margin.
             if(isChecked) {
                 Box(
                     modifier = Modifier

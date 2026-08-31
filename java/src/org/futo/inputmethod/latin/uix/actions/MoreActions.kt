@@ -113,7 +113,9 @@ fun ActionItem(action: Action, modifier: Modifier = Modifier, dragIcon: Boolean 
                         // Wrapped inside a column narrower than the tile, a label
                         // broke inside a word that would have fitted the tile.
                         modifier = Modifier.fillMaxWidth(),
-                        style = Typography.Small.copy(lineHeight = 12.sp),
+                        // 1.25, not the 12sp on 14sp this inherited, which set
+                        // a two-line label with its lines touching.
+                        style = Typography.Small.copy(lineHeight = 17.5.sp),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
@@ -168,7 +170,11 @@ fun MoreActionsView() {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            // Outer margin wider than the gutter. Equal ones read as a grid that
+            // has been cut off rather than inset, which is the whole reason this
+            // panel was measured in the first place -- it had 45px between the
+            // cards and 34 to the screen edge.
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         columns = GridCells.Fixed(4),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)

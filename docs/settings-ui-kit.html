@@ -604,7 +604,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 </div>
 
 <h2 class="sec">Notices, dialogs, and the states nobody designed</h2>
-<p class="lede">The inventory reached fourteen <code>AlertDialog</code> call sites, five empty states and four progress states. None has a considered design today.</p>
+<p class="lede">The inventory reached fourteen <code>AlertDialog</code> call sites, five empty states and four progress states. None had a considered design when this section was written; the empty state below was built from it, and is what every empty list in the app and on the keyboard&rsquo;s panels uses now.</p>
 
 <div class="item">
   <div class="pair">
@@ -640,7 +640,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <p>Tips take the card&rsquo;s 12&nbsp;dp inset and a 16&nbsp;dp radius, so they read as a sibling of the groups rather than a foreign object. The warning variant is amber, not red &mdash; red is for destruction, and these are cautions.</p>
     <p>Empty states say what would be here and how it gets here. The current ones are a <code>Tip</code> saying &ldquo;&hellip;none&rdquo; or nothing at all.</p>
     <p>The destructive action is filled and last; cancel is quiet and first. That ordering is Android&rsquo;s, not iOS&rsquo;s.</p>
-    <p><b>Compose:</b> <code>Tip</code> and <code>WarningTip</code> keep their signatures; <code>AlertDialog</code> gains a shared wrapper so the fourteen call sites stop each choosing their own button order. <code>EmptyState</code> is new.</p>
+    <p><b>Compose:</b> <code>Tip</code> and <code>WarningTip</code> keep their signatures; <code>AlertDialog</code> gains a shared wrapper so the fourteen call sites stop each choosing their own button order. <code>SettingsEmptyState</code> is new, and shipped.</p>
   </div>
 </div>
 
@@ -768,13 +768,13 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <p><b>The outer margin is smaller than the gutter.</b> Measured: cards sit 45&nbsp;px apart with 34&nbsp;px to the right screen edge. An inner gap wider than the outer one makes a grid read as clipped rather than inset. The kit puts 16&nbsp;dp outside and 8&nbsp;dp between, so the margin always wins.</p>
     <p><b>The grid is not centred.</b> 120&nbsp;px on the left against 34&nbsp;px on the right, an 86&nbsp;px difference that needs no ruler to see. It comes from a symmetric <code>padding(8.dp)</code> applied inside a window that is already inset on one side in one&#8209;handed mode.</p>
     <p><b>The tiles are enormous.</b> 121&nbsp;&times;&nbsp;87&nbsp;dp to carry a 24&nbsp;dp icon and one word, so six actions fill a panel that holds twelve at 76&nbsp;&times;&nbsp;72&nbsp;dp. A fixed 4&#8209;column grid also gives a round column pitch; <code>GridCells.Adaptive(98.dp)</code> distributes the remainder, so the pitch lands on no particular number and lines up with nothing else on screen.</p>
-    <p><b>Labels are set at 100% leading.</b> <code>Typography.Small.copy(lineHeight&nbsp;=&nbsp;12.sp)</code> at a 12&nbsp;sp size, so &ldquo;Clipboard Manager&rdquo; sets its two lines touching. Leading goes to 1.25, and the labels get shorter &mdash; the panel is already titled &ldquo;All actions&rdquo;, so &ldquo;Manager&rdquo; and &ldquo;Info&rdquo; add nothing.</p>
+    <p><b>Labels are set tighter than solid.</b> <code>Typography.Small</code> is 14&nbsp;sp and the tile overrode its leading to 12, so &ldquo;Clipboard Manager&rdquo; set its two lines touching and slightly overlapping. Leading goes to 1.25, and the labels get shorter &mdash; the panel is already titled &ldquo;All actions&rdquo;, so &ldquo;Manager&rdquo; and &ldquo;Info&rdquo; add nothing.</p>
     <p><b>The edit button was a 131&nbsp;dp outlined pill</b> &mdash; measured 345&nbsp;px wide, a third of the bar, carrying the same visual weight as the title beside it. An outline promises a primary action. It becomes a text button, which is what a secondary action in a title bar looks like.</p>
     <p>One thing that turned out fine: the icons do <em>not</em> drift when a label wraps to two lines. Measured centres across a row of one&#8209; and two&#8209;line tiles were 568, 568 and 570&nbsp;px. The wrap&#8209;content <code>Column</code> keeps them put.</p>
     <p><b>Compose:</b> <code>ActionItem</code> and <code>MoreActionsView</code> in <code>actions/MoreActions.kt</code>; <code>ActionWindowBar</code> in <code>ActionBar.kt:938</code>. The grid moves from <code>GridCells.Adaptive(98.dp)</code> to <code>GridCells.Fixed(4)</code>, and the <code>OutlinedButton</code> in <code>MoreActionsAction.WindowTitleBar</code> becomes a <code>TextButton</code>. <code>ActionsEditor</code> takes the same grid so the editor and the panel stay the same shape.</p>
     <table class="num">
       <tr><th>Metric</th><th>Measured today</th><th>Kit</th></tr>
-      <tr><td>Tile</td><td class="was">121 &times; 87&nbsp;dp</td><td>76 &times; 72&nbsp;dp</td></tr>
+      <tr><td>Tile</td><td class="was">121 &times; 87&nbsp;dp</td><td>87 &times; 84&nbsp;dp as built</td></tr>
       <tr><td>Columns</td><td class="was">adaptive, 3</td><td>fixed, 4</td></tr>
       <tr><td>Gutter</td><td class="was">16&nbsp;dp</td><td>8&nbsp;dp</td></tr>
       <tr><td>Outer margin</td><td class="was">40 / 11&nbsp;dp</td><td>16&nbsp;dp both sides</td></tr>
@@ -817,7 +817,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <p><b>Nothing shares a left edge.</b> On the actions panel the chevron&rsquo;s stroke starts at x&nbsp;57, the back arrow&rsquo;s at 142, and the card grid at 120 &mdash; three different left edges in one view. The kit gives the gutter a single centreline and hangs the control on it.</p>
     <p><b>In an action window it stays.</b> This section previously said the opposite &mdash; that a panel&rsquo;s own back arrow and this chevron are two left&#8209;pointing glyphs in one view, so the control should disappear while a panel is open. It was built that way and then reversed after use: a control that vanishes when a panel opens reads as the panel having broken it, and one&#8209;handed reach is exactly as awkward on a panel as it is on the keys. The two glyphs sit on different grounds &mdash; the back arrow on the panel, this on the keyboard&rsquo;s gutter &mdash; which is what separates them.</p>
     <p><b>It is narrower than its gutter.</b> 40&nbsp;dp against a gutter of about 51, which leaves roughly 13&nbsp;dp of empty ground between the control and the nearest key. Padding cannot buy that gap: the control is pinned to the screen edge and the keys start where the one&#8209;handed layout puts them, so padding grows the node without moving either edge. The touch target keeps its full 48&nbsp;dp height.</p>
-    <p><b>Compose:</b> <code>UixManager.OneHandedOptions</code>. The <code>Column</code> and its <code>Spacer(weight)</code> become one <code>Box</code> aligned <code>CenterStart</code> / <code>CenterEnd</code>; the 48&nbsp;dp hit target is kept and a <code>Surface</code> at <code>keyboardContainer</code> supplies the 40&nbsp;dp circle. Long&#8209;press&#8209;to&#8209;exit and <code>HideOneHandedExitButtonSetting</code> are unchanged.</p>
+    <p><b>Compose:</b> <code>UixManager.OneHandedOptions</code>. The <code>Column</code> and its <code>Spacer(weight)</code> become a centred column holding both controls, and the 48&nbsp;dp hit targets are kept. As built it is not the circle this section first drew: the container is 40&nbsp;dp wide at <code>keyboardContainer</code>, square against the screen edge it touches and rounded on the inner side only, because a circle floating a hairline off the edge reads as unattached. Long&#8209;press&#8209;to&#8209;exit and <code>HideOneHandedExitButtonSetting</code> are unchanged.</p>
   </div>
 </div>
 
