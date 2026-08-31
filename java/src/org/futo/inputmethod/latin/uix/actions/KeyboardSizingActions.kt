@@ -1,6 +1,8 @@
 package org.futo.inputmethod.latin.uix.actions
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,9 +32,11 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.futo.inputmethod.latin.R
 import org.futo.inputmethod.latin.uix.Action
 import org.futo.inputmethod.latin.uix.ActionBarHeight
+import org.futo.inputmethod.latin.uix.ActionSep
 import org.futo.inputmethod.latin.uix.ActionWindow
 import org.futo.inputmethod.latin.uix.CloseResult
 import org.futo.inputmethod.latin.uix.TutorialMode
@@ -120,7 +125,23 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
                     painterResource(iconRes),
                     contentDescription = null
                 )
-                Text(name, style = Typography.SmallMl)
+                // Shrinks to fit rather than wrapping. The tile is 87dp wide in
+                // one-handed mode at 411dp, and the longest of these four labels
+                // -- Lithuanian "Pluduriuojanti" -- is 95dp at the phone's own
+                // font scale of 1.1. A second line does not fit in a 54dp tile,
+                // so wrapping means a cut label; this way the label is always
+                // whole, at 14sp wherever it fits and down to 10sp where it does
+                // not.
+                BasicText(
+                    name,
+                    style = Typography.SmallMl.copy(color = LocalContentColor.current),
+                    maxLines = 1,
+                    autoSize = TextAutoSize.StepBased(
+                        minFontSize = 10.sp,
+                        maxFontSize = 14.sp,
+                        stepSize = 0.5.sp
+                    )
+                )
             }
         }
     }
@@ -156,35 +177,41 @@ val KeyboardModeAction = Action(
                 // matches the shared bar exactly -- same glyph, same title style --
                 // so the two read as one thing.
                 Column {
-                    Row(Modifier.height(ActionBarHeight)) {
-                        if(manager.getTutorialMode() != TutorialMode.ResizerTutorial) {
-                            IconButton(onClick = {
-                                manager.closeActionWindow()
-                            }) {
-                                Icon(
-                                    painter = painterResource(R.drawable.arrow_left_26),
-                                    contentDescription = stringResource(R.string.action_keyboard_modes_go_back)
-                                )
+                    // ActionWindowBar is a column of a hairline over a weighted
+                    // row, so a bare 40dp row here was a hairline taller and the
+                    // only panel header without the rule above it.
+                    Column(Modifier.height(ActionBarHeight)) {
+                        ActionSep()
+                        Row(Modifier.weight(1.0f)) {
+                            if(manager.getTutorialMode() != TutorialMode.ResizerTutorial) {
+                                IconButton(onClick = {
+                                    manager.closeActionWindow()
+                                }) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.arrow_left_26),
+                                        contentDescription = stringResource(R.string.action_keyboard_modes_go_back)
+                                    )
+                                }
                             }
-                        }
-                        Text(
-                            windowName(),
-                            style = Typography.Body.MediumMl,
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Spacer(Modifier.weight(1.0f))
-                        TextButton(onClick = {
-                            manager.showResizer()
+                            Text(
+                                windowName(),
+                                style = Typography.Body.MediumMl,
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            )
+                            Spacer(Modifier.weight(1.0f))
+                            TextButton(onClick = {
+                                manager.showResizer()
 
-                            if(manager.getTutorialMode() == TutorialMode.ResizerTutorial) {
-                                manager.markTutorialCompleted()
+                                if(manager.getTutorialMode() == TutorialMode.ResizerTutorial) {
+                                    manager.markTutorialCompleted()
+                                }
+                            }, Modifier.onGloballyPositioned {
+                                if(manager.getTutorialMode() == TutorialMode.ResizerTutorial) {
+                                    manager.setTutorialArrowPosition(it)
+                                }
+                            }) {
+                                Text(stringResource(R.string.action_keyboard_modes_resize_keyboard), style = Typography.Body.MediumMl)
                             }
-                        }, Modifier.onGloballyPositioned {
-                            if(manager.getTutorialMode() == TutorialMode.ResizerTutorial) {
-                                manager.setTutorialArrowPosition(it)
-                            }
-                        }) {
-                            Text(stringResource(R.string.action_keyboard_modes_resize_keyboard), style = Typography.Body.MediumMl)
                         }
                     }
                     // The margin the marker used to carry. Here it costs each tile
