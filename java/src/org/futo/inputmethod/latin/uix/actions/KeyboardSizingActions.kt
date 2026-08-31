@@ -131,7 +131,7 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
                 )
                 // Shrinks to fit rather than wrapping. The tile is 87dp wide in
                 // one-handed mode at 411dp, and the longest of these four labels
-                // -- Lithuanian "Pluduriuojanti" (Plūduriuojanti) -- is 95dp at the phone's own
+                // -- Lithuanian "Plūduriuojanti" -- is 95dp at the phone's own
                 // font scale of 1.1. A second line does not fit in a 54dp tile,
                 // so wrapping means a cut label; this way it is whole at 14sp
                 // wherever it fits and down to 10sp where it does not. Below that

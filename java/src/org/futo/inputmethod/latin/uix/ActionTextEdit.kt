@@ -281,8 +281,9 @@ private fun GenericEditTextCompose(
         editText.setTextColor(fgColor.toArgb())
         editText.setHintTextColor(fgColor.copy(alpha = 0.7f).toArgb())
         // A wash of the text colour rather than the accent, for the reason the
-        // caret below moved: on High Contrast Yellow the accent is the field's own
-        // ground, so a selection over it was 1.03 to 1 -- text you had selected
+        // caret below moved. On High Contrast Yellow the accent is white and the
+        // field is yellow, so the old wash -- white at 70% over yellow -- came out
+        // a shade of the field itself, 1.03 to 1 against it: text you had selected
         // looked exactly like text you had not.
         editText.highlightColor = fgColor.copy(alpha = 0.3f).toArgb()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

@@ -790,8 +790,8 @@ private fun LettersKey(onExit: () -> Unit) {
  *
  * It is drawn in `keyboardContainer`, which is what every other container on a
  * keyboard surface takes -- `ActionHeaderSearch`, the tiles on the actions panel,
- * the keys themselves. It is the only container on this page: the emoji below it
- * are glyphs on the bare surface.
+ * the keys themselves. The emoji below it are glyphs on the bare surface, and the
+ * only other container on the page is the pill behind the selected category.
  */
 @Composable
 private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: MutableState<String>) {

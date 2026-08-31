@@ -259,11 +259,11 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 .wbar .ib { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; color: var(--kbfg); }
 .wbar .wt { flex: 1; min-width: 0; font-size: 16px; font-weight: 500; padding-left: 4px; }
 .wbar .txtbtn { font-size: 14px; font-weight: 500; color: var(--kbacc); padding: 0 12px; height: 40px; display: grid; place-items: center; border-radius: 20px; flex: none; }
-.agrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 8px 16px 16px; }
-.acard { background: var(--kbc, var(--card)); border-radius: 18px; height: 72px; display: flex; flex-direction: column;
+.agrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 8px; }
+.acard { background: var(--kbc, var(--card)); border-radius: 18px; height: 84px; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 6px; padding: 8px 4px; text-align: center; }
 .acard .g { width: 24px; height: 24px; flex: none; }
-.acard .l { font-size: 11px; line-height: 1.25; color: var(--kbfg, var(--fg)); max-height: 2.5em; overflow: hidden; }
+.acard .l { font-size: 11px; line-height: 0.857; color: var(--kbfg, var(--fg)); max-height: 2.5em; overflow: hidden; }
 .acard .g { color: var(--kbfg, var(--fg)); }
 .agrid.old { grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 8px 11px 8px 40px; }
 .agrid.old .acard { height: 86px; border-radius: 16px; }
@@ -725,16 +725,16 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       </div>
       <div class="agrid">
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/></svg><div class="l">Emoji</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg><div class="l">Debug</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg><div class="l">Debug info</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7L4 12l5 5M4 12h11a5 5 0 0 1 0 10"/></svg><div class="l">Undo</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7l5 5-5 5M20 12H9a5 5 0 0 0 0 10"/></svg><div class="l">Redo</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4"/></svg><div class="l">Text editor</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg><div class="l">Clipboard</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/><circle cx="12" cy="15" r="1.2"/></svg><div class="l">Theme</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/></svg><div class="l">Resize</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg><div class="l">Clipboard manager</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/><circle cx="12" cy="15" r="1.2"/></svg><div class="l">Theme switcher</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/></svg><div class="l">Keyboard modes</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9zM12 12v7a2 2 0 0 0 4 0"/></svg><div class="l">One&#8209;handed</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><div class="l">Voice</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><div class="l">Language</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><div class="l">Voice input</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><div class="l">Language switch key</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg><div class="l">Settings</div></div>
       </div>
     </div>
@@ -748,16 +748,16 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       </div>
       <div class="agrid">
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/></svg><div class="l">Emoji</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg><div class="l">Debug</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg><div class="l">Debug info</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7L4 12l5 5M4 12h11a5 5 0 0 1 0 10"/></svg><div class="l">Undo</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7l5 5-5 5M20 12H9a5 5 0 0 0 0 10"/></svg><div class="l">Redo</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4"/></svg><div class="l">Text editor</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg><div class="l">Clipboard</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/><circle cx="12" cy="15" r="1.2"/></svg><div class="l">Theme</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/></svg><div class="l">Resize</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg><div class="l">Clipboard manager</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/><circle cx="12" cy="15" r="1.2"/></svg><div class="l">Theme switcher</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/></svg><div class="l">Keyboard modes</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9zM12 12v7a2 2 0 0 0 4 0"/></svg><div class="l">One&#8209;handed</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><div class="l">Voice</div></div>
-        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><div class="l">Language</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><div class="l">Voice input</div></div>
+        <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><div class="l">Language switch key</div></div>
         <div class="acard"><svg class="g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg><div class="l">Settings</div></div>
       </div>
     </div>
@@ -774,10 +774,10 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <p><b>Compose:</b> <code>ActionItem</code> and <code>MoreActionsView</code> in <code>actions/MoreActions.kt</code>; <code>ActionWindowBar</code> in <code>ActionBar.kt:938</code>. The grid moves from <code>GridCells.Adaptive(98.dp)</code> to <code>GridCells.Fixed(4)</code>, and the <code>OutlinedButton</code> in <code>MoreActionsAction.WindowTitleBar</code> becomes a <code>TextButton</code>. <code>ActionsEditor</code> takes the same grid so the editor and the panel stay the same shape.</p>
     <table class="num">
       <tr><th>Metric</th><th>Measured today</th><th>Kit</th></tr>
-      <tr><td>Tile</td><td class="was">121 &times; 87&nbsp;dp</td><td>84&nbsp;dp tall as built; 92.75 wide in the editor, 88.75 on the panel, 76 one&#8209;handed</td></tr>
+      <tr><td>Tile</td><td class="was">121 &times; 87&nbsp;dp</td><td>84&nbsp;dp tall as built; 92.75 wide in the editor, 88.75 on the panel, 80 one&#8209;handed</td></tr>
       <tr><td>Columns</td><td class="was">adaptive, 3</td><td>fixed, 4</td></tr>
       <tr><td>Gutter</td><td class="was">16&nbsp;dp</td><td>8&nbsp;dp</td></tr>
-      <tr><td>Outer margin</td><td class="was">40 / 11&nbsp;dp</td><td>16&nbsp;dp &mdash; tried, reverted, costs the label 4&nbsp;dp</td></tr>
+      <tr><td>Outer margin</td><td class="was">46 / 13&nbsp;dp</td><td>16&nbsp;dp &mdash; tried, reverted, costs the label 4&nbsp;dp</td></tr>
       <tr><td>Label leading</td><td class="was">12&nbsp;sp on 14&nbsp;sp</td><td>1.25 &mdash; tried, reverted, needs a taller tile</td></tr>
       <tr><td>Edit control</td><td class="was">131&nbsp;dp outlined</td><td>text button</td></tr>
     </table>
@@ -1069,7 +1069,11 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     (<code>FloatingPreEditView</code>) is an overlay over the text being composed
     rather than a surface in a panel. The two that <em>are</em> panel fields &mdash;
     the clipboard&rsquo;s search and the emoji page&rsquo;s &mdash; share one look:
-    a <code>keyboardContainer</code> pill with no border.</p>
+    a <code>keyboardContainer</code> pill with no border. They keep that fill on a
+    theme with key borders off, and so do the action tiles and the mic and expand
+    buttons: the rule that empties a key on those themes is a rule about keys. A
+    control keeps its container, which is what tells it apart from the keys it
+    sits above.</p>
     <p><b>The unselected half of the selection treatment is not uniform</b>, on
     purpose. The modes panel&rsquo;s unselected labels are at full strength, because
     a label is small text at any size the auto&#8209;sizer picks, so it wants 4.5:1,
