@@ -135,7 +135,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-private val SEARCH_FIELD_HEIGHT = 44.dp
+private val SEARCH_FIELD_HEIGHT = 48.dp
 
 private val CompatEmojiVersions = setOf("9.0", "10.0", "12.0", "12.1", "13.0", "13.1", "14.0", "15.0", "15.1", "16.0", "17.0")
 val Context.compatEmojiTypeface: Typeface? get() = try {
@@ -800,9 +800,10 @@ private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: Mutable
         // Every dp here comes out of the grid below, so the field is kept to
         // roughly one emoji row.
         .padding(horizontal = Spacing.s, vertical = Spacing.xs)
-        // A floor rather than a fixed height: the same in both states, so
-        // tapping the field does not resize it, but it grows with the font scale
-        // instead of cutting the text off at 44dp.
+        // 48dp, which is what the editor underneath pins itself to
+        // (ActionTextEdit setHeight) and what a tap target wants. A floor rather
+        // than a fixed height, so the two states agree: below it the idle row is
+        // an icon and one line, above it nothing asks for more.
         .heightIn(min = SEARCH_FIELD_HEIGHT)
         .clip(RoundedCornerShape(Spacing.xl))
         .background(LocalKeyboardScheme.current.keyboardContainer)
