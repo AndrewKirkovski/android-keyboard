@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.LocalView
@@ -42,6 +42,8 @@ import org.futo.inputmethod.latin.R
 import org.futo.inputmethod.latin.common.Constants
 import org.futo.inputmethod.latin.uix.Action
 import org.futo.inputmethod.latin.uix.ActionWindow
+import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
+import org.futo.inputmethod.latin.uix.LocalThemeProvider
 
 @Composable
 fun IconWithColor(@DrawableRes iconId: Int, iconColor: Color, modifier: Modifier = Modifier) {
@@ -71,6 +73,8 @@ fun TogglableKey(
     modifier: Modifier = Modifier,
     contents: @Composable (color: Color) -> Unit
 ) {
+    val keys = panelKeyColors()
+
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -89,9 +93,9 @@ fun TogglableKey(
                 onClick = { }
             ),
         shape = RoundedCornerShape(8.dp),
-        color = if(toggled) { MaterialTheme.colorScheme.secondary } else { MaterialTheme.colorScheme.secondaryContainer }
+        color = if(toggled) { keys.accent } else { keys.functionalKey }
     ) {
-        contents(if(toggled) { MaterialTheme.colorScheme.onSecondary } else { MaterialTheme.colorScheme.onSecondaryContainer })
+        contents(if(toggled) { keys.onAccent } else { keys.onKey })
     }
 
 }
@@ -136,12 +140,44 @@ fun Modifier.repeatablyClickableAction(repeatable: Boolean = true, onTrigger: (B
     )
 }
 
+/**
+ * The three key treatments the keyboard itself draws, so a panel built out of
+ * keys matches the keys under it. [BasicThemeProvider] builds the keyboard's own
+ * from exactly these roles: an ordinary key, a functional key, and the accent it
+ * gives the enter key. It also drops both fills to transparent on a theme with
+ * key borders off, which is why this reads the provider rather than the colour
+ * scheme alone -- a panel that ignored it would draw filled boxes over a
+ * keyboard that draws none.
+ */
+private class PanelKeyColors(
+    val key: Color,
+    val functionalKey: Color,
+    val onKey: Color,
+    val accent: Color,
+    val onAccent: Color
+)
+
+@Composable
+private fun panelKeyColors(): PanelKeyColors {
+    val scheme = LocalKeyboardScheme.current
+    // A preview has no theme provider, and reading it there throws.
+    val borders = LocalInspectionMode.current || LocalThemeProvider.current.keyBorders
+
+    return PanelKeyColors(
+        key = if (borders) scheme.keyboardContainer else Color.Transparent,
+        functionalKey = if (borders) scheme.keyboardContainerVariant else Color.Transparent,
+        onKey = if (borders) scheme.onKeyboardContainer else scheme.onBackground,
+        accent = scheme.primary,
+        onAccent = scheme.onPrimary
+    )
+}
+
 @Composable
 fun ActionKey(
     onTrigger: () -> Unit,
     modifier: Modifier = Modifier,
     repeatable: Boolean = true,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color = panelKeyColors().key,
     contents: @Composable () -> Unit
 ) {
     Surface(
@@ -163,6 +199,8 @@ fun ArrowKeys(
     modifier: Modifier,
     moveCursor: (direction: Direction) -> Unit
 ) {
+    val keys = panelKeyColors()
+
     Row(modifier = modifier) {
         ActionKey(
             modifier = Modifier
@@ -172,7 +210,7 @@ fun ArrowKeys(
         ) {
             IconWithColor(
                 iconId = R.drawable.arrow_left,
-                iconColor = MaterialTheme.colorScheme.onPrimary
+                iconColor = keys.onKey
             )
         }
 
@@ -187,7 +225,7 @@ fun ArrowKeys(
             ) {
                 IconWithColor(
                     iconId = R.drawable.arrow_up,
-                    iconColor = MaterialTheme.colorScheme.onPrimary
+                    iconColor = keys.onKey
                 )
             }
 
@@ -200,7 +238,7 @@ fun ArrowKeys(
             ) {
                 IconWithColor(
                     iconId = R.drawable.arrow_down,
-                    iconColor = MaterialTheme.colorScheme.onPrimary
+                    iconColor = keys.onKey
                 )
             }
         }
@@ -213,7 +251,7 @@ fun ArrowKeys(
         ) {
             IconWithColor(
                 iconId = R.drawable.arrow_right,
-                iconColor = MaterialTheme.colorScheme.onPrimary
+                iconColor = keys.onKey
             )
         }
     }
@@ -251,32 +289,42 @@ fun CtrlShiftMetaKeys(modifier: Modifier, ctrlState: MutableState<Boolean>, shif
 
 @Composable
 fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int) -> Unit, keyboardShown: Boolean) {
+    val keys = panelKeyColors()
+
+    // The column beside this one splits 3:1 -- arrows over modifiers -- so its one
+    // horizontal line sits at three quarters. Four side keys land on that line by
+    // accident of being equal. Three do not: dropping delete when the keyboard is
+    // up would put the undo row's top edge at two thirds and leave the panel with
+    // no line running across it. The clipboard keys take up the slack instead, so
+    // the bottom band is one band in both states.
+    val clipboardKeyWeight = if (keyboardShown) 1.5f else 1.0f
+
     Column(modifier = modifier) {
         ActionKey(
             modifier = Modifier
-                .weight(1.0f)
+                .weight(clipboardKeyWeight)
                 .fillMaxWidth(),
             repeatable = false,
-            color = MaterialTheme.colorScheme.primaryContainer,
+            color = keys.functionalKey,
             onTrigger = { onEvent(KeyEvent.KEYCODE_C, KeyEvent.META_CTRL_ON) }
         ) {
             IconWithColor(
                 iconId = R.drawable.copy,
-                iconColor = MaterialTheme.colorScheme.onPrimaryContainer
+                iconColor = keys.onKey
             )
         }
 
         ActionKey(
             modifier = Modifier
-                .weight(1.0f)
+                .weight(clipboardKeyWeight)
                 .fillMaxWidth(),
             repeatable = false,
-            color = MaterialTheme.colorScheme.primaryContainer,
+            color = keys.functionalKey,
             onTrigger = { onEvent(KeyEvent.KEYCODE_V, KeyEvent.META_CTRL_ON) }
         ) {
             IconWithColor(
                 iconId = R.drawable.clipboard,
-                iconColor = MaterialTheme.colorScheme.onPrimaryContainer
+                iconColor = keys.onKey
             )
         }
 
@@ -286,12 +334,12 @@ fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int)
                     .weight(1.0f)
                     .fillMaxWidth(),
                 repeatable = true,
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = keys.functionalKey,
                 onTrigger = { onCodePoint(Constants.CODE_DELETE) }
             ) {
                 IconWithColor(
                     iconId = R.drawable.delete,
-                    iconColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    iconColor = keys.onKey
                 )
             }
         }
@@ -305,12 +353,12 @@ fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int)
                     .weight(1.0f)
                     .fillMaxHeight(),
                 repeatable = false,
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = keys.functionalKey,
                 onTrigger = { onEvent(KeyEvent.KEYCODE_Z, KeyEvent.META_CTRL_ON) }
             ) {
                 IconWithColor(
                     iconId = R.drawable.undo,
-                    iconColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    iconColor = keys.onKey
                 )
             }
 
@@ -319,12 +367,12 @@ fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int)
                     .weight(1.0f)
                     .fillMaxHeight(),
                 repeatable = false,
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = keys.functionalKey,
                 onTrigger = { onEvent(KeyEvent.KEYCODE_Y, KeyEvent.META_CTRL_ON) }
             ) {
                 IconWithColor(
                     iconId = R.drawable.redo,
-                    iconColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    iconColor = keys.onKey
                 )
             }
         }
