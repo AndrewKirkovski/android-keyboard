@@ -933,8 +933,10 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     it at&nbsp;8, the category row at&nbsp;2, the search field pinned at&nbsp;128 &mdash;
     are now one, on the <code>Spacing</code> scale. The search field was a fixed
     128&nbsp;dp pill in the window bar, dressed as a text input while being a button
-    that switched modes. It is the panel&rsquo;s width now, with a fixed height so that
-    tapping it does not resize it.</p>
+    that switched modes. It is the panel&rsquo;s width now, and takes a height
+    floor rather than a fixed height &mdash; 48&nbsp;dp, which is what the editor
+    underneath pins itself to and what a tap target wants, so the two states agree
+    without cutting the text off at a larger font scale.</p>
     <p><b>Five selected&#8209;item treatments existed across these surfaces.</b> A filled
     <code>secondary</code>&nbsp;/&nbsp;<code>onSecondary</code> pair wins, because it is
     what the keyboard puts on a latched key (<code>KeyVisualStyle.StickyOn</code>) and
@@ -990,7 +992,13 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 <div class="item wide">
   <div class="notes">
     <p>Which screen each setting lives on &mdash; that is the arrangement document, already written, and it is what step&nbsp;5 lays out.</p>
-    <p>The rest of the in-keyboard panels. The actions grid, its window bar and the one&#8209;handed control are designed above; clipboard settings, the theme picker and the bug viewer still share <code>Components.kt</code> and inherit the row family unchanged. All of them need checking against a photo background, since they render over someone else&rsquo;s app.</p>
+    <p>The rest of the in-keyboard panels. The actions grid, its window bar, the
+    one&#8209;handed control, the emoji page, the text editor, keyboard modes and the
+    clipboard&rsquo;s notice and empty states are designed above; what is left
+    untouched is the clipboard&rsquo;s <em>clip rows</em>, the theme picker and the bug
+    viewer, which still share <code>Components.kt</code> and inherit the row family
+    unchanged. All of them need checking against a photo background, since they render
+    over someone else&rsquo;s app.</p>
     <p>Tablet and landscape. The capture was phone portrait only.</p>
     <p><b>Three exceptions to the one&#8209;treatment&#8209;per&#8209;job rule, each with its reason.</b>
     They are listed rather than left for a reader to find and take for oversights.</p>

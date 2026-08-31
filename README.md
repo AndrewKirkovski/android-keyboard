@@ -108,6 +108,14 @@ opening the panel on a phone at 1080px rather than by reading the code.
 - **Sentence case reached the panels.** They still said "Clipboard History
   Inactive" above a button reading "Enable Clipboard History", from a keyboard
   whose settings rows had already stopped doing that.
+- **A panel with nothing in it says so.** The clipboard drew a blank rectangle
+  with clipboard history on and nothing copied, and shipped a pinned entry
+  reading "Clipboard entries will appear here" -- a hardcoded English string
+  sitting in your history as though you had copied it. The emoji page announced
+  a search with no matches by pushing a fake category into the grid, so the
+  message arrived as a section heading. Every list in the app that can be empty
+  now says so the same way, and the phantom entry is removed from histories that
+  already saved it.
 - **Keyboard modes says which screen it is.** The shared window bar is only drawn
   when the keyboard is hidden, and this panel keeps it visible, so the screen had
   a back arrow and a Resize keyboard button with nothing between them.
