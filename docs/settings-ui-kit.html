@@ -989,6 +989,45 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
   </div>
 </div>
 
+<div class="item wide">
+  <div class="notes">
+    <span class="tag">Redesigned</span>
+    <h3>The clipboard, and what a panel says when it holds nothing</h3>
+    <p><b>Its notice was five lines of product sentences.</b> Two of the three said
+    what the heading above them and the button below them already said &mdash; how to
+    switch the feature on, and that it can be configured elsewhere, from a panel with
+    no route to elsewhere. What is left is the part a reader cannot get from the two
+    controls around it: what clipboard history does, and what it keeps. The card is
+    centred rather than pinned to the top, because this panel ends where the keyboard
+    begins and a lone card at the top leaves the bottom half of it visibly blank.</p>
+    <p><b>It had three empty states and drew none of them.</b> With history on and
+    nothing copied the panel was a blank rectangle. What stood in for an empty state
+    was a <em>pinned clip</em> reading &ldquo;Clipboard entries will appear
+    here&rdquo; &mdash; a hardcoded English string sitting in the history as though
+    the reader had copied it, which could be pinned, pasted and deleted like a real
+    one, and which only ever appeared before the first save, so a history that had
+    clips and no longer does still drew nothing. An empty state is not a list item.
+    All three states &mdash; nothing copied, a search with no matches, and the same
+    two on the emoji page and the actions grid &mdash; are the app&rsquo;s empty
+    state, centred in the panel.</p>
+    <p><b>And the control that clears it is a bin.</b> It wore the close glyph, two
+    icons from the back arrow that dismisses the panel, on a button whose three
+    outcomes are clear the clips, unpin all of them, or switch the feature off. The
+    emoji page&rsquo;s clear&#8209;recents button had the same fault and the same
+    fix.</p>
+    <p><b>One thing deliberately left:</b> the notice card keeps its accent fill. An
+    empty list should not be accent&#8209;coloured &mdash; that is the rule the
+    settings empty state was written for &mdash; but this is not an empty list. It is
+    a feature that is off, with the button that turns it on inside the card, which is
+    what the accent is for.</p>
+    <p><b>Compose:</b> <code>actions/clipboard/ClipboardHistoryAction.kt</code> &mdash;
+    <code>ClipboardNotice</code> for the three one&#8209;card states,
+    <code>ClipboardEmptyState</code> for the empty ones, and
+    <code>isTheOldEmptyStateEntry()</code>, which drops the pinned clip from histories
+    that already saved it and from a settings backup that restores one.</p>
+  </div>
+</div>
+
 <h2 class="sec">What this kit does not answer</h2>
 <div class="item wide">
   <div class="notes">
@@ -997,7 +1036,8 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     one&#8209;handed control, the emoji page, the text editor, keyboard modes and the
     clipboard&rsquo;s notice and empty states are designed above; what is left
     untouched is the clipboard&rsquo;s <em>clip rows</em>, the theme picker&rsquo;s
-    <em>swatch grid</em> and the bug viewer, which still share
+    <em>swatch grid</em> and the bug viewer, whose own empty state keeps its
+    debug&#8209;styled label, which still share
     <code>Components.kt</code> and inherit the row family unchanged. The theme panel
     around that grid is not untouched: it took the shared title bar and its headings
     moved to the section header. All of them need checking against a photo background, since they render
