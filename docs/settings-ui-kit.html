@@ -275,6 +275,14 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 .oh { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px;
   border-radius: 50%; background: var(--kbc); display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.18); }
 .oh.bare { background: transparent; box-shadow: none; top: 22px; transform: none; left: 12px; width: 32px; height: 32px; }
+.tpanel { display: grid; grid-template-columns: 3fr 1fr; gap: 6px; height: 150px; padding: 8px; }
+.tpanel .col { display: grid; gap: 6px; }
+.tpanel .arrows { grid-template-columns: repeat(3, 1fr); }
+.tpanel .tk { background: var(--kbc); border-radius: 8px; display: grid; place-items: center;
+  color: var(--kbfg); font-size: 15px; }
+.tpanel .tk.fn { background: color-mix(in srgb, var(--kbc) 55%, var(--kb)); color: var(--kbfg2); }
+.tpanel .tk.on { background: var(--kbacc); color: #fff; }
+.tpanel .tk.none { background: transparent; color: var(--kbfg); }
 .kstrip .guide { position: absolute; left: 0; right: 0; height: 1px; background: var(--acc); opacity: .55; }
 
 
@@ -703,7 +711,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
 </div>
 
 <h2 class="sec">On the keyboard</h2>
-<p class="lede">These panels render in the <em>keyboard&rsquo;s</em> palette over somebody else&rsquo;s app, so they are drawn here on the keyboard&rsquo;s own ground rather than the settings ground. Every number below is measured from a 1080&nbsp;px capture at density&nbsp;3.</p>
+<p class="lede">These panels render in the <em>keyboard&rsquo;s</em> palette over somebody else&rsquo;s app, so they are drawn here on the keyboard&rsquo;s own ground rather than the settings ground. Every number below is measured from a 1080&nbsp;px capture at density&nbsp;2.625, which is 411&nbsp;dp wide.</p>
 
 <div class="item">
   <div class="pair">
@@ -759,19 +767,19 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <h3>Action cards and the window bar</h3>
     <p><b>The outer margin is smaller than the gutter.</b> Measured: cards sit 45&nbsp;px apart with 34&nbsp;px to the right screen edge. An inner gap wider than the outer one makes a grid read as clipped rather than inset. The kit puts 16&nbsp;dp outside and 8&nbsp;dp between, so the margin always wins.</p>
     <p><b>The grid is not centred.</b> 120&nbsp;px on the left against 34&nbsp;px on the right, an 86&nbsp;px difference that needs no ruler to see. It comes from a symmetric <code>padding(8.dp)</code> applied inside a window that is already inset on one side in one&#8209;handed mode.</p>
-    <p><b>The tiles are enormous.</b> 93&nbsp;&times;&nbsp;86&nbsp;dp to carry a 24&nbsp;dp icon and one word, so six actions fill a panel that holds twelve at 76&nbsp;&times;&nbsp;72&nbsp;dp. A fixed 4&#8209;column grid also gives a round column pitch; <code>GridCells.Adaptive(98.dp)</code> distributes the remainder, so the pitch lands on no particular number and lines up with nothing else on screen.</p>
+    <p><b>The tiles are enormous.</b> 121&nbsp;&times;&nbsp;87&nbsp;dp to carry a 24&nbsp;dp icon and one word, so six actions fill a panel that holds twelve at 76&nbsp;&times;&nbsp;72&nbsp;dp. A fixed 4&#8209;column grid also gives a round column pitch; <code>GridCells.Adaptive(98.dp)</code> distributes the remainder, so the pitch lands on no particular number and lines up with nothing else on screen.</p>
     <p><b>Labels are set at 100% leading.</b> <code>Typography.Small.copy(lineHeight&nbsp;=&nbsp;12.sp)</code> at a 12&nbsp;sp size, so &ldquo;Clipboard Manager&rdquo; sets its two lines touching. Leading goes to 1.25, and the labels get shorter &mdash; the panel is already titled &ldquo;All actions&rdquo;, so &ldquo;Manager&rdquo; and &ldquo;Info&rdquo; add nothing.</p>
-    <p><b>The edit button was a 115&nbsp;dp outlined pill</b> &mdash; measured 345&nbsp;px wide, a third of the bar, carrying the same visual weight as the title beside it. An outline promises a primary action. It becomes a text button, which is what a secondary action in a title bar looks like.</p>
+    <p><b>The edit button was a 131&nbsp;dp outlined pill</b> &mdash; measured 345&nbsp;px wide, a third of the bar, carrying the same visual weight as the title beside it. An outline promises a primary action. It becomes a text button, which is what a secondary action in a title bar looks like.</p>
     <p>One thing that turned out fine: the icons do <em>not</em> drift when a label wraps to two lines. Measured centres across a row of one&#8209; and two&#8209;line tiles were 568, 568 and 570&nbsp;px. The wrap&#8209;content <code>Column</code> keeps them put.</p>
     <p><b>Compose:</b> <code>ActionItem</code> and <code>MoreActionsView</code> in <code>actions/MoreActions.kt</code>; <code>ActionWindowBar</code> in <code>ActionBar.kt:938</code>. The grid moves from <code>GridCells.Adaptive(98.dp)</code> to <code>GridCells.Fixed(4)</code>, and the <code>OutlinedButton</code> in <code>MoreActionsAction.WindowTitleBar</code> becomes a <code>TextButton</code>. <code>ActionsEditor</code> takes the same grid so the editor and the panel stay the same shape.</p>
     <table class="num">
       <tr><th>Metric</th><th>Measured today</th><th>Kit</th></tr>
-      <tr><td>Tile</td><td class="was">93 &times; 86&nbsp;dp</td><td>76 &times; 72&nbsp;dp</td></tr>
+      <tr><td>Tile</td><td class="was">121 &times; 87&nbsp;dp</td><td>76 &times; 72&nbsp;dp</td></tr>
       <tr><td>Columns</td><td class="was">adaptive, 3</td><td>fixed, 4</td></tr>
-      <tr><td>Gutter</td><td class="was">15&nbsp;dp</td><td>8&nbsp;dp</td></tr>
+      <tr><td>Gutter</td><td class="was">16&nbsp;dp</td><td>8&nbsp;dp</td></tr>
       <tr><td>Outer margin</td><td class="was">40 / 11&nbsp;dp</td><td>16&nbsp;dp both sides</td></tr>
       <tr><td>Label leading</td><td class="was">12&nbsp;sp on 12&nbsp;sp</td><td>1.25</td></tr>
-      <tr><td>Edit control</td><td class="was">115&nbsp;dp outlined</td><td>text button</td></tr>
+      <tr><td>Edit control</td><td class="was">131&nbsp;dp outlined</td><td>text button</td></tr>
     </table>
   </div>
 </div>
@@ -807,8 +815,160 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <p><b>It is the only control on the keyboard with no container.</b> Its neighbours all sit in filled circles &mdash; the action&#8209;bar overflow measures 89&nbsp;px across, the expand and microphone buttons about 100 &mdash; while this one is a bare 22&nbsp;&times;&nbsp;40&nbsp;px stroke laid straight on the keyboard ground. It reads as decoration rather than a button.</p>
     <p><b>It does not hold still.</b> Across three captures of the same session its centre sits at y&nbsp;180, y&nbsp;204 and y&nbsp;176 &mdash; it moves 28&nbsp;px between screens, because it is pinned to the top of a full&#8209;height column whose top depends on whether the action bar is expanded (<code>absolutePadding(top = if (isActionsExpanded) ActionBarHeight else 0.dp)</code>). The kit centres it on the letter rows, so it is the same distance from the thumb every time.</p>
     <p><b>Nothing shares a left edge.</b> On the actions panel the chevron&rsquo;s stroke starts at x&nbsp;57, the back arrow&rsquo;s at 142, and the card grid at 120 &mdash; three different left edges in one view. The kit gives the gutter a single centreline and hangs the control on it.</p>
-    <p><b>In an action window it disappears.</b> The emoji and actions panels already carry a back arrow 96&nbsp;px away; two left&#8209;pointing glyphs in one view, one meaning &ldquo;go back&rdquo; and the other &ldquo;move the keyboard&rdquo;, is not a spacing problem. The panel covers the keyboard anyway, so there is nothing to move while it is open.</p>
+    <p><b>In an action window it stays.</b> This section previously said the opposite &mdash; that a panel&rsquo;s own back arrow and this chevron are two left&#8209;pointing glyphs in one view, so the control should disappear while a panel is open. It was built that way and then reversed after use: a control that vanishes when a panel opens reads as the panel having broken it, and one&#8209;handed reach is exactly as awkward on a panel as it is on the keys. The two glyphs sit on different grounds &mdash; the back arrow on the panel, this on the keyboard&rsquo;s gutter &mdash; which is what separates them.</p>
+    <p><b>It is narrower than its gutter.</b> 40&nbsp;dp against a gutter of about 51, which leaves roughly 13&nbsp;dp of empty ground between the control and the nearest key. Padding cannot buy that gap: the control is pinned to the screen edge and the keys start where the one&#8209;handed layout puts them, so padding grows the node without moving either edge. The touch target keeps its full 48&nbsp;dp height.</p>
     <p><b>Compose:</b> <code>UixManager.OneHandedOptions</code>. The <code>Column</code> and its <code>Spacer(weight)</code> become one <code>Box</code> aligned <code>CenterStart</code> / <code>CenterEnd</code>; the 48&nbsp;dp hit target is kept and a <code>Surface</code> at <code>keyboardContainer</code> supplies the 40&nbsp;dp circle. Long&#8209;press&#8209;to&#8209;exit and <code>HideOneHandedExitButtonSetting</code> are unchanged.</p>
+  </div>
+</div>
+
+<div class="item">
+  <div class="pair">
+    <div class="dev kbd">
+      <div class="label">Borders on &mdash; key, functional key, and the accent a latched modifier wears</div>
+      <div class="tpanel">
+        <div class="col">
+          <div class="col arrows">
+            <div class="tk"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></div>
+            <div class="col"><div class="tk"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 11l7-7 7 7"/></svg></div><div class="tk"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 13l-7 7-7-7"/></svg></div></div>
+            <div class="tk"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          </div>
+          <div class="col" style="grid-template-columns: 1fr 1fr; grid-auto-flow: column">
+            <div class="tk on">ctrl</div>
+            <div class="tk fn"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7M6 12l6-6 6 6"/><path d="M8 20h8"/></svg></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="tk fn"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></div>
+          <div class="tk fn"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg></div>
+          <div class="col" style="grid-template-columns: 1fr 1fr; grid-auto-flow: column">
+            <div class="tk fn"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7L4 12l5 5M4 12h11a5 5 0 0 1 0 10"/></svg></div><div class="tk fn"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7l5 5-5 5M20 12H9a5 5 0 0 0 0 10"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dev kbd dark">
+      <div class="label">Borders off &mdash; the keyboard draws no fills, so neither does the panel</div>
+      <div class="tpanel">
+        <div class="col">
+          <div class="col arrows">
+            <div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></div>
+            <div class="col"><div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 11l7-7 7 7"/></svg></div><div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 13l-7 7-7-7"/></svg></div></div>
+            <div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          </div>
+          <div class="col" style="grid-template-columns: 1fr 1fr; grid-auto-flow: column">
+            <div class="tk none">ctrl</div>
+            <div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7M6 12l6-6 6 6"/><path d="M8 20h8"/></svg></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></div>
+          <div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg></div>
+          <div class="col" style="grid-template-columns: 1fr 1fr; grid-auto-flow: column">
+            <div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7L4 12l5 5M4 12h11a5 5 0 0 1 0 10"/></svg></div><div class="tk none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7l5 5-5 5M20 12H9a5 5 0 0 0 0 10"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="notes">
+    <span class="tag">Redesigned</span>
+    <h3>A panel of keys is made of keys</h3>
+    <p><b>The text editor drew from Material roles, not from the keyboard.</b> Its
+    arrows were <code>primary</code>, its clipboard keys <code>primaryContainer</code>,
+    its modifiers <code>secondaryContainer</code> &mdash; three role pairs, none of
+    which is a colour the keyboard puts on a key. Under <code>UixThemeWrapper</code>
+    those <em>are</em> keyboard&#8209;scheme colours, so the file passes any check that
+    greps for the scheme, and the panel still looks like a different product from the
+    keys underneath it. That is the trap: compiling against the keyboard&rsquo;s palette
+    is not the same as using it.</p>
+    <p><b>The keyboard has exactly three key treatments</b>, and
+    <code>BasicThemeProvider</code> names them: an ordinary key is
+    <code>keyboardContainer</code>, a functional key is
+    <code>keyboardContainerVariant</code>, and the one accent key &mdash; enter &mdash;
+    is <code>primary</code>. Glyphs are <code>onKeyboardContainer</code>. A panel made
+    of keys uses those and nothing else: cursor keys are ordinary keys, clipboard and
+    modifier keys are functional keys, and the accent is spent only on a modifier that
+    is latched &mdash; which is what the keyboard already does with a held shift.</p>
+    <p><b>Key borders off is the case that catches a hardcoded colour.</b> The same
+    provider drops both fills to transparent and colours glyphs
+    <code>onBackground</code> when a theme has borders off. A panel that reaches for
+    <code>keyboardContainer</code> directly then draws filled boxes over a keyboard
+    that draws none &mdash; the right&#8209;hand mock above. Reading
+    <code>LocalThemeProvider.current.keyBorders</code> keeps the two in step, and it is
+    why every keyboard surface is captured on two deliberately unlike themes rather
+    than two shades of one.</p>
+    <p><b>Compose:</b> <code>panelKeyColors()</code> in
+    <code>actions/TextEditAction.kt</code> returns the five colours as one object, and
+    <code>ActionKey</code>, <code>TogglableKey</code>, <code>ArrowKeys</code> and
+    <code>SideKeys</code> take them from it. <code>LocalInspectionMode</code> guards the
+    provider read, because a preview has no provider and reading it throws.</p>
+    <table class="num">
+      <tr><th>Element</th><th>Was</th><th>Kit</th></tr>
+      <tr><td>Cursor keys</td><td class="was">primary</td><td>keyboardContainer</td></tr>
+      <tr><td>Clipboard keys</td><td class="was">primaryContainer</td><td>keyboardContainerVariant</td></tr>
+      <tr><td>Modifier, idle</td><td class="was">secondaryContainer</td><td>keyboardContainerVariant</td></tr>
+      <tr><td>Modifier, latched</td><td class="was">secondary</td><td>primary</td></tr>
+      <tr><td>Borders off</td><td class="was">fills unchanged</td><td>transparent, glyphs onBackground</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="item wide">
+  <div class="notes">
+    <span class="tag">Redesigned</span>
+    <h3>The emoji page, and one selected&#8209;item treatment across the panels</h3>
+    <p><b>The emoji grid sat on a slab no other panel draws.</b> Its ground was
+    <code>keyboardContainer</code> &mdash; the key colour &mdash; so every emoji sat on
+    one enormous key, and the slab&rsquo;s rounded bottom corners cut the part&#8209;row
+    on a curve, so scrolling read as damage. Neither the actions grid nor the clipboard
+    paints a ground at all: both sit on the one the window draws,
+    <code>keyboardSurfaceDim</code> above the keyboard and <code>keyboardSurface</code>
+    expanded. Containers go around items, not around pages. The slab is gone, and the
+    grid&rsquo;s content colour moves to <code>onSurface</code> with it &mdash; on
+    High&nbsp;Contrast&nbsp;Yellow, <code>onKeyboardContainer</code> and
+    <code>keyboardSurface</code> are both black, so leaving it would have been black on
+    black.</p>
+    <p><b>Four left edges down one page</b> &mdash; the slab at&nbsp;0, the grid inside
+    it at&nbsp;8, the category row at&nbsp;2, the search field pinned at&nbsp;128 &mdash;
+    are now one, on the <code>Spacing</code> scale. The search field was a fixed
+    128&nbsp;dp pill in the window bar, dressed as a text input while being a button
+    that switched modes. It is the panel&rsquo;s width now, with a fixed height so that
+    tapping it does not resize it.</p>
+    <p><b>Five selected&#8209;item treatments existed across these surfaces.</b> A filled
+    <code>secondary</code>&nbsp;/&nbsp;<code>onSecondary</code> pair wins, because it is
+    what the keyboard puts on a latched key (<code>KeyVisualStyle.StickyOn</code>) and
+    because it is a defined foreground&#8209;on&#8209;background pair. A bare accent tint
+    fails on <code>DefaultLight</code>, where <code>primary</code> and
+    <code>onSurface</code> are two near&#8209;blacks, and on
+    High&nbsp;Contrast&nbsp;Yellow, where they are both white. The emoji category row
+    keeps its pill and changes its ink.</p>
+    <p><b>Compose:</b> <code>actions/EmojiAction.kt</code> &mdash;
+    <code>EmojiCategoriesContainer</code> for the pill, the panel <code>Column</code>
+    for the ground, <code>EmojiSearchBar</code> for the field.</p>
+  </div>
+</div>
+
+<div class="item wide">
+  <div class="notes">
+    <span class="tag">Redesigned</span>
+    <h3>Every panel says which panel it is</h3>
+    <p><b>Two panels had no title, for one reason.</b> <code>ActionWindowBar</code> draws
+    every panel&rsquo;s back arrow and name, and it was rendered only while the keyboard
+    was hidden. The theme switcher and keyboard modes both keep the keyboard visible, so
+    neither ever composed one: keyboard modes showed a back arrow and a
+    Resize&nbsp;keyboard button with nothing between them, and the theme switcher had no
+    bar at all &mdash; only a floating <code>&times;</code> in a circle sitting over the
+    keyboard&rsquo;s top&#8209;left key.</p>
+    <p><b>The flag lives on the window, not in the panel.</b>
+    <code>ActionWindow.showTitleBarAboveKeyboard</code> defaults to false, so every other
+    panel composes exactly as before; the theme switcher sets it, drops its floating
+    close button, and the bar&rsquo;s own back arrow takes that job. The bar composes
+    outside the fixed&#8209;height content box, so the window grows upward by
+    <code>ActionBarHeight</code> rather than the picker losing 40&nbsp;dp &mdash; which
+    matters, because that picker had just been cut down to fit.</p>
+    <p><b>Compose:</b> <code>Action.kt</code> for the flag, <code>UixManager.kt</code>
+    for the render condition, <code>actions/ThemeAction.kt</code> for the two
+    overrides.</p>
   </div>
 </div>
 
