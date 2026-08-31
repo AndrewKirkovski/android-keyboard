@@ -146,10 +146,11 @@ opening the panel on a phone at 1080px rather than by reading the code.
   gutter, square against the screen edge it touches and rounded on the inner
   side, with 20dp between two buttons that mean "nudge the keyboard across" and
   "leave one-handed mode".
-- **Hide the one-handed exit button.** It sits inside the arc a thumb sweeps
-  while typing one-handed, so it gets caught by accident. A setting under
-  Keyboard → Resize hides it, and a long press on the switch-hands chevron
-  leaves one-handed mode.
+- **Hide the one-handed exit button.** It used to sit at the bottom of the
+  gutter, inside the arc a thumb sweeps while typing one-handed, where it got
+  caught by accident; it sits above the switch-hands chevron now, so the setting
+  under Keyboard → Resize is a preference rather than a remedy. A long press on
+  the chevron leaves one-handed mode either way.
 - **Background images can be blurred.** Opacity was already a theme-file field;
   sharpness was not. `AdvancedThemeOptions.backgroundImageBlur` defaults to 0dp.
 
