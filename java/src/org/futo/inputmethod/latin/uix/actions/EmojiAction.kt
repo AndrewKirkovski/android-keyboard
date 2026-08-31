@@ -51,6 +51,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -100,7 +101,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.futo.inputmethod.latin.R
 import org.futo.inputmethod.latin.common.Constants
 import org.futo.inputmethod.latin.uix.Action
-import org.futo.inputmethod.latin.uix.ActionHeaderSearch
+import org.futo.inputmethod.latin.uix.ActionTextEditor
 import org.futo.inputmethod.latin.uix.ActionWindow
 import org.futo.inputmethod.latin.uix.AutoFitText
 import org.futo.inputmethod.latin.uix.DataStoreHelper
@@ -512,7 +513,7 @@ fun Emojis(
                 }
                 // Inside the panel now, so the heading and the last row are not
                 // flush against its edges -- the vertical inset was 0.
-                .padding(Spacing.s, Spacing.s)
+                .padding(Spacing.s, Spacing.xs)
         )
 
         Box(Modifier.matchParentSize().background(
@@ -764,6 +765,59 @@ private fun LettersKey(onExit: () -> Unit) {
     }
 }
 
+/**
+ * Emoji search, on the emoji panel rather than in the window bar.
+ *
+ * It used to be a 128dp pill wedged between the panel's title and its two icon
+ * buttons, which is the least room on the screen and a fixed width in it. Here it
+ * has the panel's full width, and it sits with the thing it filters.
+ *
+ * It cannot use [ActionHeaderSearch]: that draws itself in `keyboardContainer`,
+ * which is the colour of the panel it would now be sitting on, so it would be
+ * invisible. On the panel the field takes the dimmer surface instead, which is
+ * the same relationship the field had to the window bar before.
+ */
+@Composable
+private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: MutableState<String>) {
+    val field = Modifier
+        .fillMaxWidth()
+        // Every dp here comes out of the grid below, which holds about six rows,
+        // so the field is kept to roughly one of them rather than the two its
+        // first draft cost.
+        .padding(horizontal = Spacing.s, vertical = Spacing.xs)
+        .clip(RoundedCornerShape(Spacing.xl))
+        .background(LocalKeyboardScheme.current.keyboardSurfaceDim)
+
+    if (searching.value) {
+        Box(
+            modifier = field.padding(horizontal = Spacing.m, vertical = Spacing.s),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            ActionTextEditor(
+                text = searchText,
+                placeholder = stringResource(R.string.action_emoji_search_for_emojis)
+            )
+        }
+    } else {
+        // A button until it is tapped, so the keyboard is not hosting a focused
+        // text field nobody asked for every time the emoji panel opens.
+        Row(
+            modifier = field
+                .clickable { searching.value = true }
+                .padding(horizontal = Spacing.m, vertical = Spacing.s),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Spacing.xs)
+        ) {
+            Icon(Icons.Default.Search, contentDescription = null)
+            Text(
+                stringResource(R.string.action_emoji_search_for_emojis),
+                style = Typography.SmallMl,
+                modifier = Modifier.alpha(0.75f)
+            )
+        }
+    }
+}
+
 @Composable
 fun EmojiGrid(
     onClick: (EmojiItem) -> Unit,
@@ -773,8 +827,8 @@ fun EmojiGrid(
     emojis: List<EmojiItem>,
     keyboardShown: Boolean,
     emojiMap: Map<String, EmojiItem>,
-    isSearching: Boolean,
-    searchFilter: String
+    searching: MutableState<Boolean>,
+    searchText: MutableState<String>
 ) {
     val context = LocalContext.current
 
@@ -817,7 +871,7 @@ fun EmojiGrid(
         addAll(categorizedEmojis)
     }
 
-    if(isSearching) {
+    if(searching.value) {
         val context = LocalContext.current
         val locales = LocalManager.current.let { remember { it.getActiveLocales() } }
         LaunchedEffect(locales) {
@@ -827,7 +881,7 @@ fun EmojiGrid(
         val translations = PersistentEmojiState.getTranslationForLocales(locales)
 
         emojiList =
-            emojiList.filterIsInstance<EmojiItemItem>().searchMultiple2(searchFilter) { item ->
+            emojiList.filterIsInstance<EmojiItemItem>().searchMultiple2(searchText.value) { item ->
                 translations?.let {
                     it.emojiToNames[item.emoji.emoji]?.names
                         ?: it.emojiToNames[item.emoji.emoji.replace("\uFE0F", "")]?.names
@@ -843,9 +897,8 @@ fun EmojiGrid(
     }
 
     Column {
-        Emojis(
+        Column(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .weight(1.0f)
                 // Inset from the keyboard's edges rather than flush against them.
@@ -858,15 +911,23 @@ fun EmojiGrid(
                 .background(
                     LocalKeyboardScheme.current.keyboardContainer,
                     RoundedCornerShape(Spacing.m)
-                ),
-            emojis = emojiList,
-            onClick = onClick,
-            emojiMap = emojiMap,
-            currentCategory = currentCategory,
-            jumpCategory = jumpCategory
-        )
+                )
+        ) {
+            EmojiSearchBar(searching, searchText)
 
-        if(!isSearching) {
+            Emojis(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1.0f),
+                emojis = emojiList,
+                onClick = onClick,
+                emojiMap = emojiMap,
+                currentCategory = currentCategory,
+                jumpCategory = jumpCategory
+            )
+        }
+
+        if(!searching.value) {
             EmojiNavigation(
                 showKeys = !keyboardShown,
                 onExit = onExit,
@@ -1207,7 +1268,7 @@ val EmojiAction = Action(
                             manager.performHapticAndAudioFeedback(Constants.CODE_DELETE, view)
                         }
                     }, emojis = emojis, keyboardShown = keyboardShown, emojiMap = PersistentEmojiState.emojiMap,
-                        isSearching = searching.value, searchFilter = searchText.value)
+                        searching = searching, searchText = searchText)
                 }
             }
 
@@ -1215,49 +1276,12 @@ val EmojiAction = Action(
             @Composable
             override fun WindowTitleBar(rowScope: RowScope) {
                 val resources = LocalResources.current
-                if(searching.value) {
-                    with(rowScope) {
-                        ActionHeaderSearch(searchText, Modifier.weight(1.0f))
-                    }
-                } else {
-                    with(rowScope) {
-                        // The base bar draws the title and then a weighted spacer,
-                        // which left the field a fixed 128dp -- fine at full width,
-                        // and wider than the space that exists once the header is
-                        // narrowed by one-handed mode. The title is drawn the same
-                        // way here, and the weight goes to the field, so the field
-                        // is what gives when the header is small.
-                        Text(
-                            windowName(),
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Surface(
-                            color = LocalKeyboardScheme.current.keyboardContainer,
-                            contentColor = LocalKeyboardScheme.current.onKeyboardContainer,
-                            shape = RoundedCornerShape(Spacing.xl),
-                            modifier = Modifier
-                                .minimumInteractiveComponentSize()
-                                .weight(1.0f)
-                                .padding(horizontal = Spacing.s)
-                                .align(Alignment.CenterVertically),
-                            onClick = { searching.value = true }
-                        ) {
-                            Box(
-                                modifier = Modifier.padding(horizontal = Spacing.m),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                // The glyph and the word were flush against each
-                                // other.
-                                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-                                    Icon(Icons.Default.Search, contentDescription = null)
-                                    Text(
-                                        stringResource(R.string.action_emoji_search_for_emojis), style = Typography.SmallMl, modifier = Modifier
-                                            .alpha(0.75f)
-                                            .align(Alignment.CenterVertically))
-                                }
-                            }
-                        }
-                    }
+                // Title, then clear-recents, then the shared expand button. Search
+                // is not here any more -- it is on the panel, where it has width and
+                // sits with the emoji it filters. That also means this bar no longer
+                // swaps itself out while searching.
+                run {
+                    super.WindowTitleBar(rowScope)
 
                     IconButton(onClick = {
                         manager.requestDialog(
@@ -1307,7 +1331,7 @@ fun EmojiGridPreview() {
         },
         keyboardShown = false,
         emojiMap = hashMapOf(),
-        isSearching = false,
-        searchFilter = ""
+        searching = remember { mutableStateOf(false) },
+        searchText = remember { mutableStateOf("") }
     )
 }
