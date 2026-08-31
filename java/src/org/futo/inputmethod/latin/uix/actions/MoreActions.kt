@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -41,6 +40,7 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -88,7 +88,7 @@ fun ActionItem(action: Action, modifier: Modifier = Modifier, dragIcon: Boolean 
                 Column(
                     modifier = Modifier
                         .align(Center)
-                        .padding(6.dp)
+                        .padding(horizontal = 2.dp)
                 ) {
                     Spacer(modifier = Modifier.weight(1.0f))
                     Icon(
@@ -107,6 +107,8 @@ fun ActionItem(action: Action, modifier: Modifier = Modifier, dragIcon: Boolean 
                             CenterHorizontally
                         ),
                         style = Typography.Small.copy(lineHeight = 12.sp),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -147,7 +149,7 @@ fun MoreActionsView() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        columns = GridCells.Adaptive(98.dp),
+        columns = GridCells.Fixed(4),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -201,7 +203,7 @@ fun ActionsEditor(header: @Composable () -> Unit) {
             .fillMaxSize()
             .padding(8.dp, 0.dp),
         state = lazyListState,
-        columns = GridCells.Adaptive(98.dp),
+        columns = GridCells.Fixed(4),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -301,7 +303,7 @@ val MoreActionsAction = Action(
             override fun WindowTitleBar(rowScope: RowScope) {
                 super.WindowTitleBar(rowScope)
 
-                OutlinedButton(onClick = { manager.showActionEditor() }, modifier = Modifier.padding(8.dp, 0.dp)) {
+                TextButton(onClick = { manager.showActionEditor() }, modifier = Modifier.padding(8.dp, 0.dp)) {
                     Text(stringResource(R.string.action_editor_edit_actions), color = LocalKeyboardScheme.current.onSurface)
                 }
             }
