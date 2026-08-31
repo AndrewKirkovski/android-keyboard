@@ -118,12 +118,12 @@ import org.futo.inputmethod.latin.uix.PersistentActionState
 import org.futo.inputmethod.latin.uix.SettingsKey
 import org.futo.inputmethod.latin.uix.actions.emoji.EmojiItem
 import org.futo.inputmethod.latin.uix.actions.emoji.EmojiView
+import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.settings.useDataStore
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import org.futo.inputmethod.latin.uix.theme.LocalCompatEmojiFamily
 import org.futo.inputmethod.latin.uix.theme.LocalCompatEmojiTypeface
 import org.futo.inputmethod.latin.uix.theme.app.Spacing
-import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.theme.Typography
 import org.futo.inputmethod.latin.uix.theme.emojiNeedsCompat
 import org.futo.inputmethod.latin.uix.theme.emojiShouldShow
@@ -665,8 +665,7 @@ val localizedCategoryNameMap = mapOf(
     "Objects" to R.string.action_emoji_category_objects,
     "Symbols" to R.string.action_emoji_category_symbols,
     "Flags" to R.string.action_emoji_category_flags,
-    "ASCII" to R.string.action_emoji_category_ascii,
-    "No results found" to R.string.action_emoji_search_no_results_found
+    "ASCII" to R.string.action_emoji_category_ascii
 )
 
 @Composable
@@ -949,7 +948,17 @@ fun EmojiGrid(
             EmojiSearchBar(searching, searchText)
 
             if(noResults) {
-                SettingsEmptyState(stringResource(R.string.action_emoji_search_no_results_found))
+                // Centred in what is left of the panel rather than tucked under
+                // the field, which is what the clipboard's empty states do on a
+                // surface of the same shape.
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1.0f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    SettingsEmptyState(stringResource(R.string.action_emoji_search_no_results_found))
+                }
             } else {
                 Emojis(
                     modifier = Modifier

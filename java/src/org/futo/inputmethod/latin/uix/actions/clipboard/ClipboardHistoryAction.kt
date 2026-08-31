@@ -449,6 +449,20 @@ fun ClipboardEntryViewPreview() {
     }
 }
 
+/**
+ * Older builds wrote an empty state into the history itself: a pinned entry at
+ * timestamp 0 reading "Clipboard entries will appear here". It is no longer
+ * created, but anyone who used clipboard history before this build has it saved,
+ * and being pinned it survives pruning forever -- so their history is never
+ * empty, they never see the empty state, and the clear button offers to unpin an
+ * entry they never made rather than to switch the feature off.
+ *
+ * Matched on all three of its fields. A user cannot produce one: every entry the
+ * app creates is stamped with the current time, and pinning re-stamps.
+ */
+private fun ClipboardEntry.isTheOldEmptyStateEntry(): Boolean =
+    timestamp == 0L && pinned && text == "Clipboard entries will appear here"
+
 const val ClipboardFileName = "clipboard.json"
 val Context.clipboardFile get() = File(filesDir, ClipboardFileName)
 val Context.clipboardDir get() = File(filesDir, "clipboardfiles")
@@ -660,10 +674,17 @@ class ClipboardHistoryManager(val context: Context, val coroutineScope: Lifecycl
 
     private suspend fun onClipboardImported(file: File) {
         migrateLegacyClipboardBak()
-        val data = decodeFile(file).map {
-            // Restore all saved items
-            it.copy(timestamp = System.currentTimeMillis())
-        }
+        val data = decodeFile(file)
+            // Before the entries are re-stamped, because the filter matches on the
+            // timestamp. A backup taken from an older build carries the phantom
+            // entry, and restoring one is the single path that could bring it back
+            // for good: re-stamping gives it a live timestamp, after which nothing
+            // can recognise it again.
+            .filterNot { it.isTheOldEmptyStateEntry() }
+            .map {
+                // Restore all saved items
+                it.copy(timestamp = System.currentTimeMillis())
+            }
 
         withContext(Dispatchers.Main) {
             clipboardHistory.clear()
@@ -910,18 +931,7 @@ ${if(clipboardFileSwap.exists()) { clipboardFileSwap.readText() } else { "File d
                 clipboardHistory.clear()
                 clipboardHistory.addAll(data)
 
-                // Older builds wrote an empty state into the history itself: a
-                // pinned entry at timestamp 0 reading "Clipboard entries will
-                // appear here". It is no longer created, but anyone who used
-                // clipboard history before this build has it saved, and being
-                // pinned it survives pruning forever -- so their history is never
-                // empty, they never see the empty state, and the clear button
-                // offers to unpin it rather than to switch the feature off.
-                clipboardHistory.removeAll {
-                    it.timestamp == 0L
-                            && it.pinned
-                            && it.text == "Clipboard entries will appear here"
-                }
+                clipboardHistory.removeAll { it.isTheOldEmptyStateEntry() }
 
                 pruneOldItems()
             }
@@ -1008,19 +1018,6 @@ ${if(clipboardFileSwap.exists()) { clipboardFileSwap.readText() } else { "File d
 }
 
 /**
- * Holds the panel's three one-card states: device locked, clipboard error, history off.
- *
- * A settings screen can leave the space under a lone card empty, because a screen
- * continues past the fold and the card is only the first thing on it. This panel is a
- * strip that ends where the keyboard begins, so the card was the only thing in it and
- * the bottom half was visibly blank. Centred instead, the way the one-handed control's
- * two buttons were. The scroll stays for the short strips that landscape and small
- * screens leave: heightIn sits inside it so the column is at least as tall as the strip
- * and Center has room to work, while taller content still scrolls from the top.
- *
- * Only these states. A list of clips fills from the top, which is where a list belongs.
- */
-/**
  * The app's empty state, centred in the strip the way a notice card is.
  *
  * [ClipboardNotice] centres its card because this panel ends where the keyboard
@@ -1038,6 +1035,19 @@ private fun ClipboardEmptyState(text: String) {
     }
 }
 
+/**
+ * Holds the panel's three one-card states: device locked, clipboard error, history off.
+ *
+ * A settings screen can leave the space under a lone card empty, because a screen
+ * continues past the fold and the card is only the first thing on it. This panel is a
+ * strip that ends where the keyboard begins, so the card was the only thing in it and
+ * the bottom half was visibly blank. Centred instead, the way the one-handed control's
+ * two buttons were. The scroll stays for the short strips that landscape and small
+ * screens leave: heightIn sits inside it so the column is at least as tall as the strip
+ * and Center has room to work, while taller content still scrolls from the top.
+ *
+ * Only these states. A list of clips fills from the top, which is where a list belongs.
+ */
 @Composable
 private fun ClipboardNotice(content: @Composable () -> Unit) {
     BoxWithConstraints(Modifier.fillMaxSize()) {

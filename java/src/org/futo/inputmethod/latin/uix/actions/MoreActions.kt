@@ -51,7 +51,6 @@ import org.futo.inputmethod.latin.uix.ActionWindow
 import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
 import org.futo.inputmethod.latin.uix.LocalManager
 import org.futo.inputmethod.latin.uix.getSettingBlocking
-import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.SettingSectionHeader
 import org.futo.inputmethod.latin.uix.settings.SettingsEmptyState
 import org.futo.inputmethod.latin.uix.settings.WarningTip
