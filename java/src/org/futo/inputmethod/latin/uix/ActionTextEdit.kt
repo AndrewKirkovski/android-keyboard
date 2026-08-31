@@ -281,7 +281,11 @@ private fun GenericEditTextCompose(
     LaunchedEffect(fgColor, primaryColor) {
         editText.setTextColor(fgColor.toArgb())
         editText.setHintTextColor(fgColor.copy(alpha = 0.7f).toArgb())
-        editText.highlightColor = primaryColor.copy(alpha = 0.7f).toArgb()
+        // A wash of the text colour rather than the accent, for the reason the
+        // caret below moved: on High Contrast Yellow the accent is the field's own
+        // ground, so a selection over it was 1.03 to 1 -- text you had selected
+        // looked exactly like text you had not.
+        editText.highlightColor = fgColor.copy(alpha = 0.3f).toArgb()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // The caret follows the text rather than the accent. These fields sit
             // on keyboardContainer, and on High Contrast Yellow primary is white
