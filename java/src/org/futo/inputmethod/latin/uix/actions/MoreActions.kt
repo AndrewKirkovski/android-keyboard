@@ -152,8 +152,17 @@ fun MoreActionsView() {
         // Not ScreenTitle: with no back arrow that is the accent section header,
         // so a grid with nothing in it was announced by what looks like the label
         // of a group that follows. This is what a list with nothing in it looks
-        // like everywhere else in the app.
-        SettingsEmptyState(stringResource(R.string.action_editor_warning_no_actions))
+        // like everywhere else in the app -- and centred in the panel, which is
+        // where the clipboard and the emoji page put theirs, because a panel that
+        // ends where the keyboard begins leaves a visibly blank half under a lone
+        // element pinned to its top.
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            SettingsEmptyState(stringResource(R.string.action_editor_warning_no_actions))
+        }
+        return
     }
 
     LazyVerticalGrid(
