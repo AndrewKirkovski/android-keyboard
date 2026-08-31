@@ -305,7 +305,7 @@ mobile devices. [CHAR LIMIT=25] -->
     </plurals>
     <string name="backup_settings_title">Backup &amp; restore</string>
     <string name="voice_settings_recording_section">Recording</string>
-    <string name="voice_settings_behaviour_section">Behaviour</string>
+    <string name="voice_settings_behavior_section">Behavior</string>
     <string name="voice_settings_models_section">Models</string>
     <string name="keyboard_settings_rows_section">Rows</string>
     <string name="keyboard_settings_keys_section">Keys</string>
@@ -362,7 +362,7 @@ mobile devices. [CHAR LIMIT=25] -->
     <!-- Subtitles as fragments, not sentences. A list row gives a subtitle two
          lines; the upstream copy is full product prose and ellipsized mid-word
          ("Boosting is avoided a…", "must be negotiat…", "will move the …"). -->
-    <string name="settings_sub_edit_actions">Favourites, pinned actions, and the action key</string>
+    <string name="settings_sub_edit_actions">Favorites, pinned actions, and the action key</string>
     <string name="settings_sub_action_key">A key left of the spacebar for one quick action</string>
     <string name="settings_sub_action_key_assigned">A key left of the spacebar, currently %s</string>
     <string name="settings_sub_bluetooth_mic">Recording may take longer to start</string>
@@ -410,7 +410,7 @@ mobile devices. [CHAR LIMIT=25] -->
          parenthesised plural in a heading. -->
     <string name="settings_action_kind_action_key">Action key</string>
     <string name="settings_action_kind_pinned">Pinned</string>
-    <string name="settings_action_kind_favorites">Favourites</string>
+    <string name="settings_action_kind_favorites">Favorites</string>
     <string name="settings_action_kind_more">More actions</string>
     <string name="settings_action_kind_hidden">Hidden</string>
 </resources>

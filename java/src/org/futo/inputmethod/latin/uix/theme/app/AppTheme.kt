@@ -192,7 +192,8 @@ val AppTypography = Typography(
         fontSize = 15.sp, lineHeight = 20.sp,
         fontWeight = FontWeight.Medium,
     ),
-    // caption, and the label under an action tile
+    // caption. Not the label under an action tile: that is drawn by the keyboard,
+    // which has its own scale, and takes Typography.Small from it.
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontSize = 12.sp, lineHeight = 15.sp,

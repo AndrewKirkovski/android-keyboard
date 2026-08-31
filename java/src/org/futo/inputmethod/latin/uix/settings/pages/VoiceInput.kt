@@ -68,7 +68,7 @@ val VoiceInputMenu = UserSettingsMenu(
             setting = DISALLOW_SYMBOLS
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
-        userSettingSection(R.string.voice_settings_behaviour_section),
+        userSettingSection(R.string.voice_settings_behavior_section),
         userSettingToggleDataStore(
             title = R.string.voice_input_settings_long_form,
             subtitle = R.string.settings_sub_longform,
