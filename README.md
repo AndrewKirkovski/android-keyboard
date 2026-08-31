@@ -117,8 +117,9 @@ opening the panel on a phone at 1080px rather than by reading the code.
   now says so the same way, and the phantom entry is removed from histories that
   already saved it.
 - **Keyboard modes says which screen it is.** The shared window bar is only drawn
-  when the keyboard is hidden, and this panel keeps it visible, so the screen had
-  a back arrow and a Resize keyboard button with nothing between them.
+  when the keyboard is hidden, and this panel keeps it visible, so until it was
+  given a header row of its own the screen showed a back arrow and a Resize
+  keyboard button with nothing between them.
 - **The theme panel has a header.** Same cause, and it had it worse: no bar at
   all, only a floating close button in a circle sitting over the keyboard's
   top-left key. `ActionWindow.showTitleBarAboveKeyboard` gives a panel its bar

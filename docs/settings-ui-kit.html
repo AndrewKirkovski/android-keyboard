@@ -964,11 +964,12 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <p><b>Two panels had no title, for one reason.</b> <code>ActionWindowBar</code> draws
     every panel&rsquo;s back arrow and name, and it was rendered only while the keyboard
     was hidden. The theme switcher and keyboard modes both keep the keyboard visible, so
-    neither ever composed one: keyboard modes showed a back arrow and a
-    Resize&nbsp;keyboard button with nothing between them, and the theme switcher had no
-    bar at all &mdash; only a floating <code>&times;</code> in a circle sitting over the
-    keyboard&rsquo;s top&#8209;left key. Keyboard modes was given its name first, in its
-    own header row; the flag came afterwards, with the theme panel.</p>
+    neither ever composed one, and each was answered separately. Keyboard modes was
+    first: it showed a back arrow and a Resize&nbsp;keyboard button with nothing between
+    them until it was given its name in a header row of its own. The theme switcher had
+    it worse and was answered later, with the flag &mdash; no bar at all, only a
+    floating <code>&times;</code> in a circle sitting over the keyboard&rsquo;s
+    top&#8209;left key.</p>
     <p><b>Keyboard modes keeps that header, and this is the argument for it.</b> The
     shared bar always draws a back arrow, and the resize tutorial needs that one arrow
     gone so the only way forward is the button beside it. A flag cannot express that
