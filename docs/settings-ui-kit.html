@@ -765,9 +765,9 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
   <div class="notes">
     <span class="tag">Redesigned</span>
     <h3>Action cards and the window bar</h3>
-    <p><b>The outer margin is smaller than the gutter.</b> Measured: cards sit 45&nbsp;px apart with 34&nbsp;px to the right screen edge. An inner gap wider than the outer one makes a grid read as clipped rather than inset. The kit puts 16&nbsp;dp outside and 8&nbsp;dp between, so the margin always wins.</p>
+    <p><b>The outer margin is smaller than the gutter.</b> Measured: cards sit 45&nbsp;px apart with 34&nbsp;px to the right screen edge. An inner gap wider than the outer one makes a grid read as clipped rather than inset. The kit puts 16&nbsp;dp outside and 8&nbsp;dp between, so the margin wins on the axis this was measured on. Vertically both are 8: the panel is 415&nbsp;dp and has to hold twelve tiles, so the rows spend what the sides can afford to give.</p>
     <p><b>The grid is not centred.</b> 120&nbsp;px on the left against 34&nbsp;px on the right, an 86&nbsp;px difference that needs no ruler to see. It comes from a symmetric <code>padding(8.dp)</code> applied inside a window that is already inset on one side in one&#8209;handed mode.</p>
-    <p><b>The tiles are enormous.</b> 121&nbsp;&times;&nbsp;87&nbsp;dp to carry a 24&nbsp;dp icon and one word, so six actions fill a panel that holds twelve at 76&nbsp;&times;&nbsp;72&nbsp;dp. A fixed 4&#8209;column grid also gives a round column pitch; <code>GridCells.Adaptive(98.dp)</code> distributes the remainder, so the pitch lands on no particular number and lines up with nothing else on screen.</p>
+    <p><b>The tiles are enormous.</b> 121&nbsp;&times;&nbsp;87&nbsp;dp to carry a 24&nbsp;dp icon and one word, so six actions fill a panel that holds twelve at the 87&nbsp;&times;&nbsp;84&nbsp;dp it was built at &mdash; the first draft of this section said 72&nbsp;dp tall, and a two&#8209;line label at the default size needs the other twelve. A fixed 4&#8209;column grid also gives a round column pitch; <code>GridCells.Adaptive(98.dp)</code> distributes the remainder, so the pitch lands on no particular number and lines up with nothing else on screen.</p>
     <p><b>Labels are set tighter than solid.</b> <code>Typography.Small</code> is 14&nbsp;sp and the tile overrode its leading to 12, so &ldquo;Clipboard Manager&rdquo; set its two lines touching and slightly overlapping. Leading goes to 1.25, and the labels get shorter &mdash; the panel is already titled &ldquo;All actions&rdquo;, so &ldquo;Manager&rdquo; and &ldquo;Info&rdquo; add nothing.</p>
     <p><b>The edit button was a 131&nbsp;dp outlined pill</b> &mdash; measured 345&nbsp;px wide, a third of the bar, carrying the same visual weight as the title beside it. An outline promises a primary action. It becomes a text button, which is what a secondary action in a title bar looks like.</p>
     <p>One thing that turned out fine: the icons do <em>not</em> drift when a label wraps to two lines. Measured centres across a row of one&#8209; and two&#8209;line tiles were 568, 568 and 570&nbsp;px. The wrap&#8209;content <code>Column</code> keeps them put.</p>
@@ -777,8 +777,8 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       <tr><td>Tile</td><td class="was">121 &times; 87&nbsp;dp</td><td>87 &times; 84&nbsp;dp as built</td></tr>
       <tr><td>Columns</td><td class="was">adaptive, 3</td><td>fixed, 4</td></tr>
       <tr><td>Gutter</td><td class="was">16&nbsp;dp</td><td>8&nbsp;dp</td></tr>
-      <tr><td>Outer margin</td><td class="was">40 / 11&nbsp;dp</td><td>16&nbsp;dp both sides</td></tr>
-      <tr><td>Label leading</td><td class="was">12&nbsp;sp on 12&nbsp;sp</td><td>1.25</td></tr>
+      <tr><td>Outer margin</td><td class="was">40 / 11&nbsp;dp</td><td>16&nbsp;dp at the sides, 8 top and bottom</td></tr>
+      <tr><td>Label leading</td><td class="was">12&nbsp;sp on 14&nbsp;sp</td><td>1.25, so 17.5&nbsp;sp</td></tr>
       <tr><td>Edit control</td><td class="was">131&nbsp;dp outlined</td><td>text button</td></tr>
     </table>
   </div>
