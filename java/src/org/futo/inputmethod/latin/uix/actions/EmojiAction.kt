@@ -132,6 +132,8 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
+private val SEARCH_FIELD_HEIGHT = 44.dp
+
 private val CompatEmojiVersions = setOf("9.0", "10.0", "12.0", "12.1", "13.0", "13.1", "14.0", "15.0", "15.1", "16.0", "17.0")
 val Context.compatEmojiTypeface: Typeface? get() = try {
     Typeface.createFromAsset(assets, "fonts/NotoColorEmoji_api24.ttf")
@@ -781,21 +783,30 @@ private fun LettersKey(onExit: () -> Unit) {
 private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: MutableState<String>) {
     val field = Modifier
         .fillMaxWidth()
-        // Every dp here comes out of the grid below, which holds about six rows,
-        // so the field is kept to roughly one of them rather than the two its
-        // first draft cost.
+        // Every dp here comes out of the grid below, so the field is kept to
+        // roughly one emoji row.
         .padding(horizontal = Spacing.s, vertical = Spacing.xs)
+        // One height for both states, so tapping the field does not resize it.
+        // The editor underneath is an AndroidView with its own intrinsic height,
+        // which is taller than this and was taking the grid's room with it.
+        .height(SEARCH_FIELD_HEIGHT)
         .clip(RoundedCornerShape(Spacing.xl))
         .background(LocalKeyboardScheme.current.keyboardSurfaceDim)
 
     if (searching.value) {
         Box(
-            modifier = field.padding(horizontal = Spacing.m, vertical = Spacing.s),
+            modifier = field.padding(horizontal = Spacing.m),
             contentAlignment = Alignment.CenterStart
         ) {
             ActionTextEditor(
                 text = searchText,
-                placeholder = stringResource(R.string.action_emoji_search_for_emojis)
+                placeholder = stringResource(R.string.action_emoji_search_for_emojis),
+                // Its default is fillMaxSize(). In the window bar that was
+                // harmless, because the bar is a fixed-height row. Here the field
+                // is the first child of the panel's column, so filling meant
+                // taking the whole panel and leaving the grid nothing -- tapping
+                // search made every emoji disappear.
+                modifier = Modifier.fillMaxWidth()
             )
         }
     } else {
@@ -804,7 +815,7 @@ private fun EmojiSearchBar(searching: MutableState<Boolean>, searchText: Mutable
         Row(
             modifier = field
                 .clickable { searching.value = true }
-                .padding(horizontal = Spacing.m, vertical = Spacing.s),
+                .padding(horizontal = Spacing.m),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Spacing.xs)
         ) {
