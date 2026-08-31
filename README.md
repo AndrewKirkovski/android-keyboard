@@ -124,7 +124,9 @@ opening the panel on a phone at 1080px rather than by reading the code.
 - **One way of showing what is selected.** There were five: a filled glyph, a
   tinted glyph, a pill, a border, a filled card. The panels now use the one the
   keyboard already puts on a latched key, which is the only one that survives a
-  theme where the accent and the text colour are the same.
+  theme where the accent and the text colour are the same. A theme swatch is the
+  exception and keeps its border: a swatch is a block of colour, so tinting it
+  would misreport the theme it is offering.
 
 ### Smaller changes
 

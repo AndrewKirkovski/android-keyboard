@@ -887,8 +887,9 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     <code>keyboardContainerVariant</code>, and the one accent key &mdash; enter &mdash;
     is <code>primary</code>. Glyphs are <code>onKeyboardContainer</code>. A panel made
     of keys uses those and nothing else: cursor keys are ordinary keys, clipboard and
-    modifier keys are functional keys, and the accent is spent only on a modifier that
-    is latched &mdash; which is what the keyboard already does with a held shift.</p>
+    modifier keys are functional keys, and the pair the keyboard puts on a latched
+    key &mdash; <code>secondary</code>, from <code>KeyVisualStyle.StickyOn</code>, not the
+    enter key&rsquo;s <code>primary</code> &mdash; is spent only on a modifier that is latched.</p>
     <p><b>Key borders off is the case that catches a hardcoded colour.</b> The same
     provider drops both fills to transparent and colours glyphs
     <code>onBackground</code> when a theme has borders off. A panel that reaches for
@@ -907,7 +908,7 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
       <tr><td>Cursor keys</td><td class="was">primary</td><td>keyboardContainer</td></tr>
       <tr><td>Clipboard keys</td><td class="was">primaryContainer</td><td>keyboardContainerVariant</td></tr>
       <tr><td>Modifier, idle</td><td class="was">secondaryContainer</td><td>keyboardContainerVariant</td></tr>
-      <tr><td>Modifier, latched</td><td class="was">secondary</td><td>primary</td></tr>
+      <tr><td>Modifier, latched</td><td class="was">secondary, on its own scale</td><td>secondary, the keyboard&rsquo;s latched pair</td></tr>
       <tr><td>Borders off</td><td class="was">fills unchanged</td><td>transparent, glyphs onBackground</td></tr>
     </table>
   </div>
@@ -941,7 +942,13 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     fails on <code>DefaultLight</code>, where <code>primary</code> and
     <code>onSurface</code> are two near&#8209;blacks, and on
     High&nbsp;Contrast&nbsp;Yellow, where they are both white. The emoji category row
-    keeps its pill and changes its ink.</p>
+    keeps its pill and changes its ink, and the modes panel takes the same pill.</p>
+    <p><b>One exception, and it is not an oversight.</b> A theme swatch keeps its
+    4&nbsp;dp <code>inversePrimary</code> border. Every other selected item is marked by
+    tinting it, and a swatch <em>is</em> a block of colour &mdash; tinting it would
+    misreport the theme it is offering. A border is the only marker that does not
+    lie about its own content, so the rule is: tint what is a control, outline what
+    is a sample.</p>
     <p><b>Compose:</b> <code>actions/EmojiAction.kt</code> &mdash;
     <code>EmojiCategoriesContainer</code> for the pill, the panel <code>Column</code>
     for the ground, <code>EmojiSearchBar</code> for the field.</p>
@@ -958,7 +965,14 @@ table.num td.was { color: var(--muted); text-decoration: line-through; }
     neither ever composed one: keyboard modes showed a back arrow and a
     Resize&nbsp;keyboard button with nothing between them, and the theme switcher had no
     bar at all &mdash; only a floating <code>&times;</code> in a circle sitting over the
-    keyboard&rsquo;s top&#8209;left key.</p>
+    keyboard&rsquo;s top&#8209;left key. Keyboard modes was given its name first, in its
+    own header row; the flag came afterwards, with the theme panel.</p>
+    <p><b>Keyboard modes keeps that header, and this is the argument for it.</b> The
+    shared bar always draws a back arrow, and the resize tutorial needs that one arrow
+    gone so the only way forward is the button beside it. A flag cannot express that
+    without growing a second flag. What the panel does not get to keep is a
+    <em>different</em> header: same back glyph, same title style, same height as the
+    shared bar, so the two read as one thing even though they are built twice.</p>
     <p><b>The flag lives on the window, not in the panel.</b>
     <code>ActionWindow.showTitleBarAboveKeyboard</code> defaults to false, so every other
     panel composes exactly as before; the theme switcher sets it, drops its floating
