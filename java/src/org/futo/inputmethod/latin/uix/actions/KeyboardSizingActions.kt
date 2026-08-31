@@ -1,8 +1,6 @@
 package org.futo.inputmethod.latin.uix.actions
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,10 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,6 +31,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.futo.inputmethod.latin.R
@@ -130,13 +131,15 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
                 // one-handed mode at 411dp, and the longest of these four labels
                 // -- Lithuanian "Pluduriuojanti" -- is 95dp at the phone's own
                 // font scale of 1.1. A second line does not fit in a 54dp tile,
-                // so wrapping means a cut label; this way the label is always
-                // whole, at 14sp wherever it fits and down to 10sp where it does
-                // not.
+                // so wrapping means a cut label; this way it is whole at 14sp
+                // wherever it fits and down to 10sp where it does not. Below that
+                // floor -- a narrow phone one-handed at the largest system font
+                // -- it ellipsises, which at least says that it did.
                 BasicText(
                     name,
                     style = Typography.SmallMl.copy(color = LocalContentColor.current),
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     autoSize = TextAutoSize.StepBased(
                         minFontSize = 10.sp,
                         maxFontSize = 14.sp,
