@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.GenericShape
@@ -336,7 +337,12 @@ fun VisitThemeStoreButton(short: Boolean = false) {
 }
 
 @Composable
-fun ThemePicker(onDeleteCustomTheme: (String) -> Unit, onCustomTheme: () -> Unit) {
+fun ThemePicker(
+    onDeleteCustomTheme: (String) -> Unit,
+    onCustomTheme: () -> Unit,
+    /** True when this is the keyboard's own panel rather than the settings screen. */
+    inKeyboard: Boolean = false
+) {
     val context = LocalContext.current
 
     val currentTheme = useDataStore(THEME_KEY.key, "").value.trimEnd('_')
@@ -366,19 +372,7 @@ fun ThemePicker(onDeleteCustomTheme: (String) -> Unit, onCustomTheme: () -> Unit
     val lifecycle = LocalLifecycleOwner.current
     Column {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxWidth(),
-                // The keyboard-preview FAB floats over this grid -- Scaffold's inner
-                // padding does not account for it -- so the last row scrolled under it
-                // and the button sat on top of a theme tile.
-                contentPadding = PaddingValues(bottom = 88.dp),
-                columns = GridCells.Adaptive(minSize = 172.dp),
-                horizontalArrangement = if (LocalLayoutDirection.current == LayoutDirection.Rtl) {
-                    Arrangement.End
-                } else {
-                    Arrangement.Start
-                }
-            ) {
+            val yourThemes: LazyGridScope.() -> Unit = {
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
                     ScreenTitle(stringResource(R.string.theme_settings_custom_themes))
                 }
@@ -403,8 +397,9 @@ fun ThemePicker(onDeleteCustomTheme: (String) -> Unit, onCustomTheme: () -> Unit
                 item {
                     VisitThemeStoreButton(customThemes.isEmpty())
                 }
+            }
 
-                item(span = { GridItemSpan(maxCurrentLineSpan) }) { }
+            val builtInThemes: LazyGridScope.() -> Unit = {
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
                     ScreenTitle(stringResource(R.string.theme_settings_default_themes))
                 }
@@ -425,7 +420,37 @@ fun ThemePicker(onDeleteCustomTheme: (String) -> Unit, onCustomTheme: () -> Unit
                         }
                     }
                 }
+            }
 
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxWidth(),
+                // The keyboard-preview FAB floats over this grid -- Scaffold's inner
+                // padding does not account for it -- so the last row scrolled under it
+                // and the button sat on top of a theme tile. There is no Scaffold and
+                // no FAB in the keyboard's own panel, where 88dp is a tenth of the
+                // space the panel has.
+                contentPadding = PaddingValues(bottom = if (inKeyboard) 0.dp else 88.dp),
+                columns = GridCells.Adaptive(minSize = 172.dp),
+                horizontalArrangement = if (LocalLayoutDirection.current == LayoutDirection.Rtl) {
+                    Arrangement.End
+                } else {
+                    Arrangement.Start
+                }
+            ) {
+                // On the settings screen your own themes come first. In the keyboard
+                // the panel is a strip above the keys, and "Your themes" plus its two
+                // buttons plus a heading is taller than the whole strip -- so the
+                // built-in thumbnails, which are what the panel is for, never appeared
+                // at all without scrolling for them.
+                if (inKeyboard) {
+                    builtInThemes()
+                    item(span = { GridItemSpan(maxCurrentLineSpan) }) { }
+                    yourThemes()
+                } else {
+                    yourThemes()
+                    item(span = { GridItemSpan(maxCurrentLineSpan) }) { }
+                    builtInThemes()
+                }
 
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) { }
 

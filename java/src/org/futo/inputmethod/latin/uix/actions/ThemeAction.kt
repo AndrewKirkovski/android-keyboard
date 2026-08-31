@@ -46,7 +46,7 @@ val ThemeAction = Action(
                     }
                 }
 
-                ThemePicker({ openSettingsLambda() }, openSettingsLambda)
+                ThemePicker({ openSettingsLambda() }, openSettingsLambda, inKeyboard = true)
             }
         }
     }
