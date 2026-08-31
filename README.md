@@ -113,9 +113,10 @@ opening the panel on a phone at 1080px rather than by reading the code.
   reading "Clipboard entries will appear here" -- a hardcoded English string
   sitting in your history as though you had copied it. The emoji page announced
   a search with no matches by pushing a fake category into the grid, so the
-  message arrived as a section heading. Every list in the app that can be empty
-  now says so the same way, and the phantom entry is removed from histories that
-  already saved it.
+  message arrived as a section heading. Every list on these panels that can be
+  empty now says so the same way -- the bug viewer keeps its own debug-styled
+  label, being a developer surface this pass left alone -- and the phantom entry
+  is removed from histories that already saved it.
 - **Keyboard modes says which screen it is.** The shared window bar is only drawn
   when the keyboard is hidden, and this panel keeps it visible, so until it was
   given a header row of its own the screen showed a back arrow and a Resize
