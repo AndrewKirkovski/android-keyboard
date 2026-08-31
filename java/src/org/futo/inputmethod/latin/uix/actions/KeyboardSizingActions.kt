@@ -89,9 +89,10 @@ internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator:
                 }
             }
         },
-        // Full strength either way. Dimming the unselected tiles to 60% put a
-        // 14sp label under 4.5:1 on seven of the light presets, and it was saying
-        // what the filled pill already says.
+        // Full strength either way. Dimming the unselected tiles to 60% put the
+        // label under 4.5:1 on seven of the light presets -- it is small text at
+        // any size the auto-sizer picks, so that threshold applies throughout --
+        // and it was saying what the filled pill already says.
         contentColor = if(isChecked) {
             MaterialTheme.colorScheme.onSecondary
         } else {
@@ -179,7 +180,11 @@ val KeyboardModeAction = Action(
                 Column {
                     // ActionWindowBar is a column of a hairline over a weighted
                     // row, so a bare 40dp row here was a hairline taller and the
-                    // only panel header without the rule above it.
+                    // only panel header without the rule above it. One difference
+                    // remains: the shared bar draws its rule outside the window's
+                    // side padding and this one inside it, so in one-handed mode
+                    // this rule stops at the keyboard rather than crossing the
+                    // empty strip. That is the better of the two.
                     Column(Modifier.height(ActionBarHeight)) {
                         ActionSep()
                         Row(Modifier.weight(1.0f)) {
