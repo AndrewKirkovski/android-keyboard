@@ -1250,8 +1250,43 @@ class UixManager(private val latinIME: LatinIME) {
                         .padding(vertical = CONTROL_PADDING),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Exit above, switch below. Gboard draws its restore
+                    // control above the switch-hands chevron, and HeliBoard its
+                    // stop button above both of its others -- 20% of keyboard
+                    // height against the switch at 50%
+                    // (KeyboardWrapperView.onLayout). Both orders keep the way
+                    // out of one-handed mode clear of the arc a thumb sweeps
+                    // while typing, which is where this one used to sit.
+                    if(!hideExitButton.value) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .clip(CircleShape)
+                                .combinedClickable(
+                                    role = Role.Button,
+                                    onClick = {
+                                        latinIME.sizingCalculator.exitOneHandedMode()
+                                    }
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.maximize),
+                                contentDescription = stringResource(R.string.one_handed_mode_exit),
+                                tint = contentColor
+                            )
+                        }
+
+                        // Two 48dp targets flush against each other, one of which
+                        // leaves one-handed mode altogether, is a misclick that
+                        // costs more than it should. Inside the block, so the gap
+                        // goes away with the button it separates.
+                        Spacer(Modifier.height(CONTROL_GAP))
+                    }
+
                     // Switching hands on tap, leaving one-handed mode on long press. The
-                    // long press matters when the exit button below is hidden: it keeps a
+                    // long press matters when the exit button above is hidden: it keeps a
                     // one-gesture way out, so hiding the button costs convenience rather
                     // than capability.
                     Box(
@@ -1283,37 +1318,6 @@ class UixManager(private val latinIME: LatinIME) {
                         }), contentDescription = stringResource(R.string.one_handed_mode_switch_hand),
                             tint = contentColor
                         )
-                    }
-
-                    if(!hideExitButton.value) {
-                        // Two 48dp targets flush against each other, where the
-                        // lower one leaves one-handed mode altogether, is a
-                        // misclick that costs more than it should. Inside the
-                        // spacer, not before the block, so the gap goes away with
-                        // the button it separates.
-                        Spacer(Modifier.height(CONTROL_GAP))
-
-                        // The same shape and touch target as the control above it,
-                        // rather than an IconButton with its own metrics.
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp)
-                                .clip(CircleShape)
-                                .combinedClickable(
-                                    role = Role.Button,
-                                    onClick = {
-                                        latinIME.sizingCalculator.exitOneHandedMode()
-                                    }
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painterResource(R.drawable.maximize),
-                                contentDescription = stringResource(R.string.one_handed_mode_exit),
-                                tint = contentColor
-                            )
-                        }
                     }
                 }
             }
