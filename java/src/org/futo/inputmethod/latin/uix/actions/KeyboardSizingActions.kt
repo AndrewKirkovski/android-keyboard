@@ -1,11 +1,15 @@
 package org.futo.inputmethod.latin.uix.actions
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -21,6 +25,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.futo.inputmethod.latin.R
@@ -33,13 +41,35 @@ import org.futo.inputmethod.v2keyboard.KeyboardMode
 import org.futo.inputmethod.v2keyboard.KeyboardSizingCalculator
 import org.futo.inputmethod.latin.uix.theme.Typography
 
+/**
+ * One mode in the row.
+ *
+ * The current mode used to be marked by swapping its glyph for a filled variant with a
+ * check badge and colouring it `tertiary`. That is a treatment nothing else in the app
+ * uses, and it cannot be shared: it needs a second hand-drawn icon per item, which the
+ * emoji categories and the theme thumbnails could never have. It also cost the most
+ * where it was used -- these four glyphs are told apart by their silhouette, and filling
+ * one in flattens the detail on the one tile the user is looking for.
+ *
+ * The marker is instead a low-alpha container behind the tile plus full-strength
+ * content, which is what the app already does for a chosen item wherever a radio button
+ * does not fit: the emoji category row (EmojiAction.kt) and the option list a settings
+ * dropdown opens (Components.kt). Horizontally inset so it does not run flush to the
+ * screen edge; the vertical inset stays small because the whole panel is 54dp.
+ */
 @Composable
-internal fun RowScope.KeyboardMode(iconRes: Int, checkedIconRes: Int, name: String, sizingCalculator: KeyboardSizingCalculator, mode: KeyboardMode, isChecked: Boolean) {
+internal fun RowScope.KeyboardMode(iconRes: Int, name: String, sizingCalculator: KeyboardSizingCalculator, mode: KeyboardMode, isChecked: Boolean) {
     Surface(
         color = Color.Transparent,
         modifier = Modifier
             .weight(1.0f)
-            .height(54.dp),
+            .height(54.dp)
+            // Four choices, one of them current. A screen reader was told which mode
+            // each tile was and never which one it was on.
+            .semantics {
+                role = Role.RadioButton
+                selected = isChecked
+            },
         onClick = {
             sizingCalculator.editSavedSettings { settings ->
                 settings.copy(
@@ -54,12 +84,27 @@ internal fun RowScope.KeyboardMode(iconRes: Int, checkedIconRes: Int, name: Stri
                 }
             }
         },
-        contentColor = if(isChecked) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onBackground
+        contentColor = MaterialTheme.colorScheme.onBackground.copy(
+            alpha = if(isChecked) 1.0f else 0.6f
+        )
     ) {
-        Box(Modifier.height(54.dp), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 6.dp, vertical = 3.dp)
+                .background(
+                    if(isChecked) {
+                        MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
+                    } else {
+                        Color.Transparent
+                    },
+                    RoundedCornerShape(12.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
-                    painterResource(if(isChecked) checkedIconRes else iconRes),
+                    painterResource(iconRes),
                     contentDescription = null
                 )
                 Text(name, style = Typography.SmallMl)
@@ -129,7 +174,6 @@ val KeyboardModeAction = Action(
                     Row {
                         KeyboardMode(
                             R.drawable.keyboard_regular,
-                            R.drawable.keyboard_fill_check,
                             stringResource(R.string.action_keyboard_modes_standard),
                             sizeCalculator, KeyboardMode.Regular,
                             currMode == KeyboardMode.Regular
@@ -137,7 +181,6 @@ val KeyboardModeAction = Action(
 
                         KeyboardMode(
                             R.drawable.keyboard_left_handed,
-                            R.drawable.keyboard_left_handed_fill_check,
                             stringResource(R.string.action_keyboard_modes_one_handed),
                             sizeCalculator, KeyboardMode.OneHanded,
                             currMode == KeyboardMode.OneHanded
@@ -146,7 +189,6 @@ val KeyboardModeAction = Action(
                         if(sizeCalculator.doesCurrentLayoutSupportSplit()) {
                             KeyboardMode(
                                 R.drawable.keyboard_split,
-                                R.drawable.keyboard_split_fill_check,
                                 stringResource(R.string.action_keyboard_modes_split),
                                 sizeCalculator, KeyboardMode.Split,
                                 currMode == KeyboardMode.Split
@@ -155,7 +197,6 @@ val KeyboardModeAction = Action(
 
                         KeyboardMode(
                             R.drawable.keyboard_float,
-                            R.drawable.keyboard_float_fill_check,
                             stringResource(R.string.action_keyboard_modes_floating),
                             sizeCalculator, KeyboardMode.Floating,
                             currMode == KeyboardMode.Floating
