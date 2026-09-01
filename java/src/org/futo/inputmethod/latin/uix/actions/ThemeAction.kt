@@ -24,7 +24,7 @@ val ThemeAction = Action(
 
             // Keeping the keyboard up meant the shared title bar was skipped, so this
             // was one of two panels with neither its name nor a back arrow -- Debug info
-            // was the other -- and all either had was the round close button the
+            // was the other -- and all this one had was the round close button the
             // suggestion strip lends a docked window, sitting over the top-left key. The
             // bar is drawn outside the panel's content box, so the window grows upward
             // to fit it rather than taking the room the thumbnails need.

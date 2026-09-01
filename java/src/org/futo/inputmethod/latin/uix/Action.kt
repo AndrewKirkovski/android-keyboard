@@ -128,8 +128,10 @@ abstract class ActionWindow {
      *
      * That bar is what gives a panel its back arrow and its name, and it is otherwise
      * only drawn once the keyboard is hidden -- which is how a panel that keeps the
-     * keyboard up ends up as the one screen that never says what it is. Off by default,
-     * because a panel that builds its own header row would then have two.
+     * keyboard up ends up as a screen that never says what it is. Two did: the theme
+     * switcher and Debug info, both of which set this. Off by default, because a panel
+     * that builds its own header row would then have two, which is the keyboard-modes
+     * panel's case.
      */
     open val showTitleBarAboveKeyboard: Boolean
         get() = false

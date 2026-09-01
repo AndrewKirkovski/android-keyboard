@@ -169,8 +169,9 @@ fun SettingSectionHeader(title: String) {
  *
  * The design has one between every pair and none at the card's edges, which is what
  * makes a card of six rows read as six things rather than one block of text. Full
- * width, not inset: the rows in this app have no leading icon, so there is no icon
- * gutter for a divider to start after.
+ * width, not inset: almost no row here carries a leading icon -- the language IME rows
+ * and a developer screen are the exceptions -- so insetting every divider to clear a
+ * gutter that is usually empty would let the few dictate the many.
  */
 @Composable
 fun SettingsRowDivider() {
@@ -384,8 +385,8 @@ fun ScreenTitleWithIcon(title: String, painter: Painter) {
  *
  * The slot overload exists so a tip carrying an inline icon or several lines still
  * looks like a tip. Resize used to build one out of PaymentSurface -- the payment
- * screen's promotional panel -- which gave the only tip in the app a heading, a border
- * and a grey fill.
+ * screen's promotional panel -- so that one tip, alone among the seventeen, had a
+ * heading, a border and a grey fill.
  */
 @Composable
 fun Tip(content: @Composable () -> Unit) {
