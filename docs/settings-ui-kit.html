@@ -316,7 +316,7 @@ table.num td.names { color: var(--muted); }
   <div class="notes">
     <span class="tag">Spacing</span>
     <h3>One scale, six steps and seven names</h3>
-    <p>A 4&nbsp;dp base: <code>xs</code>&nbsp;4, <code>s</code>&nbsp;8, <code>m</code>&nbsp;12, <code>l</code>&nbsp;16, <code>xl</code>&nbsp;24, <code>xxl</code>&nbsp;32, with seven named tokens for the places a name reads better than a step &mdash; <code>cardInset</code>, <code>cardGap</code>, <code>rowInset</code>, <code>rowHeight</code>, <code>rowHeightTwoLine</code>, <code>iconSlot</code>, <code>iconGap</code>. A gap can no longer be 9 or 19 or 21&nbsp;dp because someone typed it. Radii are not on this scale and were never meant to be: a 22&nbsp;dp card and a 26&nbsp;dp dialog are shapes, not spacing.</p>
+    <p>A 4&nbsp;dp base: <code>xs</code>&nbsp;4, <code>s</code>&nbsp;8, <code>m</code>&nbsp;12, <code>l</code>&nbsp;16, <code>xl</code>&nbsp;24, <code>xxl</code>&nbsp;32, with seven named tokens for the places a name reads better than a step &mdash; <code>cardInset</code>, <code>cardGap</code>, <code>rowInset</code>, <code>rowHeight</code>, <code>rowHeightTwoLine</code>, <code>iconSlot</code>, <code>iconGap</code>. A gap in a component on this scale can no longer be 9 or 19 or 21&nbsp;dp because someone typed it. The scale governs what it was applied to, not the tree: the live <code>DropDownPicker</code> still spaces itself by 9, and the payment screen still insets by 19. Radii are not on this scale and were never meant to be: a 22&nbsp;dp card and a 26&nbsp;dp dialog are shapes, not spacing.</p>
     <table class="num">
       <tr><th>Step</th><th>Value</th><th>Used for</th></tr>
       <tr><td><code>xs</code></td><td>4 dp</td><td>title&ndash;subtitle</td></tr>
@@ -354,7 +354,7 @@ table.num td.names { color: var(--muted); }
   <div class="notes">
     <span class="tag">Type</span>
     <h3>Seven roles, one system</h3>
-    <p>The app currently runs two type systems in parallel: a hand-rolled <code>Typography</code> object used 58&nbsp;times under <code>settings/</code>, against 9&nbsp;uses of <code>MaterialTheme.typography</code>. Five of the hand-rolled styles set line-height equal to font-size &mdash; 100%&nbsp;leading. These seven replace both.</p>
+    <p>The app currently runs two type systems in parallel: a hand-rolled <code>Typography</code> object used 58&nbsp;times under <code>settings/</code>, against 9&nbsp;uses of <code>MaterialTheme.typography</code>. Five of the hand-rolled styles set line-height equal to font-size &mdash; 100%&nbsp;leading. These seven replace both under <code>settings/</code>, where the hand-rolled object now has no readers. It is still running elsewhere: seventeen uses across twelve files, the keyboard&rsquo;s own panels among them, which is why the action tile below is specified in <code>Typography.Small</code> rather than in a role from this table.</p>
     <table class="num">
       <tr><th>Role</th><th>Size / line</th><th>Weight</th><th>M3 slot</th></tr>
       <tr><td>Large title</td><td>28 / 34</td><td>600</td><td><code>headlineMedium</code></td></tr>
@@ -453,7 +453,7 @@ table.num td.names { color: var(--muted); }
 </div>
 
 <h2 class="sec">Rows</h2>
-<p class="lede">The app has three incompatible row heights today &mdash; 68&nbsp;dp in <code>SettingItem</code>, 50&nbsp;dp in <code>LanguageConfigurable</code>, 44&nbsp;dp in <code>LayoutConfigurable</code> &mdash; and not one screen uses a single height. Two heights, by content.</p>
+<p class="lede">The app has four incompatible row heights today &mdash; 68&nbsp;dp in <code>SettingItem</code> and 48 when it is compact, 50&nbsp;dp in <code>LanguageConfigurable</code>, 44&nbsp;dp in <code>LayoutConfigurable</code> &mdash; and not one screen uses a single height. Two heights, by content.</p>
 
 <div class="item">
   <div class="pair">
@@ -613,7 +613,7 @@ table.num td.names { color: var(--muted); }
 </div>
 
 <h2 class="sec">Notices, dialogs, and the states nobody designed</h2>
-<p class="lede">The inventory reached thirteen <code>AlertDialog</code> call sites, five empty states and ten progress indicators. None had a considered design when this section was written; the empty state below was built from it, and is what every empty list in the app and on the keyboard&rsquo;s panels uses now, apart from the bug viewer, which keeps its own debug-styled string.</p>
+<p class="lede">The inventory reached thirteen <code>AlertDialog</code> call sites, five empty states and ten progress indicators. None had a considered design when this section was written; the empty state below was built from it, and is what every empty list that has one uses now. Two do not: the bug viewer keeps its own debug-styled string, and the personal dictionary&rsquo;s word list has no empty branch at all, so with no words it draws nothing.</p>
 
 <div class="item">
   <div class="pair">
@@ -668,14 +668,14 @@ table.num td.names { color: var(--muted); }
       <div style="height:8px"></div>
       <div class="lang">
         <div class="hd">
-          <div class="n"><b>Polski</b><span>1&nbsp;layout</span></div>
+          <div class="n"><b>polski</b><span>1&nbsp;layout</span></div>
 
         </div>
         <div class="grp">Keyboard Layouts</div>
         <div class="row"><div class="body"><div class="ttl">Polski / English (typograficzna)</div></div></div>
         <div class="row add"><div class="body"><div class="ttl">Add layout</div></div></div>
         <div class="grp">Language data</div>
-        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="chip">Polski (Imported)</div></div>
+        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="chip">Dictionary (Imported)</div></div>
         <div class="row"><div class="body"><div class="ttl">Transformer Model</div></div><div class="chip warn">(None)</div></div>
         <div class="row"><div class="body"><div class="ttl">Voice Input Model</div></div><div class="chip warn">(None)</div></div>
         <div class="grp" style="color:var(--fg2)">Multilingual</div>
@@ -688,14 +688,14 @@ table.num td.names { color: var(--muted); }
       <div style="height:8px"></div>
       <div class="lang">
         <div class="hd">
-          <div class="n"><b>Polski</b><span>1&nbsp;layout</span></div>
+          <div class="n"><b>polski</b><span>1&nbsp;layout</span></div>
 
         </div>
         <div class="grp">Keyboard Layouts</div>
         <div class="row"><div class="body"><div class="ttl">Polski / English (typograficzna)</div></div></div>
         <div class="row add"><div class="body"><div class="ttl">Add layout</div></div></div>
         <div class="grp">Language data</div>
-        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="chip">Polski (Imported)</div></div>
+        <div class="row"><div class="body"><div class="ttl">Dictionary</div></div><div class="chip">Dictionary (Imported)</div></div>
         <div class="row"><div class="body"><div class="ttl">Transformer Model</div></div><div class="chip warn">(None)</div></div>
         <div class="row"><div class="body"><div class="ttl">Voice Input Model</div></div><div class="chip warn">(None)</div></div>
         <div class="grp" style="color:var(--fg2)">Multilingual</div>
@@ -902,9 +902,11 @@ table.num td.names { color: var(--muted); }
     <code>keyboardContainer</code>, a functional key is
     <code>keyboardContainerVariant</code>, and the one accent key &mdash; enter &mdash; is
     <code>primary</code>. Expert mode quietens it rather than flattening it: enter drops
-    to <code>outline</code> at 10% under <code>onSurface</code> at 60%, where a functional
-    key keeps its fill under a glyph at 20%, so enter stays the most legible thing on the
-    keyboard. Glyphs are <code>onKeyboardContainer</code>. A panel made
+    to <code>outline</code> at 10%, and its glyph &mdash; an icon, so tinted by
+    <code>enterKeyForeground</code> rather than by the descriptor&rsquo;s label colour
+    &mdash; to <code>onBackground</code> at 33%, where a functional key&rsquo;s glyph goes
+    to 20% and a letter&rsquo;s fill goes transparent. Enter stays the most legible thing
+    on the keyboard. Glyphs are <code>onKeyboardContainer</code>. A panel made
     of keys uses those and nothing else: cursor keys are ordinary keys, clipboard and
     modifier keys are functional keys, and the pair the keyboard puts on a latched
     key &mdash; <code>secondary</code>, from <code>KeyVisualStyle.StickyOn</code>, not the
@@ -950,7 +952,7 @@ table.num td.names { color: var(--muted); }
     black.</p>
     <p><b>Four left edges down one page</b> &mdash; the slab at&nbsp;0, the grid inside
     it at&nbsp;8, the category row at&nbsp;2, the search field pinned at&nbsp;128 &mdash;
-    are now one, on the <code>Spacing</code> scale &mdash; except the category row, whose own <code>Spacing.s</code> sits inside the navigation row&rsquo;s, so its first glyph starts at 16. The search field was a fixed
+    are now one, on the <code>Spacing</code> scale &mdash; except the category row, whose own <code>Spacing.s</code> sits inside the navigation row&rsquo;s, so its first item&rsquo;s box starts at 16 &mdash; the 24&nbsp;dp glyph is centred in an <code>IconButton</code> inside that, so its ink starts nearer 26, and at 72 when the letters key precedes it. The search field was a fixed
     128&nbsp;dp pill in the window bar, dressed as a text input while being a button
     that switched modes. It is the panel&rsquo;s width now, and takes a height
     floor rather than a fixed height &mdash; 48&nbsp;dp, which is what the editor
@@ -964,8 +966,9 @@ table.num td.names { color: var(--muted); }
     where <code>primary</code> and
     <code>onSurface</code> are two near&#8209;blacks, and on
     High&nbsp;Contrast&nbsp;Yellow, where they are both white. The emoji category row
-    keeps its fully round pill and changes its ink; the modes panel takes the same pair
-    on a 12&nbsp;dp marker, so the colour is shared and the shape is not.</p>
+    keeps its fully round pill and changes its ink; the modes panel takes the same pair on a marker that fills its tile &mdash;
+    the full width by 48 of the tile&rsquo;s 54&nbsp;dp &mdash; at a 12&nbsp;dp corner
+    radius. The colour is shared and the shape is not.</p>
     <p><b>One exception, and it is not an oversight.</b> A theme swatch keeps its
     4&nbsp;dp border, drawn in <code>primary</code>: <code>inversePrimary</code> was the
     first choice, and the settings app&rsquo;s palette does not define that role &mdash;
@@ -1105,11 +1108,12 @@ table.num td.names { color: var(--muted); }
     a label is small text at any size the auto&#8209;sizer picks, so it wants 4.5:1,
     and 60% put it under that on seven light presets.
     The emoji category row&rsquo;s unselected glyphs went the same way, and for the
-    same reason: a 24&nbsp;dp glyph is held to 3:1 rather than 4.5, and 60% left it
-    between 3.7 and 4.6 on the light presets &mdash; clear of the bar with nothing
-    spare. Both are full strength, and in both the filled marker is what says which one
-    is selected &mdash; a round pill on the emoji row, a 12&nbsp;dp rectangle on the
-    modes panel.</p>
+    same reason: a 24&nbsp;dp glyph is held to 3:1 rather than 4.5, and the 60% of
+    <code>onBackground</code> that used to tint it measured 3.7 to 4.5 across the light
+    presets &mdash; a clear pass. What settles it is that the filled pill already says
+    which one is selected, so the alpha said it twice. Both are full strength, and in both the filled marker is what says which one
+    is selected &mdash; a round pill on the emoji row, a tile-filling rectangle at a
+    12&nbsp;dp radius on the modes panel.</p>
   </div>
 </div>
 
