@@ -286,8 +286,8 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
     }
     // Named rather than derived. contentColorFor compares by colour value, and the
     // builders now map surfaceContainer to keyboardContainer, so it would match and
-    // hand back onSurface -- which is not onKeyboardContainer on High Contrast
-    // Yellow or Classic Material Light.
+    // hand back onSurface -- which is not onKeyboardContainer on Classic Material
+    // Light or Catppuccin Mocha.
     val onColor = if(clipboardEntry.pinned) {
         scheme.onPrimaryContainer
     } else {
@@ -374,7 +374,7 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
                             // Full strength. At 16dp this is a non-text
                             // element against a 3:1 threshold. What was here --
                             // contentColorFor(surfaceContainer) at half alpha over
-                            // Material's baseline lilac -- came out 2.96 to 3.29
+                            // Material's baseline lilac -- came out 2.96 to 3.28
                             // across the light presets and failed Classic Material
                             // Light. Half of onSurfaceVariant over keyboardContainer
                             // would be worse still: 2.27 to 2.68, clearing on none

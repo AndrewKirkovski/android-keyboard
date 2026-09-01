@@ -109,11 +109,11 @@ fun ThemePreview(colors: KeyboardColorScheme, name: String, loading: Boolean, is
 
     // primary, not inversePrimary. This reads the ambient scheme, which is the
     // settings app's palette on the Themes screen and the selected theme on the
-    // keyboard's own panel. Neither the app's palette nor the nineteen static
-    // presets set inversePrimary until ColorScheme.kt began filling it, so under
-    // either the border marking the theme in use came out Material's baseline
-    // purple; under a dynamic or zip theme it came out a wallpaper colour. Neither
-    // is an accent.
+    // keyboard's own panel. The nineteen static presets did not set inversePrimary
+    // until ColorScheme.kt began filling it, and the app's palette still does not,
+    // so under either the border marking the theme in use came out Material's baseline
+    // purple; under a dynamic theme it came out a wallpaper colour, and under a
+    // zip theme whatever its file names. None of the three is an accent.
     val borderColor = if (isSelected) {
         currColors.primary
     } else {
