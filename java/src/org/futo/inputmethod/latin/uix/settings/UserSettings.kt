@@ -191,8 +191,8 @@ fun UserSettingsMenu.render(showBack: Boolean = true, showTitle: Boolean = true)
  * light/dark setting and the keyboard follows whatever theme the user picked for it.
  * The KeyboardView inside takes that from the activity's own DynamicThemeProvider
  * rather than from Compose, so it would do this unwrapped -- Swipe and Add language
- * draw the same composable without one. The wrapper is for the Compose content
- * beside it, the spinner shown while the layout loads. Looking different from
+ * draw the same composable without one. The wrapper is for the Compose branch: while
+ * the layout loads, a spinner is drawn in the view's place. Looking different from
  * the page around it is the correct outcome.
  */
 @Composable

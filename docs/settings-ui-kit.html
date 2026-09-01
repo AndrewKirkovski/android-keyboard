@@ -21,7 +21,8 @@
   --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
   --device: 'Roboto', system-ui, sans-serif;
 
-  /* the proposed scale — every number in the specimens comes from here */
+  /* The proposed scale, for reference. The specimens are hand-drawn and do not read
+     these: their chrome carries a few off-scale values, 9px among them. */
   --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
   --s5: 20px; --s6: 24px; --s7: 32px; --s8: 40px;
 }
@@ -356,12 +357,12 @@ table.num td.names { color: var(--muted); }
     in <code>AppTheme.kt</code>.</p>
     <p><b>Compose:</b> <code>AppLightColors</code> and <code>AppDarkColors</code> in
     <code>theme/app/AppTheme.kt</code>, which are <code>lightColorScheme</code> and
-    <code>darkColorScheme</code> and not the keyboard's palette. That one is built by
-    <code>ColorScheme.kt</code>, and the boundary is what it is the ground <em>of</em>:
-    never a settings row, but anything drawing the keyboard itself, which these screens
-    do in several places and by more than one route &mdash; a Compose wrapper on some,
-    and on others the activity's own <code>DynamicThemeProvider</code>, which a
-    <code>KeyboardView</code> reads without any wrapper at all.</p>
+    <code>darkColorScheme</code> and not the keyboard's palette, which
+    <code>ColorScheme.kt</code> builds. A settings screen draws in this one; where it
+    shows the keyboard &mdash; a layout preview, a theme thumbnail, a single key beside a
+    radio row &mdash; that part draws in the keyboard's, by whichever route the composable
+    in question happens to take. The same row components appear on both palettes,
+    because the keyboard's own panels are built from them too.</p>
   </div>
 </div>
 

@@ -38,9 +38,8 @@ import org.futo.inputmethod.latin.uix.theme.LocalCompatEmojiTypeface
  *
  * So the app follows the system light/dark setting like any other Android app, and the
  * keyboard theme stays where it belongs: on the keyboard, and on the previews of it that
- * settings screens show. Those previews wrap themselves in the keyboard scheme
- * explicitly, which is why a preview can look nothing like the page around it -- that is
- * the point, not a bug.
+ * settings screens show. A preview can look nothing like the page around it, and that is
+ * the point rather than a bug.
  *
  * The palette is the product's own, taken from polish-typographic.com rather than
  * invented here: warm neutrals and a crimson accent, so the app reads as part of the
