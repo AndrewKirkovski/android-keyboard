@@ -346,7 +346,13 @@ table.num td.names { color: var(--muted); }
       <div class="sw-chip"><b style="background:#1a1a1c"></b>#1a1a1c<br>card dk</div>
       <div class="sw-chip"><b style="background:#ee6680"></b>#ee6680<br>accent dk</div>
     </div>
-    <p style="margin-top:var(--s4)">Everything else keeps the palette already in <code>AppTheme.kt</code>.</p>
+    <p style="margin-top:var(--s4)">One more role moved, and it is not decorative:
+    <code>outlineVariant</code> went from <code>#D8D4CC</code> to <code>#E6E4DE</code> in
+    light and <code>#3A3A36</code> to <code>#2A2A2D</code> in dark. That is the colour
+    <code>SettingsRowDivider</code> draws in, and the old values were a warm grey that
+    read as a rule ruled across a card rather than a hairline between two rows. The
+    specimens above already use the new ones. Everything else keeps the palette already
+    in <code>AppTheme.kt</code>.</p>
   </div>
 </div>
 

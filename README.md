@@ -102,9 +102,9 @@ opening the panel on a phone at 1080px rather than by reading the code.
   the glyph to fill whatever the cell leaves, and the text size only decides the
   resolution it is rendered at. Search moved off a fixed 128dp pill in the window
   bar and onto the panel, where it has width and sits with what it filters.
-- **Clear-recents is not an X.** It wore `R.drawable.close` a few pixels from the
+- **Clear-recents is not an X.** It wore `R.drawable.close` in the same bar as the
   back arrow that closes the panel, so the destructive control had the dismiss
-  icon and the dismiss control sat beside it.
+  icon while the control that really dismisses sat at the other end of the bar.
 - **Sentence case reached the panels.** They still said "Clipboard History
   Inactive" above a button reading "Enable Clipboard History", from a keyboard
   whose settings rows had already stopped doing that.
