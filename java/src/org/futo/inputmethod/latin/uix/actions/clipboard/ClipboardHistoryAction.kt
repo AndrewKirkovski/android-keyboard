@@ -275,19 +275,22 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
     // keyboardContainer is the fork's "a container carrying no state" colour --
     // the same one the emoji search bar, the action items and the tiles in All
     // actions wear. surfaceContainer, which this used to read, was not forwarded
-    // by the extended builders until they were changed alongside this, so the
-    // nineteen static presets got Material's baseline lilac instead of the theme's
-    // own container. The dynamic and zip themes always supplied a real one.
+    // by the extended builders until they were changed alongside this, so the seven
+    // light presets got Material's baseline lilac and the twelve dark ones its
+    // near-black #211F26, instead of the theme's own container. The dynamic and zip
+    // themes always supplied a real one.
     val scheme = LocalKeyboardScheme.current
     val color = if(clipboardEntry.pinned) {
         scheme.primaryContainer
     } else {
         scheme.keyboardContainer
     }
-    // Named rather than derived. contentColorFor compares by colour value, and the
-    // builders now map surfaceContainer to keyboardContainer, so it would match and
-    // hand back onSurface -- which is not onKeyboardContainer on Classic Material
-    // Light or Catppuccin Mocha.
+    // Named rather than derived. contentColorFor compares by colour value in a fixed
+    // role order, and the builders now map surfaceContainer to keyboardContainer, so
+    // it would match -- handing back onSurface, which is not onKeyboardContainer on
+    // Classic Material Light or Catppuccin Mocha, or, on Snowfall, Cotton Candy and
+    // Deep Sea Light, matching secondaryContainer five roles earlier and handing back
+    // onSecondaryContainer, which is not it either.
     val onColor = if(clipboardEntry.pinned) {
         scheme.onPrimaryContainer
     } else {
@@ -374,7 +377,7 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
                             // Full strength. At 16dp this is a non-text
                             // element against a 3:1 threshold. What was here --
                             // contentColorFor(surfaceContainer) at half alpha over
-                            // Material's baseline lilac -- came out 2.96 to 3.28
+                            // Material's baseline lilac -- came out 2.96 to 3.29
                             // across the light presets and failed Classic Material
                             // Light. Half of onSurfaceVariant over keyboardContainer
                             // would be worse still: 2.27 to 2.68, clearing on none

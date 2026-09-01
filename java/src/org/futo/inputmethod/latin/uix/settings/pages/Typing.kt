@@ -108,7 +108,6 @@ import org.futo.inputmethod.latin.uix.setSettingBlocking
 import org.futo.inputmethod.latin.uix.settings.BottomSpacer
 import org.futo.inputmethod.latin.uix.settings.DataStoreItem
 import org.futo.inputmethod.latin.uix.settings.DropDownPickerSettingItem
-import org.futo.inputmethod.latin.uix.settings.GlyphIcon
 import org.futo.inputmethod.latin.uix.settings.LocalSharedPrefsCache
 import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.PrimarySettingToggleDataStoreItem

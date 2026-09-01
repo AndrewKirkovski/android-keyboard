@@ -485,9 +485,9 @@ fun SpacedColumn(gap: Dp, modifier: Modifier = Modifier, horizontalAlignment: Al
 }
 
 /**
- * A short piece of text standing in the leading slot where its neighbours have
- * icons, for settings whose subject is a character rather than a thing -- the
- * number row's "123".
+ * A short piece of text standing in a row's leading slot, for a setting whose
+ * subject is a character rather than a thing. Nothing calls it: its one call site
+ * was the number row's "123", and that screen is gone.
  *
  * It was previously plain body text, which put a paragraph's letterform in a
  * column of 24dp stroked line art and read as a stray word. Boxing it to the

@@ -354,7 +354,7 @@ table.num td.names { color: var(--muted); }
   <div class="notes">
     <span class="tag">Type</span>
     <h3>Seven roles, one system</h3>
-    <p>The app currently runs two type systems in parallel: a hand-rolled <code>Typography</code> object used 58&nbsp;times under <code>settings/</code>, against 9&nbsp;uses of <code>MaterialTheme.typography</code>. Five of the hand-rolled styles set line-height equal to font-size &mdash; 100%&nbsp;leading. These seven replace both under <code>settings/</code>, where the hand-rolled object now has no readers. It is still running elsewhere: seventeen uses across twelve files, the keyboard&rsquo;s own panels among them, which is why the action tile below is specified in <code>Typography.Small</code> rather than in a role from this table.</p>
+    <p>The app currently runs two type systems in parallel: a hand-rolled <code>Typography</code> object used 58&nbsp;times under <code>settings/</code>, against 9&nbsp;uses of <code>MaterialTheme.typography</code>. Five of the hand-rolled styles set line-height equal to font-size &mdash; 100%&nbsp;leading. These seven replace both under <code>settings/</code>, where the hand-rolled object now has no readers. It is still running elsewhere: sixteen uses across eleven files, the keyboard&rsquo;s own panels among them, which is why the action tile below is specified in <code>Typography.Small</code> rather than in a role from this table.</p>
     <table class="num">
       <tr><th>Role</th><th>Size / line</th><th>Weight</th><th>M3 slot</th></tr>
       <tr><td>Large title</td><td>28 / 34</td><td>600</td><td><code>headlineMedium</code></td></tr>
@@ -905,7 +905,7 @@ table.num td.names { color: var(--muted); }
     to <code>outline</code> at 10%, and its glyph &mdash; an icon, so tinted by
     <code>enterKeyForeground</code> rather than by the descriptor&rsquo;s label colour
     &mdash; to <code>onBackground</code> at 33%, where a functional key&rsquo;s glyph goes
-    to 20% and a letter&rsquo;s fill goes transparent. Enter stays the most legible thing
+    to 20% and a letter&rsquo;s goes transparent while its fill stays. Enter stays the most legible thing
     on the keyboard. Glyphs are <code>onKeyboardContainer</code>. A panel made
     of keys uses those and nothing else: cursor keys are ordinary keys, clipboard and
     modifier keys are functional keys, and the pair the keyboard puts on a latched
@@ -952,7 +952,7 @@ table.num td.names { color: var(--muted); }
     black.</p>
     <p><b>Four left edges down one page</b> &mdash; the slab at&nbsp;0, the grid inside
     it at&nbsp;8, the category row at&nbsp;2, the search field pinned at&nbsp;128 &mdash;
-    are now one, on the <code>Spacing</code> scale &mdash; except the category row, whose own <code>Spacing.s</code> sits inside the navigation row&rsquo;s, so its first item&rsquo;s box starts at 16 &mdash; the 24&nbsp;dp glyph is centred in an <code>IconButton</code> inside that, so its ink starts nearer 26, and at 72 when the letters key precedes it. The search field was a fixed
+    are now one, on the <code>Spacing</code> scale &mdash; except the category row, whose own <code>Spacing.s</code> sits inside the navigation row&rsquo;s, so its first item&rsquo;s box starts at 16 &mdash; the 24&nbsp;dp glyph is centred in an <code>IconButton</code> inside that, so its ink starts nearer 28, and at 76 when the letters key, which is exactly 48&nbsp;dp and sits flush against the row, precedes it. The search field was a fixed
     128&nbsp;dp pill in the window bar, dressed as a text input while being a button
     that switched modes. It is the panel&rsquo;s width now, and takes a height
     floor rather than a fixed height &mdash; 48&nbsp;dp, which is what the editor
