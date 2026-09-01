@@ -385,8 +385,8 @@ fun ScreenTitleWithIcon(title: String, painter: Painter) {
  *
  * The slot overload exists so a tip carrying an inline icon or several lines still
  * looks like a tip. Resize used to build its own out of PaymentSurface -- the payment
- * screen's promotional panel -- so it alone had a heading, a border and a grey fill
- * where every other tip is a plain primaryContainer note.
+ * screen's promotional panel -- so it alone had a heading, a border and a grey fill.
+ * Every other tip, warning ones included, is a filled note and nothing else.
  */
 @Composable
 fun Tip(content: @Composable () -> Unit) {
@@ -549,9 +549,9 @@ fun SettingItem(
             Spacer(Modifier.width(Spacing.rowInset))
             if (icon != null) {
                 // The slot is the icon, 24dp, not a 48dp column holding a 40dp circle
-                // holding the icon. The column reserved its width whether or not a row
-                // had an icon, so titles started at 20dp on some rows and 80dp on
-                // others -- most of the 14 different left edges came from here.
+                // holding the icon. That column was reserved only for a row that passed
+                // one, so titles started at 20dp on some rows and 80dp on others --
+                // most of the 14 different left edges came from here.
                 //
                 // On a row with a subtitle the slot pins to the top, beside the title
                 // it labels, rather than floating against the middle of the text block.
