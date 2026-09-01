@@ -21,8 +21,8 @@
   --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
   --device: 'Roboto', system-ui, sans-serif;
 
-  /* The proposed scale, for reference. The specimens are hand-drawn and do not read
-     these: their chrome carries a few off-scale values, 9px among them. */
+  /* The proposed scale, for reference. Only this page's own chrome reads it; the
+     specimens are hand-drawn and carry whatever a mockup needed. */
   --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
   --s5: 20px; --s6: 24px; --s7: 32px; --s8: 40px;
 }
@@ -389,7 +389,7 @@ table.num td.names { color: var(--muted); }
 </div>
 
 <h2 class="sec">App bar</h2>
-<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement, unevenly &mdash; the collapsed half comes from <code>ScrollableList</code>, which is the only thing that provides the anchor, so a screen gets the collapsed bar only if it both scrolls through <code>ScrollableList</code> and titles itself with <code>ScreenTitle</code>. Several do neither, and keep the 28&nbsp;sp title with nothing to replace it on scroll. <code>LargeTopAppBar</code> is used zero times today.</p>
+<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement, unevenly &mdash; the collapsed half comes from <code>ScrollableList</code>, which is the only thing that provides the anchor, so a screen gets the collapsed bar only if it scrolls through <code>ScrollableList</code> and calls <code>ScreenTitle</code> with a back arrow &mdash; without one, that composable returns a section header and registers nothing. Screens failing either half keep whatever title they drew, with nothing to replace it on scroll. <code>LargeTopAppBar</code> is used zero times today.</p>
 
 <div class="item">
   <div class="pair">

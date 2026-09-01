@@ -1020,10 +1020,11 @@ fun ScrollableList(modifier: Modifier = Modifier, spacing: Dp = 0.dp, horizontal
         // Only a screen title registers itself, and only screens have one -- the panels
         // that render inside the keyboard call SettingSectionHeader directly, which does
         // not. So this appears on settings screens and nowhere else -- but not on all of
-        // them. This is the only provider of the anchor, so a screen gets the bar only
-        // if it both scrolls through here and titles itself with ScreenTitle. Several
-        // build their own LazyColumn or Column, or draw their title as a bare Text, and
-        // keep the 28sp title with nothing to replace it on scroll.
+        // them. This is the only provider of the anchor, and ScreenTitle registers with
+        // it only when it draws a back arrow: without one it returns a section header
+        // instead. So a screen gets the bar only if it scrolls through here and titles
+        // itself with a back arrow, and a screen failing either half keeps whatever
+        // title it drew with nothing to replace it on scroll.
         AnimatedVisibility(
             visible = anchor.scrolledAway,
             enter = fadeIn(),
