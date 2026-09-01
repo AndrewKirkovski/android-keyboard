@@ -989,15 +989,17 @@ table.num td.names { color: var(--muted); }
   <div class="notes">
     <span class="tag">Redesigned</span>
     <h3>Every panel says which panel it is</h3>
-    <p><b>Two panels had no title, for one reason.</b> <code>ActionWindowBar</code> draws
+    <p><b>Three panels had no title, for one reason.</b> <code>ActionWindowBar</code> draws
     every panel&rsquo;s back arrow and name, and it was rendered only while the keyboard
-    was hidden. The theme switcher and keyboard modes both keep the keyboard visible, so
-    neither ever composed one, and each was answered separately. Keyboard modes was
+    was hidden. The theme switcher, keyboard modes and Debug&nbsp;info all keep the
+    keyboard visible, so none ever composed one, and each was answered separately. Keyboard modes was
     first: it showed a back arrow and a Resize&nbsp;keyboard button with nothing between
     them until it was given its name in a header row of its own. The theme switcher had
     it worse and was answered later, with the flag &mdash; no bar at all, only a
     floating <code>&times;</code> in a circle sitting over the keyboard&rsquo;s
-    top&#8209;left key.</p>
+    top&#8209;left key. Debug&nbsp;info was the one nobody looked at, because it is a
+    developer surface: it declared a <code>windowName()</code> and drew it nowhere. It
+    takes the same flag.</p>
     <p><b>Keyboard modes keeps that header, and this is the argument for it.</b> The
     shared bar always draws a back arrow, and the resize tutorial needs that one arrow
     gone so the only way forward is the button beside it. A flag cannot express that

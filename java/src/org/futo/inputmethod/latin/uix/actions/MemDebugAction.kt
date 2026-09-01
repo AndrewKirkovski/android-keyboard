@@ -268,6 +268,18 @@ val MemoryDebugAction = Action(
             override val onlyShowAboveKeyboard: Boolean
                 get() = true
 
+            // Keeping the keyboard up skips the shared title bar, which left this
+            // panel drawing neither its name nor a back arrow -- the same gap the
+            // theme switcher had, and for the same reason. It already declares a
+            // name below; this is what draws it.
+            override val showTitleBarAboveKeyboard: Boolean
+                get() = true
+
+            // The bar's back arrow closes the panel, which is where every other
+            // panel puts that.
+            override val showCloseButton: Boolean
+                get() = false
+
             override val positionIsUserManagable: Boolean
                 get() = true
 
