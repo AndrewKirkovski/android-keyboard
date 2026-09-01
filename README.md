@@ -91,7 +91,7 @@ opening the panel on a phone at 1080px rather than by reading the code.
   panel has room for two and a half, and the last row was cut through its labels.
   It is `Fixed(4)` now, and the label is laid out at the tile's width rather than
   shrink-wrapped inside a narrower column — which is why "Language switch key"
-  used to break mid-word while the longer "Clipboard manager" did not.
+  used to break mid-word rather than wrapping between its words.
 - **The theme panel shows themes.** It reused the settings screen's picker
   unchanged. "Your themes", its two buttons and a heading are together taller than
   the strip the panel gets above the keyboard, so every built-in thumbnail began
@@ -119,12 +119,13 @@ opening the panel on a phone at 1080px rather than by reading the code.
   is removed from histories that already saved it.
 - **Keyboard modes says which screen it is.** The shared window bar is only drawn
   when the keyboard is hidden, and this panel keeps it visible, so until it was
-  given a header row of its own the screen showed a back arrow and a Resize
-  keyboard button with nothing between them.
+  given its name in the header row it already builds, that row showed a back arrow
+  and a Resize keyboard button with nothing between them.
 - **The theme panel has a header.** Same cause, and it had it worse: no bar at
   all, only a floating close button in a circle sitting over the keyboard's
   top-left key. `ActionWindow.showTitleBarAboveKeyboard` gives a panel its bar
-  while the keyboard is up; it defaults to false, so nothing else changes.
+  while the keyboard is up. Debug info takes it too, for the same reason; it
+  defaults to false, so the panels that do not set it compose as before.
 - **The text editor is made of the keyboard's keys.** Its arrows were `primary`,
   its clipboard keys `primaryContainer`, its modifiers `secondaryContainer` --
   keyboard-scheme colours, so the file passes any check that greps for the
@@ -161,7 +162,7 @@ Each is filed upstream and merged into this tree rather than waited on.
 | Issue | What it fixes |
 | --- | --- |
 | [#2262](https://github.com/futo-org/android-keyboard/issues/2262) | Autocorrect indexed compose coordinates by UTF-8 byte, so every letter after the first non-ASCII one was scored against the wrong tap. Exactly the Polish and Cyrillic case this fork exists for. |
-| [#2263](https://github.com/futo-org/android-keyboard/issues/2263) | Quick actions land one key off on any layout whose third letter row is nine columns or more — which is every ЙЦУКЕН layout, in the shipped release. |
+| [#2263](https://github.com/futo-org/android-keyboard/issues/2263) | Quick actions land off by `(n - 7) / 2` keys on any layout whose third letter row is `n` columns wide — one key at nine or ten, which is every ЙЦУКЕН layout, and two at eleven or twelve. In the shipped release. |
 | [#2265](https://github.com/futo-org/android-keyboard/issues/2265) | A model covering two languages showed `en pl` as its heading. |
 | [#2266](https://github.com/futo-org/android-keyboard/issues/2266) | `generate.py` opened its inputs without an encoding, so a fresh clone did not build on a default Windows install. |
 | [#2267](https://github.com/futo-org/android-keyboard/issues/2267) | Adding a second product flavor failed Gradle configuration. |

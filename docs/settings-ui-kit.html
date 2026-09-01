@@ -353,6 +353,10 @@ table.num td.names { color: var(--muted); }
     read as a rule ruled across a card rather than a hairline between two rows. The
     specimens above already use the new ones. Everything else keeps the palette already
     in <code>AppTheme.kt</code>.</p>
+    <p><b>Compose:</b> <code>AppLightColors</code> and <code>AppDarkColors</code> in
+    <code>theme/app/AppTheme.kt</code>, which are <code>lightColorScheme</code> and
+    <code>darkColorScheme</code> and not the keyboard's palette &mdash; that one is
+    built by <code>ColorScheme.kt</code> and reaches these screens nowhere.</p>
   </div>
 </div>
 
@@ -371,6 +375,9 @@ table.num td.names { color: var(--muted); }
       <tr><td>Control value</td><td>15 / 20</td><td>500, accent</td><td><code>labelLarge</code></td></tr>
       <tr><td>Caption</td><td>12 / 15</td><td>400</td><td><code>labelSmall</code></td></tr>
     </table>
+    <p><b>Compose:</b> <code>AppTypography</code> in <code>theme/app/AppTheme.kt</code>,
+    replacing the hand-rolled <code>Typography</code> object in
+    <code>theme/Type.kt</code> for everything under <code>settings/</code>.</p>
     <p>Row title drops from weight&nbsp;500 to 400. At 16&nbsp;sp against a 13&nbsp;sp secondary subtitle the hierarchy is already carried by size and colour; the extra weight was doing the work colour should do, and made every row shout equally.</p>
   </div>
 </div>

@@ -207,7 +207,7 @@ val AppTypography = Typography(
 // --------------------------------------------------------------------------------- //
 
 /**
- * Five steps, replacing the 26 ad-hoc RoundedCornerShape values under settings/.
+ * Five steps, replacing the 17 ad-hoc RoundedCornerShape call sites under settings/.
  * MaterialTheme.shapes was previously supplied to nothing and used zero times.
  *
  * [Shapes.large] is the one that matters: it is the grouped card every settings row
