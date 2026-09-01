@@ -370,7 +370,7 @@ table.num td.names { color: var(--muted); }
 </div>
 
 <h2 class="sec">App bar</h2>
-<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement on every settings screen. <code>LargeTopAppBar</code> is used zero times today.</p>
+<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement, unevenly &mdash; the collapsed half comes from <code>ScrollableList</code>, which is the only thing that provides the anchor, so the six screens that build their own list keep the 28&nbsp;sp title and get no collapsed bar at all. <code>LargeTopAppBar</code> is used zero times today.</p>
 
 <div class="item">
   <div class="pair">
