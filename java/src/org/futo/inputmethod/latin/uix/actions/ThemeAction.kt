@@ -23,11 +23,11 @@ val ThemeAction = Action(
             override val onlyShowAboveKeyboard: Boolean = true
 
             // Keeping the keyboard up meant the shared title bar was skipped, so this
-            // was the one panel with neither its name nor a back arrow -- all it had was
-            // the round close button the suggestion strip lends a docked window, sitting
-            // over the top-left key. The bar is drawn outside the panel's content box,
-            // so the window grows upward to fit it rather than taking the room the
-            // thumbnails need.
+            // was one of two panels with neither its name nor a back arrow -- Debug info
+            // was the other -- and all either had was the round close button the
+            // suggestion strip lends a docked window, sitting over the top-left key. The
+            // bar is drawn outside the panel's content box, so the window grows upward
+            // to fit it rather than taking the room the thumbnails need.
             override val showTitleBarAboveKeyboard: Boolean = true
 
             // The bar's back arrow is now what closes the panel, and it is where every
