@@ -28,8 +28,8 @@ import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
  * with how the letters in a popup are ordered.
  *
  * Inline autofill joins the suggestion-bar switch because it governs what appears in
- * that same bar. It used to sit two rows from the switch that shows the bar at all,
- * which is close enough to look deliberate and far enough to be missed.
+ * that same bar. It already sat directly beneath that switch; what changed is that both
+ * moved off a screen about layout and onto one about appearance.
  */
 val AppearanceMenu = UserSettingsMenu(
     title = R.string.appearance_settings_title,

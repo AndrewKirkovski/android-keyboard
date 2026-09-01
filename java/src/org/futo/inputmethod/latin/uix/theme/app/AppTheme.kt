@@ -207,7 +207,9 @@ val AppTypography = Typography(
 // --------------------------------------------------------------------------------- //
 
 /**
- * Five steps, replacing the 17 ad-hoc RoundedCornerShape call sites under settings/.
+ * Five steps, for the components. A dozen RoundedCornerShape call sites remain under
+ * settings/ -- developer screens, the theme editor's chrome and a few one-offs -- which
+ * this does not reach.
  * MaterialTheme.shapes was previously supplied to nothing and used zero times.
  *
  * [Shapes.large] is the one that matters: it is the grouped card every settings row

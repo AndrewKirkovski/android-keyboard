@@ -274,7 +274,7 @@ fun DynamicThemePreview(isSelected: Boolean = false, onClick: () -> Unit = { }) 
 /**
  * An action tile in the theme grid: an icon over the word for what it does.
  *
- * On `surfaceVariant` these were #F0EEE9 on a #F4F3EF ground -- four units apart, so in
+ * On `surfaceVariant` these were #F0EEE9 on a #F4F3EF ground -- five units apart, so in
  * light they read as empty space rather than as buttons. An icon on its own also left
  * "browse online" as something to guess at, next to a grid of tiles that all name
  * themselves. The card surface is what the rest of the app puts content on, and it

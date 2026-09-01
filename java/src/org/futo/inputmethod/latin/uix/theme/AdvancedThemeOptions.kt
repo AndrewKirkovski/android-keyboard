@@ -26,7 +26,8 @@ data class KeyIcon(
  * [AdvancedThemeOptions.keyShadow] null renders exactly as it did before.
  *
  * The shadow is drawn into the gap that already exists between keys rather than widening it,
- * because that gap (KeyboardLayoutSet: 4dp horizontal, 8dp vertical) also feeds hit testing,
+ * because that gap -- KeyboardLayoutSet's 4dp, doubled vertically by LayoutEngine -- also
+ * feeds hit testing,
  * KeyDetector and gesture typing. Keeping radius + offsetY within roughly 3dp stays inside
  * that budget and leaves hit targets untouched.
  */
@@ -51,8 +52,9 @@ data class AdvancedThemeOptions(
      * Applied in Compose at [org.futo.inputmethod.latin.uix.KeyboardBackground], so it costs a
      * RenderEffect on one node rather than any work per key, and it is a no-op below API 31.
      *
-     * The default must stay: Toml1 parses with `ignoreUnknownNames = false`, so a field without
-     * one would break every theme file written before this change.
+     * The default is what the constructions in ColorScheme.kt rely on. A theme file that
+     * predates this is covered separately: ktoml decodes SerializedTomlFile, whose own
+     * `blur` field defaults to 0, and Toml.kt passes that through explicitly.
      */
     val backgroundImageBlur: Dp = 0.dp,
 

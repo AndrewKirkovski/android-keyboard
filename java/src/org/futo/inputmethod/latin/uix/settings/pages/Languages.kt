@@ -203,10 +203,11 @@ private fun PresentChip(text: String) {
  * on top. Removal moves into the overflow: a full-width filled red button was the
  * loudest thing on the screen and it is the action wanted least often.
  *
- * When this is the only language installed, three of its controls have nothing to act
- * on. The layout cannot be removed, the language cannot be removed, and multilingual
- * typing needs a second language before it means anything. The card says so, rather than
- * offering controls that quietly do nothing.
+ * When this is the only language installed, two of its controls have nothing to act on:
+ * the language cannot be removed, and multilingual typing needs a second language before
+ * it means anything. The card says so, rather than offering controls that quietly do
+ * nothing. Layout removal is gated separately, on the layout count, because a language
+ * must keep one whether or not it has company.
  */
 @Composable
 fun LanguageSurface(
