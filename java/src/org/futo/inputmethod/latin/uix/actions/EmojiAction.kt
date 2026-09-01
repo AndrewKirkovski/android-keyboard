@@ -1353,10 +1353,10 @@ val EmojiAction = Action(
                         {}
                     )
                 }) {
-                    // Not a close glyph. This clears the recent emoji, and it sits a
-                    // few pixels from the back arrow that does close the panel -- an
-                    // X there reads as "dismiss" and instead throws away the list you
-                    // use most. trash is what Languages uses to remove something.
+                    // Not a close glyph. This clears the recent emoji, and it shares
+                    // a bar with the back arrow that does close the panel -- an X here
+                    // reads as "dismiss" and instead throws away the list you use
+                    // most. trash is what Languages uses to remove something.
                     Icon(painterResource(id = R.drawable.trash), contentDescription = stringResource(
                         R.string.action_emoji_clear_recent_emojis_content_description
                     ))

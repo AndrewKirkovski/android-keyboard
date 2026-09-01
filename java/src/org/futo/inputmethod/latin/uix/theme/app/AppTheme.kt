@@ -255,8 +255,9 @@ object Spacing {
 
     /**
      * The leading slot is the icon itself at 24dp, not a 40dp circle inside a 48dp
-     * column. The circle pushed every title 48dp from the edge whether the row had an
-     * icon or not, which is where most of the 14 left edges came from.
+     * column. That column was laid out whether the row had an icon or not, and with
+     * the spacers around it pushed every title 80dp from the edge, which is where
+     * most of the 14 left edges came from.
      */
     val iconSlot = 24.dp
     val iconGap = 16.dp

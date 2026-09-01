@@ -1203,10 +1203,10 @@ val ClipboardHistoryAction = Action(
                     }) {
                         // A trash glyph, not a close one. Everything behind this
                         // button is destructive -- clear the unpinned clips, unpin
-                        // all of them, or switch history off -- and it sits two
-                        // icons from the back arrow that really does dismiss the
-                        // panel. Same correction the emoji page's clear-recents
-                        // button needed.
+                        // all of them, or switch history off -- and it shares a bar
+                        // with the back arrow that really does dismiss the panel.
+                        // Same correction the emoji page's clear-recents button
+                        // needed.
                         Icon(
                             painterResource(id = R.drawable.trash),
                             contentDescription = stringResource(R.string.action_clipboard_manager_clear_clipboard)

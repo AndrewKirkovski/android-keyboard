@@ -384,9 +384,9 @@ fun ScreenTitleWithIcon(title: String, painter: Painter) {
  * A note on the ground between cards.
  *
  * The slot overload exists so a tip carrying an inline icon or several lines still
- * looks like a tip. Resize used to build one out of PaymentSurface -- the payment
- * screen's promotional panel -- so that one tip, alone among the seventeen, had a
- * heading, a border and a grey fill.
+ * looks like a tip. Resize used to build its own out of PaymentSurface -- the payment
+ * screen's promotional panel -- so it alone had a heading, a border and a grey fill
+ * where every other tip is a plain primaryContainer note.
  */
 @Composable
 fun Tip(content: @Composable () -> Unit) {
