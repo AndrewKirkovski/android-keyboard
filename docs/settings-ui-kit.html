@@ -1007,15 +1007,18 @@ table.num td.names { color: var(--muted); }
     <em>different</em> header: same back glyph, same title style, same height as the
     shared bar, so the two read as one thing even though they are built twice.</p>
     <p><b>The flag lives on the window, not in the panel.</b>
-    <code>ActionWindow.showTitleBarAboveKeyboard</code> defaults to false, so every other
-    panel composes exactly as before; the theme switcher sets it, drops its floating
-    close button, and the bar&rsquo;s own back arrow takes that job. The bar composes
+    <code>ActionWindow.showTitleBarAboveKeyboard</code> defaults to false, so every panel
+    that does not set it composes exactly as before. Two set it &mdash; the theme switcher
+    and Debug&nbsp;info &mdash; and both drop their floating close button, because the
+    bar&rsquo;s own back arrow takes that job. The bar composes
     outside the fixed&#8209;height content box, so the window grows upward by
     <code>ActionBarHeight</code> rather than the picker losing 40&nbsp;dp &mdash; which
     matters, because that picker had just been cut down to fit.</p>
     <p><b>Compose:</b> <code>Action.kt</code> for the flag, <code>UixManager.kt</code>
-    for the render condition, <code>actions/ThemeAction.kt</code> for the two
-    overrides.</p>
+    for the render condition, and <code>actions/ThemeAction.kt</code> and
+    <code>actions/MemDebugAction.kt</code> for the two overrides apiece.
+    <code>actions/KeyboardSizingActions.kt</code> is the third panel the bar would skip,
+    and it keeps its own header instead.</p>
   </div>
 </div>
 
