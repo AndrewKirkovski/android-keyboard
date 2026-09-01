@@ -169,9 +169,9 @@ fun SettingSectionHeader(title: String) {
  *
  * The design has one between every pair and none at the card's edges, which is what
  * makes a card of six rows read as six things rather than one block of text. Full
- * width, not inset: almost no row here carries a leading icon -- the language IME rows
- * and a developer screen are the exceptions -- so insetting every divider to clear a
- * gutter that is usually empty would let the few dictate the many.
+ * width, not inset. The leading slot is empty on most rows and occupied on a few --
+ * an icon on some, a RadioButton on a radio group's -- and a divider inset to clear it
+ * would indent under every row to suit the minority that fill it.
  */
 @Composable
 fun SettingsRowDivider() {

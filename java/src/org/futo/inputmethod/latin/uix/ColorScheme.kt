@@ -147,6 +147,8 @@ data class KeyboardColorScheme(
         get() = extended.onKeyboardContainerPressed
     val hintColor: Color?
         get() = extended.hintColor
+    val advancedThemeOptions: AdvancedThemeOptions
+        get() = extended.advancedThemeOptions
 }
 
 fun extendedDarkColorScheme(

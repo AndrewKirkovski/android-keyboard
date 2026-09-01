@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -93,7 +94,8 @@ fun TogglableKey(
                 onClick = { }
             ),
         shape = RoundedCornerShape(8.dp),
-        color = if(toggled) { keys.accent } else { keys.functionalKey }
+        color = if(toggled) { keys.accent } else { keys.functionalKey },
+        shadowElevation = keys.elevation
     ) {
         contents(if(toggled) { keys.onAccent } else { keys.onKey })
     }
@@ -155,7 +157,8 @@ private class PanelKeyColors(
     val functionalKey: Color,
     val onKey: Color,
     val accent: Color,
-    val onAccent: Color
+    val onAccent: Color,
+    val elevation: Dp
 )
 
 @Composable
@@ -169,7 +172,18 @@ private fun panelKeyColors(): PanelKeyColors {
         functionalKey = if (borders) scheme.keyboardContainerVariant else Color.Transparent,
         onKey = if (borders) scheme.onKeyboardContainer else scheme.onBackground,
         accent = scheme.secondary,
-        onAccent = scheme.onSecondary
+        onAccent = scheme.onSecondary,
+        // A theme that gives its keys a shadow has to give the panel's the same
+        // one, or a panel of keys sits on the keyboard looking like a different
+        // material. BasicThemeProvider draws that shadow into the key's own
+        // drawable, which this cannot reuse, so the blur radius the theme asks
+        // for becomes the Surface's elevation. Suppressed with borders off,
+        // where the fill is transparent and a shadow would hang under nothing.
+        elevation = if (borders) {
+            scheme.advancedThemeOptions.keyShadow?.radius ?: 0.dp
+        } else {
+            0.dp
+        }
     )
 }
 
@@ -189,7 +203,8 @@ fun ActionKey(
                 onTrigger = { onTrigger() }
             ),
         shape = RoundedCornerShape(8.dp),
-        color = color
+        color = color,
+        shadowElevation = panelKeyColors().elevation
     ) {
         contents()
     }
