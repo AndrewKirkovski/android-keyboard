@@ -76,8 +76,8 @@ keyboard, and on the previews of it that settings screens show.
 A fuller redesign is in progress. Its component kit lives at
 [`docs/settings-ui-kit.html`](docs/settings-ui-kit.html) — open it in a browser
 beside the app. It is the target the Compose work is measured against, in both
-light and dark, with every entry naming the composable and file it maps to and
-carrying the measurement it replaces.
+light and dark, with every entry naming the composable and file it maps to, and most
+carrying the measurement they replace.
 
 ### The keyboard's own panels
 
@@ -134,8 +134,9 @@ opening the panel on a phone at 1080px rather than by reading the code.
   themselves, and follows a theme that turns key borders off.
 - **One way of showing what is selected.** There were five: a filled glyph, a
   tinted glyph, a pill, a border, a filled card. The panels now use the one the
-  keyboard already puts on a latched key, which is the only one that survives a
-  theme where the accent and the text colour are the same. A theme swatch is the
+  keyboard already puts on a latched key, which is a defined
+  foreground on a defined ground and so cannot collapse on a theme where the accent
+  and the text colour are the same — which a tint does. A theme swatch is the
   exception and keeps its border: a swatch is a block of colour, so tinting it
   would misreport the theme it is offering.
 

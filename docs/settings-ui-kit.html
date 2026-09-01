@@ -304,7 +304,8 @@ table.num td.names { color: var(--muted); }
   it says so.</p>
   <p class="prov">Reference for the settings rebuild &mdash; the target the Compose
   work is measured against, not a description of what ships today. Every entry
-  names the composable and file it maps to. Numbers marked
+  names the composable and file it maps to, and most carry the measurement they
+  replace. Numbers marked
   <span class="mono" style="text-decoration:line-through">like this</span> were
   measured from the app as it stands.</p>
 </header>
@@ -355,8 +356,11 @@ table.num td.names { color: var(--muted); }
     in <code>AppTheme.kt</code>.</p>
     <p><b>Compose:</b> <code>AppLightColors</code> and <code>AppDarkColors</code> in
     <code>theme/app/AppTheme.kt</code>, which are <code>lightColorScheme</code> and
-    <code>darkColorScheme</code> and not the keyboard's palette &mdash; that one is
-    built by <code>ColorScheme.kt</code> and reaches these screens nowhere.</p>
+    <code>darkColorScheme</code> and not the keyboard's palette. That one is built by
+    <code>ColorScheme.kt</code> and reaches these screens only inside a preview of the
+    keyboard &mdash; <code>UixThemeAuto</code> on the layout and gesture previews, and
+    <code>ThemePreview</code> on the Themes screen &mdash; never as the ground a settings
+    row sits on.</p>
   </div>
 </div>
 
@@ -411,7 +415,7 @@ table.num td.names { color: var(--muted); }
     <h3>Large collapsing title</h3>
     <p>Expanded: 28&nbsp;sp, with 16&nbsp;dp of space above it and 16 below. The generous space is the point &mdash; it puts the title where a thumb is not, and the content where it is.</p>
     <p>Collapsed: the row title at 16&nbsp;sp with the back arrow, 49&nbsp;dp tall &mdash; 12&nbsp;dp above and below a 24&nbsp;dp icon, and a hairline beneath. It appears on scroll, which the app already does; what it does not do is use a real app bar to do it.</p>
-    <p><b>Compose:</b> <code>Scaffold</code> + <code>LargeTopAppBar</code> with <code>enterAlwaysScrollBehavior</code> &mdash; asked for, not built. <code>ScreenTitle</code> keeps its <code>showBack = true</code> call sites and hands the title to <code>CollapsedScreenTitle</code> through a scroll anchor instead. The rest are section headers and become the component below.</p>
+    <p><b>Compose:</b> in <code>settings/Components.kt</code>. <code>Scaffold</code> + <code>LargeTopAppBar</code> with <code>enterAlwaysScrollBehavior</code> &mdash; asked for, not built. <code>ScreenTitle</code> keeps its <code>showBack = true</code> call sites and hands the title to <code>CollapsedScreenTitle</code> through a scroll anchor instead. The rest are section headers and become the component below.</p>
   </div>
 </div>
 
@@ -461,7 +465,7 @@ table.num td.names { color: var(--muted); }
       <tr><td>Header case</td><td class="was">UPPER, 0.08em</td><td>Sentence, accent</td></tr>
       <tr><td>Space above header</td><td class="was">28 dp</td><td>24 dp</td></tr>
     </table>
-    <p><b>Compose:</b> <code>SettingSectionHeader</code> and <code>SettingsCard</code> &mdash; a <code>Surface</code> rather than a <code>Card</code> &mdash; replacing <code>ScreenTitle(showBack = false)</code>, with <code>SettingsCardItem</code> for the lists that have to stay lazy.</p>
+    <p><b>Compose:</b> in <code>settings/Components.kt</code>: <code>SettingSectionHeader</code> and <code>SettingsCard</code> &mdash; a <code>Surface</code> rather than a <code>Card</code> &mdash; replacing <code>ScreenTitle(showBack = false)</code>, with <code>SettingsCardItem</code> for the lists that have to stay lazy.</p>
   </div>
 </div>
 
@@ -511,7 +515,7 @@ table.num td.names { color: var(--muted); }
       <tr><td>Disabled</td><td class="was">alpha .5</td><td>alpha .38 &mdash; asked, not built, the row still fades to .5</td></tr>
     </table>
     <p>The icon gutter shrinks from a 48&nbsp;dp column to the icon&rsquo;s own 24&nbsp;dp. The wide column existed because <code>NavigationItem</code> drew a 40&nbsp;dp tinted circle. The circle is gone and <code>NavigationItem</code> delegates to <code>SettingItem</code> with a bare 24&nbsp;dp icon, so an iconed row&rsquo;s title starts at 60&nbsp;dp against an un&#8209;iconed one&rsquo;s 20, where it used to be 80 against 20. The gutter is narrower, not gone; closing it entirely would indent every row on the screen to pay for the few that carry an icon.</p>
-    <p><b>Compose:</b> a new <code>SettingRow</code> on M3 <code>ListItem</code> &mdash; used zero times today &mdash; replacing <code>SettingItem</code>, <code>NavigationItem</code>, <code>LanguageConfigurable</code> and <code>LayoutConfigurable</code>. Not built that way: <code>SettingItem</code> was rewritten in place to the two heights, <code>NavigationItem</code> now delegates to it, <code>LanguageConfigurable</code> is deleted, and <code>LayoutConfigurable</code> survives in <code>Languages.kt</code> with no call sites left. <code>ListItem</code> is still used zero times.</p>
+    <p><b>Compose:</b> in <code>settings/Components.kt</code>. A new <code>SettingRow</code> on M3 <code>ListItem</code> &mdash; used zero times today &mdash; replacing <code>SettingItem</code>, <code>NavigationItem</code>, <code>LanguageConfigurable</code> and <code>LayoutConfigurable</code>. Not built that way: <code>SettingItem</code> was rewritten in place to the two heights, <code>NavigationItem</code> now delegates to it, <code>LanguageConfigurable</code> is deleted, and <code>LayoutConfigurable</code> survives in <code>Languages.kt</code> with no call sites left. <code>ListItem</code> is still used zero times.</p>
   </div>
 </div>
 
@@ -614,7 +618,7 @@ table.num td.names { color: var(--muted); }
     <p><b>The current value becomes the subtitle.</b> That is the standard two&#8209;line row at 72&nbsp;dp, so the picker introduces no new height and no new left edge, and the value gets a full line to itself instead of competing with the label for one. It takes the accent, because it is the part that changes.</p>
     <p><b>The options move into a sheet</b>, where a long option has room to be read in full rather than truncated to fit a control. The sheet is radio rows from this same kit, so nothing new is invented for it.</p>
     <p>The radio sits in the row&rsquo;s 24&nbsp;dp leading slot, sharing its text edge with an icon; M3&rsquo;s <code>RadioButton</code> draws a 20&nbsp;dp glyph inside it. Today it sits in the 48&nbsp;dp icon column, so every radio option is indented 80&nbsp;dp.</p>
-    <p><b>Compose:</b> <code>DropDownPickerSettingItem</code> keeps its signature and stops rendering <code>DropDownPicker</code> as <code>subcontent</code>; it becomes a <code>SettingItem</code> that passes the current selection as its own <code>subcontent</code>, with a <code>ModalBottomSheet</code> whose rows are <code>SettingItem</code> carrying a <code>RadioButton</code> in the icon slot rather than <code>SettingRadio</code> itself. <code>SettingRadio</code> is unchanged apart from no longer emitting a section header for its own label.</p>
+    <p><b>Compose:</b> in <code>settings/Components.kt</code>. <code>DropDownPickerSettingItem</code> keeps its signature and stops rendering <code>DropDownPicker</code> as <code>subcontent</code>; it becomes a <code>SettingItem</code> that passes the current selection as its own <code>subcontent</code>, with a <code>ModalBottomSheet</code> whose rows are <code>SettingItem</code> carrying a <code>RadioButton</code> in the icon slot rather than <code>SettingRadio</code> itself. <code>SettingRadio</code> is unchanged apart from no longer emitting a section header for its own label.</p>
     <table class="num">
       <tr><th></th><th>Today</th><th>Kit</th></tr>
       <tr><td>Control</td><td class="was">outlined box, 1&nbsp;dp border</td><td>row + sheet</td></tr>
@@ -665,7 +669,7 @@ table.num td.names { color: var(--muted); }
     three use <code>OutlinedButton</code>, in two files. Two offer a single button; two
     more declare one slot and then hand-roll a <code>Row</code> of two or three inside
     it.</p>
-    <p><b>Compose:</b> <code>Tip</code> and <code>WarningTip</code> keep their signatures. The shared <code>AlertDialog</code> wrapper, so the call sites stop each choosing their own button order, is not built &mdash; all thirteen still declare their own buttons, and they do not agree on the
+    <p><b>Compose:</b> in <code>settings/Components.kt</code>. <code>Tip</code> and <code>WarningTip</code> keep their signatures. The shared <code>AlertDialog</code> wrapper, so the call sites stop each choosing their own button order, is not built &mdash; all thirteen still declare their own buttons, and they do not agree on the
     control: three reach for <code>OutlinedButton</code>, and two build a button row by
     hand inside a single slot. <code>SettingsEmptyState</code> is new, and shipped.</p>
   </div>
@@ -844,7 +848,7 @@ table.num td.names { color: var(--muted); }
     <p><b>Nothing shares a left edge.</b> On the actions panel the chevron&rsquo;s stroke starts at x&nbsp;57, the back arrow&rsquo;s at 142, and the card grid at 120 &mdash; three different left edges in one view. The kit gives the gutter a single centreline and hangs the control on it.</p>
     <p><b>In an action window it stays.</b> This section previously said the opposite &mdash; that a panel&rsquo;s own back arrow and this chevron are two left&#8209;pointing glyphs in one view, so the control should disappear while a panel is open. It was built that way and then reversed after use: a control that vanishes when a panel opens reads as the panel having broken it, and one&#8209;handed reach is exactly as awkward on a panel as it is on the keys. The two glyphs sit on different grounds &mdash; the back arrow on the panel, this on the keyboard&rsquo;s gutter &mdash; which is what separates them.</p>
     <p><b>It is narrower than its gutter.</b> 40&nbsp;dp against a gutter of about 51, which leaves roughly 11&nbsp;dp of empty ground between the control and the nearest key. Padding cannot buy that gap: the control is pinned to the screen edge and the keys start where the one&#8209;handed layout puts them, so padding grows the node without moving either edge. The touch target keeps its full 48&nbsp;dp height.</p>
-    <p><b>Compose:</b> <code>UixManager.OneHandedOptions</code>. The <code>Column</code> and its <code>Spacer(weight)</code> become a centred column holding both controls, and the 48&nbsp;dp hit targets are kept. As built it is not the circle this section first drew: the container is 40&nbsp;dp wide at <code>keyboardContainer</code>, square against the screen edge it touches and rounded on the inner side only, because a circle floating a hairline off the edge reads as unattached. Long&#8209;press&#8209;to&#8209;exit and <code>HideOneHandedExitButtonSetting</code> are unchanged.</p>
+    <p><b>Compose:</b> <code>UixManager.OneHandedOptions</code> in <code>uix/UixManager.kt</code>. The <code>Column</code> and its <code>Spacer(weight)</code> become a centred column holding both controls, and the 48&nbsp;dp hit targets are kept. As built it is not the circle this section first drew: the container is 40&nbsp;dp wide at <code>keyboardContainer</code>, square against the screen edge it touches and rounded on the inner side only, because a circle floating a hairline off the edge reads as unattached. Long&#8209;press&#8209;to&#8209;exit and <code>HideOneHandedExitButtonSetting</code> are unchanged.</p>
   </div>
 </div>
 
