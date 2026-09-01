@@ -371,11 +371,14 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
                         tint = if(clipboardEntry.pinned) {
                             onColor
                         } else {
-                            // Full strength. At 16dp this is a non-text element
-                            // against a 3:1 threshold, and half of it came out
-                            // between 2.96 and 3.28 on the light presets -- only
-                            // just clearing it, and not at all on Classic
-                            // Material Light.
+                            // Full strength. At 16dp this is a non-text
+                            // element against a 3:1 threshold. What was here --
+                            // contentColorFor(surfaceContainer) at half alpha over
+                            // Material's baseline lilac -- came out 2.96 to 3.29
+                            // across the light presets and failed Classic Material
+                            // Light. Half of onSurfaceVariant over keyboardContainer
+                            // would be worse still: 2.27 to 2.68, clearing on none
+                            // of the seven.
                             scheme.onSurfaceVariant
                         },
                         modifier = Modifier.size(16.dp).rotate(

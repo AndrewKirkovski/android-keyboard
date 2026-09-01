@@ -714,10 +714,10 @@ private fun EmojiCategoriesContainer(
             ) {
                 // Full strength either way, as on the keyboard-mode tiles
                 // (KeyboardSizingActions.kt). Every category has a 24dp icon, so
-                // the bar is the 3:1 an icon needs rather than 4.5:1, and 60% left
-                // these between 3.7 and 4.6 on the light presets -- clear of it
-                // with nothing spare. The filled pill already says which category
-                // is selected.
+                // the bar is the 3:1 an icon needs rather than 4.5:1, and 60% of
+                // onBackground cleared it on all seven light presets, 3.7 to 4.5.
+                // This is consistency rather than contrast: the filled pill already
+                // says which category is selected, so the alpha said it twice.
                 val color = if (isActive) {
                     MaterialTheme.colorScheme.onSecondary
                 } else {

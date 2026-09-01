@@ -121,9 +121,11 @@ fun BoxScope.ResizerRect(onDragged: (DragDelta) -> Boolean, showResetApply: Bool
         .clip(shape)
     ) {
         val primaryColor = MaterialTheme.colorScheme.primary
-        // primaryContainer rather than inversePrimary. ColorScheme.kt now maps the
-        // two to the same colour; before it did, this handle came out Material's
-        // baseline purple.
+        // primaryContainer rather than inversePrimary. The nineteen static presets
+        // never set inversePrimary, so under one of those this handle came out
+        // Material's baseline purple. The extended builders map it to
+        // primaryContainer now; the wrapped dynamic and zip schemes still carry
+        // their own, which is a wallpaper colour rather than an accent.
     val primaryInverseColor = MaterialTheme.colorScheme.primaryContainer
         val errorColor = MaterialTheme.colorScheme.error
         val radius = with(LocalDensity.current) { 24.dp.toPx() }

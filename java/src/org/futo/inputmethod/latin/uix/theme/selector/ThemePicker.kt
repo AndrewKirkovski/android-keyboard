@@ -107,10 +107,13 @@ fun ThemePreview(colors: KeyboardColorScheme, name: String, loading: Boolean, is
         Dp.Hairline
     }
 
-    // primary, not inversePrimary: the settings app's palette leaves that role
-    // unset, and the static presets did too until ColorScheme.kt began filling it,
-    // so the border marking the theme in use came out Material's baseline purple on
-    // both surfaces this is drawn on.
+    // primary, not inversePrimary. This reads the ambient scheme, which is the
+    // settings app's palette on the Themes screen and the selected theme on the
+    // keyboard's own panel. Neither the app's palette nor the nineteen static
+    // presets set inversePrimary until ColorScheme.kt began filling it, so under
+    // either the border marking the theme in use came out Material's baseline
+    // purple; under a dynamic or zip theme it came out a wallpaper colour. Neither
+    // is an accent.
     val borderColor = if (isSelected) {
         currColors.primary
     } else {
@@ -273,7 +276,7 @@ fun DynamicThemePreview(isSelected: Boolean = false, onClick: () -> Unit = { }) 
  *
  * On `surfaceVariant` these were #F0EEE9 on a #F4F3EF ground -- four units apart, so in
  * light they read as empty space rather than as buttons. An icon on its own also left
- * "browse online" as something to guess at, next to eight tiles that all name
+ * "browse online" as something to guess at, next to a grid of tiles that all name
  * themselves. The card surface is what the rest of the app puts content on, and it
  * separates from the ground in both themes.
  */
