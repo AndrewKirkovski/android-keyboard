@@ -151,7 +151,7 @@ opening the panel on a phone at 1080px rather than by reading the code.
 - **Hide the one-handed exit button.** It used to sit at the bottom of the
   gutter, inside the arc a thumb sweeps while typing one-handed, where it got
   caught by accident; it sits above the switch-hands chevron now, so the setting
-  under Keyboard → Resize is a preference rather than a remedy. A long press on
+  under Keys & layout → Resize keyboard is a preference rather than a remedy. A long press on
   the chevron leaves one-handed mode either way.
 - **Background images can be blurred.** Opacity was already a theme-file field;
   sharpness was not. `AdvancedThemeOptions.backgroundImageBlur` defaults to 0dp.

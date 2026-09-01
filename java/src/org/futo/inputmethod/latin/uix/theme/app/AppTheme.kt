@@ -208,8 +208,9 @@ val AppTypography = Typography(
 
 /**
  * Five steps, for the components. A dozen RoundedCornerShape call sites remain under
- * settings/ -- developer screens, the theme editor's chrome and a few one-offs -- which
- * this does not reach.
+ * settings/: developer screens and the theme editor's chrome, a handful on individual
+ * screens, and three in Components.kt itself -- two of which already draw the radii
+ * this object names, and could read them from here instead.
  * MaterialTheme.shapes was previously supplied to nothing and used zero times.
  *
  * [Shapes.large] is the one that matters: it is the grouped card every settings row

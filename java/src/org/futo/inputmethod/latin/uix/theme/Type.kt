@@ -8,9 +8,10 @@ import androidx.compose.ui.unit.sp
 /**
  * Superseded by [org.futo.inputmethod.latin.uix.theme.app.AppTypography], which is now
  * supplied to MaterialTheme on both sides of the app. Nothing under settings/ reads this
- * any more. What remains is the keyboard's own panels, plus ThemePreview, which is
- * shared with the settings Themes screen -- all out of scope for the settings redesign
- * and migrated with the keyboard work rather than ahead of it.
+ * any more. What remains is keyboard-side -- its panels, its window bar, the floating
+ * pre-edit, the quick-clip pill and two dialogs -- plus ThemePreview, which is shared
+ * with the settings Themes screen. All out of scope for the settings redesign, and
+ * migrated with the keyboard work rather than ahead of it.
  *
  * Do not add uses. Five of the ten styles below set lineHeight equal to fontSize, which
  * crushes any string that wraps -- the reason it is being retired.

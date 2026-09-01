@@ -357,10 +357,11 @@ table.num td.names { color: var(--muted); }
     <p><b>Compose:</b> <code>AppLightColors</code> and <code>AppDarkColors</code> in
     <code>theme/app/AppTheme.kt</code>, which are <code>lightColorScheme</code> and
     <code>darkColorScheme</code> and not the keyboard's palette. That one is built by
-    <code>ColorScheme.kt</code> and reaches these screens only inside a preview of the
-    keyboard &mdash; <code>UixThemeAuto</code> on the layout and gesture previews, and
-    <code>ThemePreview</code> on the Themes screen &mdash; never as the ground a settings
-    row sits on.</p>
+    <code>ColorScheme.kt</code>, and the boundary is what it is the ground <em>of</em>:
+    never a settings row, but anything drawing the keyboard itself, which these screens
+    do in several places and by more than one route &mdash; a Compose wrapper on some,
+    and on others the activity's own <code>DynamicThemeProvider</code>, which a
+    <code>KeyboardView</code> reads without any wrapper at all.</p>
   </div>
 </div>
 
@@ -676,7 +677,7 @@ table.num td.names { color: var(--muted); }
 </div>
 
 <h2 class="sec">A language</h2>
-<p class="lede">Designed from what a language <em>is</em> in the data, not from what the screen shows today. A language carries an identity, three resource slots, one or more layouts, one multilingual flag, and a way to be removed &mdash; and when it is the <em>only</em> language, three of those controls have nothing to act on.</p>
+<p class="lede">Designed from what a language <em>is</em> in the data, not from what the screen shows today. A language carries an identity, three resource slots, one or more layouts, one multilingual flag, and a way to be removed &mdash; and when it is the <em>only</em> language, two of those controls have nothing to act on.</p>
 
 <div class="item">
   <div class="pair">
@@ -727,7 +728,7 @@ table.num td.names { color: var(--muted); }
     <p>The data says five things: a name, three resource slots (<code>LanguageOptions</code> &mdash; dictionary, transformer, voice input, each a nullable filename), a list of layouts, a multilingual flag, and deletion. That is the whole surface. Everything below follows from it.</p>
     <p><b>Layouts come first.</b> They are what somebody opens this screen to change; the three model slots are plumbing that is correct by default. Today the order is reversed.</p>
     <p><b>A slot has three states, not two.</b> A named file, a built&#8209;in fallback, or nothing at all. All three used to render as a name or the word &ldquo;None&rdquo;, so &ldquo;none, and that is fine&rdquo; looks identical to &ldquo;none, and prediction is off.&rdquo; The ask was for the chip to carry the difference, with only the state that needs attention taking colour. It is built for the two slots that have a built-in to fall back to: a dictionary with one reads &ldquo;Built-in Dictionary&rdquo; on the neutral chip, a voice model with one names its fallback, and only a genuine gap takes the amber <code>MissingChip</code>. Only the transformer slot conflates them, and <code>ConfirmResourceActionDialog</code> treats that kind as always having a fallback. What is not built is the <em>type</em>: the state is inferred from whether a string came back rather than carried, so a reader of <code>LanguageOptions</code> cannot tell the two apart without knowing how each slot is filled.</p>
-    <p><b>With one language, three controls are inert.</b> The layout cannot be removed (there would be none), the language cannot be removed (there would be none), and multilingual typing needs a second language before it means anything. The card shows that, instead of offering controls that quietly do nothing: the multilingual row is disabled and says why, and the two removals are absent rather than greyed.</p>
+    <p><b>With one language, two controls are inert.</b> The language cannot be removed (there would be none), and multilingual typing needs a second language before it means anything. The card shows that, instead of offering controls that quietly do nothing: the multilingual row is disabled and says why, and the removal is absent rather than greyed. Layout removal is a separate rule and a separate condition &mdash; a language must keep one layout, so the last one has no remove whether or not the language has company.</p>
     <p><b>Destruction moves to the overflow.</b> A full&#8209;width filled red button is the loudest thing on the screen, and it is the action wanted least often.</p>
     <p><b>Compose:</b> <code>LanguageSurface</code> is rebuilt in <code>pages/Languages.kt</code>. <code>LanguageConfigurable</code> (50&nbsp;dp) and <code>ActionableItem</code> are deleted and their rows become the standard 56&nbsp;dp row; <code>LayoutConfigurable</code> (44&nbsp;dp) survives in <code>Languages.kt</code> with no call sites left. <code>LanguageOptions</code> gaining a per&#8209;slot state, so the chip can tell a fallback from a gap, is not built &mdash; it is still three nullable filenames.</p>
     <table class="num">
