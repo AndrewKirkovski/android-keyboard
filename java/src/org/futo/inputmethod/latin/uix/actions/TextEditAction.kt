@@ -1,7 +1,11 @@
 package org.futo.inputmethod.latin.uix.actions
 
+import android.graphics.Bitmap
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.view.KeyEvent
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
@@ -25,16 +29,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -46,6 +51,8 @@ import org.futo.inputmethod.latin.uix.Action
 import org.futo.inputmethod.latin.uix.ActionWindow
 import org.futo.inputmethod.latin.uix.LocalKeyboardScheme
 import org.futo.inputmethod.latin.uix.LocalThemeProvider
+import org.futo.inputmethod.v2keyboard.KeyVisualStyle
+import kotlin.math.roundToInt
 
 @Composable
 fun IconWithColor(@DrawableRes iconId: Int, iconColor: Color, modifier: Modifier = Modifier) {
@@ -75,7 +82,7 @@ fun TogglableKey(
     modifier: Modifier = Modifier,
     contents: @Composable (color: Color) -> Unit
 ) {
-    val keys = panelKeyColors()
+    val key = panelKey(if (toggled) KeyVisualStyle.StickyOn else KeyVisualStyle.Functional)
 
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -89,23 +96,27 @@ fun TogglableKey(
     Surface(
         modifier = modifier
             .padding(4.dp)
-            .keyShadow(if (toggled) 0.dp else keys.elevation, keys.shadowColor)
+            .keyBackground(if (isPressed) key.backgroundPressed else key.background)
             .clickable(
                 interactionSource = interactionSource,
-                indication = LocalIndication.current,
+                indication = null,
                 onClick = { }
             ),
         shape = RoundedCornerShape(8.dp),
-        color = if(toggled) { keys.accent } else { keys.functionalKey }
+        color = key.fill
     ) {
-        contents(if(toggled) { keys.onAccent } else { keys.onKey })
+        contents(if (isPressed) key.contentPressed else key.content)
     }
 
 }
 
 @Composable
-fun Modifier.repeatablyClickableAction(repeatable: Boolean = true, onTrigger: (Boolean) -> Unit): Modifier {
-    val interactionSource = remember { MutableInteractionSource() }
+fun Modifier.repeatablyClickableAction(
+    repeatable: Boolean = true,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    indication: Indication? = LocalIndication.current,
+    onTrigger: (Boolean) -> Unit
+): Modifier {
     val currentOnTrigger by rememberUpdatedState(onTrigger)
 
     LaunchedEffect(interactionSource, repeatable) {
@@ -138,98 +149,130 @@ fun Modifier.repeatablyClickableAction(repeatable: Boolean = true, onTrigger: (B
 
     return this.clickable(
         interactionSource = interactionSource,
-        indication = LocalIndication.current,
+        indication = indication,
         onClick = { }
     )
 }
 
 /**
- * The three key treatments the keyboard itself draws, so a panel built out of
- * keys matches the keys under it. [BasicThemeProvider] builds the keyboard's own
- * from exactly these roles: an ordinary key, a functional key, and the pair it
- * puts on a latched one -- KeyVisualStyle.StickyOn, which is secondary rather
- * than the enter key's primary. It also drops both fills to transparent on a theme with
- * key borders off, which is why this reads the provider rather than the colour
- * scheme alone -- a panel that ignored it would draw filled boxes over a
- * keyboard that draws none.
+ * The keyboard's own drawing of a key, for a panel that is built out of keys.
+ *
+ * [BasicThemeProvider] gives each key style a drawable rather than a colour, because a
+ * theme can put more on a key than a fill: a corner radius, and a shadow drawn through
+ * Paint.setShadowLayer. The panel used to rebuild that out of colour-scheme roles and
+ * reproduce the rest, and the shadow is what showed the cost of reproducing it --
+ * Compose's elevation scales the shadow colour it is handed by the theme's own shadow
+ * alpha, and ignores it entirely below API 28, so a panel matched against one theme
+ * came out wrong on the next. Reading the style hands over fill, radius, shadow and
+ * pressed state together, and they are the key's rather than a copy of the key's.
+ *
+ * The three styles the panel uses are the three it is made of: an ordinary key, a
+ * functional key, and the one the keyboard puts on a latched modifier --
+ * KeyVisualStyle.StickyOn, which is secondary rather than the enter key's primary.
+ * Key borders need no handling here: the provider already drops these fills to
+ * transparent, and their shadows with them, when borders are off.
  */
-private class PanelKeyColors(
-    val key: Color,
-    val functionalKey: Color,
-    val onKey: Color,
-    val accent: Color,
-    val onAccent: Color,
-    val elevation: Dp,
-    val shadowColor: Color
+private class PanelKey(
+    val background: Drawable?,
+    val backgroundPressed: Drawable?,
+    /** Stands in for [background] where there is none to read, which means a preview. */
+    val fill: Color,
+    val content: Color,
+    val contentPressed: Color
 )
 
 @Composable
-private fun panelKeyColors(): PanelKeyColors {
-    val scheme = LocalKeyboardScheme.current
-    // A preview has no theme provider, and reading it there throws.
-    val borders = LocalInspectionMode.current || LocalThemeProvider.current.keyBorders
+private fun panelKey(style: KeyVisualStyle): PanelKey {
+    // A preview has no theme provider, and reading it there throws. It gets flat colour
+    // from the scheme instead: a preview shows the arrangement, not the material.
+    if (LocalInspectionMode.current) {
+        val scheme = LocalKeyboardScheme.current
+        val latched = style == KeyVisualStyle.StickyOn
+        val content = if (latched) scheme.onSecondary else scheme.onKeyboardContainer
+        return PanelKey(
+            background = null,
+            backgroundPressed = null,
+            fill = when {
+                latched -> scheme.secondary
+                style == KeyVisualStyle.Functional -> scheme.keyboardContainerVariant
+                else -> scheme.keyboardContainer
+            },
+            content = content,
+            contentPressed = content
+        )
+    }
 
-    return PanelKeyColors(
-        key = if (borders) scheme.keyboardContainer else Color.Transparent,
-        functionalKey = if (borders) scheme.keyboardContainerVariant else Color.Transparent,
-        onKey = if (borders) scheme.onKeyboardContainer else scheme.onBackground,
-        accent = scheme.secondary,
-        onAccent = scheme.onSecondary,
-        // A theme that gives its keys a shadow has to give the panel's the same
-        // one, or a panel of keys sits on the keyboard looking like a different
-        // material. BasicThemeProvider bakes that shadow into the key's own
-        // drawable and this does not reuse it, so the blur radius the theme asks
-        // for becomes an elevation and the colour is carried across separately --
-        // Compose would otherwise substitute its own, and the two Samsung themes
-        // differ only in shadow colour, sharing a radius.
-        //
-        // Suppressed with borders off to match BasicThemeProvider, which drops
-        // the shadow with them: "only a key that draws a background can cast a
-        // shadow".
-        elevation = if (borders) {
-            scheme.advancedThemeOptions.keyShadow?.radius ?: 0.dp
-        } else {
-            0.dp
-        },
-        shadowColor = Color(scheme.advancedThemeOptions.keyShadow?.color ?: 0)
+    val key = LocalThemeProvider.current.getKeyStyleDescriptor(style)
+    return PanelKey(
+        background = key.backgroundDrawable,
+        backgroundPressed = key.backgroundDrawablePressed,
+        fill = Color.Transparent,
+        content = Color(key.foregroundColor),
+        contentPressed = Color(key.foregroundColorPressed)
     )
 }
 
 /**
- * The key shadow the theme asks for, in the theme's own colour.
+ * Draws a key background behind the content, at the size the key is.
  *
- * A latched key passes 0: BasicThemeProvider builds KeyVisualStyle.StickyOn with no
- * shadow, so a shift-locked key on the keyboard casts none and one in a panel must
- * not either.
+ * A drawable that casts a shadow insets its fill to leave the shadow room, and reports
+ * that inset through getPadding -- so growing the bounds by it lands the fill exactly on
+ * the box being modified and puts the shadow in the gap around it, which is where the
+ * keyboard's own shadows fall. A drawable with no shadow reports nothing and lands
+ * unchanged.
+ *
+ * The result is kept as an image rather than redrawn each frame. One drawable is shared
+ * by every key of a style, and the shadowed one caches a bitmap against the last bounds
+ * it drew at, so keys of two sizes taking turns would each throw away the other's.
  */
-private fun Modifier.keyShadow(elevation: Dp, color: Color): Modifier =
-    if (elevation <= 0.dp) this else this.shadow(
-        elevation = elevation,
-        shape = RoundedCornerShape(8.dp),
-        clip = false,
-        ambientColor = color,
-        spotColor = color
-    )
+private fun Modifier.keyBackground(drawable: Drawable?): Modifier =
+    if (drawable == null) this else drawWithCache {
+        val spill = Rect()
+        drawable.getPadding(spill)
+        val width = size.width.roundToInt() + spill.left + spill.right
+        val height = size.height.roundToInt() + spill.top + spill.bottom
+
+        val image = if (width > 0 && height > 0) {
+            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also {
+                drawable.setBounds(0, 0, width, height)
+                drawable.draw(android.graphics.Canvas(it))
+            }.asImageBitmap()
+        } else {
+            null
+        }
+
+        val origin = Offset(-spill.left.toFloat(), -spill.top.toFloat())
+        onDrawBehind {
+            image?.let { drawImage(it, topLeft = origin) }
+        }
+    }
 
 @Composable
 fun ActionKey(
     onTrigger: () -> Unit,
     modifier: Modifier = Modifier,
     repeatable: Boolean = true,
-    color: Color = panelKeyColors().key,
+    style: KeyVisualStyle = KeyVisualStyle.Normal,
     contents: @Composable () -> Unit
 ) {
-    val keys = panelKeyColors()
+    val key = panelKey(style)
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+
     Surface(
         modifier = modifier
             .padding(4.dp)
-            .keyShadow(keys.elevation, keys.shadowColor)
+            .keyBackground(if (pressed) key.backgroundPressed else key.background)
             .repeatablyClickableAction(
                 repeatable = repeatable,
+                interactionSource = interactionSource,
+                // The pressed drawable is the keyboard's own press feedback, and a
+                // ripple over it would be a second one.
+                indication = null,
                 onTrigger = { onTrigger() }
             ),
         shape = RoundedCornerShape(8.dp),
-        color = color
+        color = key.fill
     ) {
         contents()
     }
@@ -240,7 +283,7 @@ fun ArrowKeys(
     modifier: Modifier,
     moveCursor: (direction: Direction) -> Unit
 ) {
-    val keys = panelKeyColors()
+    val key = panelKey(KeyVisualStyle.Normal)
 
     Row(modifier = modifier) {
         ActionKey(
@@ -251,7 +294,7 @@ fun ArrowKeys(
         ) {
             IconWithColor(
                 iconId = R.drawable.arrow_left,
-                iconColor = keys.onKey
+                iconColor = key.content
             )
         }
 
@@ -266,7 +309,7 @@ fun ArrowKeys(
             ) {
                 IconWithColor(
                     iconId = R.drawable.arrow_up,
-                    iconColor = keys.onKey
+                    iconColor = key.content
                 )
             }
 
@@ -279,7 +322,7 @@ fun ArrowKeys(
             ) {
                 IconWithColor(
                     iconId = R.drawable.arrow_down,
-                    iconColor = keys.onKey
+                    iconColor = key.content
                 )
             }
         }
@@ -292,7 +335,7 @@ fun ArrowKeys(
         ) {
             IconWithColor(
                 iconId = R.drawable.arrow_right,
-                iconColor = keys.onKey
+                iconColor = key.content
             )
         }
     }
@@ -330,7 +373,7 @@ fun CtrlShiftMetaKeys(modifier: Modifier, ctrlState: MutableState<Boolean>, shif
 
 @Composable
 fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int) -> Unit, keyboardShown: Boolean) {
-    val keys = panelKeyColors()
+    val key = panelKey(KeyVisualStyle.Functional)
 
     // The column beside this one splits 3:1 -- arrows over modifiers -- so its one
     // horizontal line sits at three quarters. Four side keys land on that line by
@@ -346,12 +389,12 @@ fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int)
                 .weight(clipboardKeyWeight)
                 .fillMaxWidth(),
             repeatable = false,
-            color = keys.functionalKey,
+            style = KeyVisualStyle.Functional,
             onTrigger = { onEvent(KeyEvent.KEYCODE_C, KeyEvent.META_CTRL_ON) }
         ) {
             IconWithColor(
                 iconId = R.drawable.copy,
-                iconColor = keys.onKey
+                iconColor = key.content
             )
         }
 
@@ -360,12 +403,12 @@ fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int)
                 .weight(clipboardKeyWeight)
                 .fillMaxWidth(),
             repeatable = false,
-            color = keys.functionalKey,
+            style = KeyVisualStyle.Functional,
             onTrigger = { onEvent(KeyEvent.KEYCODE_V, KeyEvent.META_CTRL_ON) }
         ) {
             IconWithColor(
                 iconId = R.drawable.clipboard,
-                iconColor = keys.onKey
+                iconColor = key.content
             )
         }
 
@@ -375,12 +418,12 @@ fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int)
                     .weight(1.0f)
                     .fillMaxWidth(),
                 repeatable = true,
-                color = keys.functionalKey,
+                style = KeyVisualStyle.Functional,
                 onTrigger = { onCodePoint(Constants.CODE_DELETE) }
             ) {
                 IconWithColor(
                     iconId = R.drawable.delete,
-                    iconColor = keys.onKey
+                    iconColor = key.content
                 )
             }
         }
@@ -394,12 +437,12 @@ fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int)
                     .weight(1.0f)
                     .fillMaxHeight(),
                 repeatable = false,
-                color = keys.functionalKey,
+                style = KeyVisualStyle.Functional,
                 onTrigger = { onEvent(KeyEvent.KEYCODE_Z, KeyEvent.META_CTRL_ON) }
             ) {
                 IconWithColor(
                     iconId = R.drawable.undo,
-                    iconColor = keys.onKey
+                    iconColor = key.content
                 )
             }
 
@@ -408,12 +451,12 @@ fun SideKeys(modifier: Modifier, onEvent: (Int, Int) -> Unit, onCodePoint: (Int)
                     .weight(1.0f)
                     .fillMaxHeight(),
                 repeatable = false,
-                color = keys.functionalKey,
+                style = KeyVisualStyle.Functional,
                 onTrigger = { onEvent(KeyEvent.KEYCODE_Y, KeyEvent.META_CTRL_ON) }
             ) {
                 IconWithColor(
                     iconId = R.drawable.redo,
-                    iconColor = keys.onKey
+                    iconColor = key.content
                 )
             }
         }
