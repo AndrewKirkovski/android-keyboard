@@ -167,9 +167,11 @@ fun FloatingPreEditView(
                 preedit.entries.forEach {
                     Text(
                         it.text, style = Typography.SmallMl.copy(
-                            // The same pair the editing branch above uses. This
-                            // was Black on DarkGray over a grey plate, which on a
-                            // dark theme was dark text on dark ground.
+                            // The same surface the editing branch above sits on,
+                            // with the palette's own quieter partner for the
+                            // entries that are not highlighted. This was Black on
+                            // DarkGray over a grey plate, which on a dark theme was
+                            // dark text on dark ground.
                             color = if (it.highlighted) {
                                 LocalKeyboardScheme.current.onSurface
                             } else {

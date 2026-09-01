@@ -712,10 +712,12 @@ private fun EmojiCategoriesContainer(
                     toggleableState = ToggleableState(isActive)
                 }
             ) {
-                // Full strength either way, for the reason the keyboard-mode
-                // tiles are (KeyboardSizingActions.kt): 60% put the glyph under
-                // its contrast threshold on the light presets, and the filled
-                // pill already says which category is selected.
+                // Full strength either way, as on the keyboard-mode tiles
+                // (KeyboardSizingActions.kt). Every category has a 24dp icon, so
+                // the bar is the 3:1 an icon needs rather than 4.5:1, and 60% left
+                // these between 3.7 and 4.6 on the light presets -- clear of it
+                // with nothing spare. The filled pill already says which category
+                // is selected.
                 val color = if (isActive) {
                     MaterialTheme.colorScheme.onSecondary
                 } else {

@@ -274,18 +274,20 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
 
     // keyboardContainer is the fork's "a container carrying no state" colour --
     // the same one the emoji search bar, the action items and the tiles in All
-    // actions wear. surfaceContainer, which this used to read, is not among the
-    // roles extendedLightColorScheme forwards, so every preset got Material's
-    // baseline lilac instead of the theme's own container.
+    // actions wear. surfaceContainer, which this used to read, was not forwarded
+    // by the extended builders until they were changed alongside this, so the
+    // nineteen static presets got Material's baseline lilac instead of the theme's
+    // own container. The dynamic and zip themes always supplied a real one.
     val scheme = LocalKeyboardScheme.current
     val color = if(clipboardEntry.pinned) {
         scheme.primaryContainer
     } else {
         scheme.keyboardContainer
     }
-    // Named rather than derived: contentColorFor knows Material's own container
-    // pairs, and keyboardContainer is not one of them, so it would match nothing
-    // and fall through to whatever LocalContentColor happened to be.
+    // Named rather than derived. contentColorFor compares by colour value, and the
+    // builders now map surfaceContainer to keyboardContainer, so it would match and
+    // hand back onSurface -- which is not onKeyboardContainer on High Contrast
+    // Yellow or Classic Material Light.
     val onColor = if(clipboardEntry.pinned) {
         scheme.onPrimaryContainer
     } else {
@@ -370,8 +372,10 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
                             onColor
                         } else {
                             // Full strength. At 16dp this is a non-text element
-                            // against a 3:1 threshold, and half of it did not
-                            // clear that on the light presets.
+                            // against a 3:1 threshold, and half of it came out
+                            // between 2.96 and 3.28 on the light presets -- only
+                            // just clearing it, and not at all on Classic
+                            // Material Light.
                             scheme.onSurfaceVariant
                         },
                         modifier = Modifier.size(16.dp).rotate(

@@ -220,10 +220,10 @@ fun extendedDarkColorScheme(
             onBackground               = onSurface,
 
             // Everything below is a role a preset does not take an argument for.
-            // Left out, Material fills them from its own baseline palette -- a
-            // purple-tinted grey that belongs to no theme in the fork -- and any
-            // composable that reads one gets that instead of the keyboard's
-            // colours. That is how the clipboard panel came to draw lilac cards
+            // Left out, Material fills them from its own baseline palette, which
+            // belongs to no theme in the fork -- lilac greys for the surfaces, a
+            // saturated purple for inversePrimary -- and any composable that
+            // reads one gets that instead of the keyboard's colours. That is how the clipboard panel came to draw lilac cards
             // on Sunflower and the selected-theme border came out Material
             // purple. Each is mapped to the nearest colour the preset does
             // supply, so a role that is read is at least the theme's.
@@ -332,10 +332,10 @@ fun extendedLightColorScheme(
             onBackground               = onSurface,
 
             // Everything below is a role a preset does not take an argument for.
-            // Left out, Material fills them from its own baseline palette -- a
-            // purple-tinted grey that belongs to no theme in the fork -- and any
-            // composable that reads one gets that instead of the keyboard's
-            // colours. That is how the clipboard panel came to draw lilac cards
+            // Left out, Material fills them from its own baseline palette, which
+            // belongs to no theme in the fork -- lilac greys for the surfaces, a
+            // saturated purple for inversePrimary -- and any composable that
+            // reads one gets that instead of the keyboard's colours. That is how the clipboard panel came to draw lilac cards
             // on Sunflower and the selected-theme border came out Material
             // purple. Each is mapped to the nearest colour the preset does
             // supply, so a role that is read is at least the theme's.

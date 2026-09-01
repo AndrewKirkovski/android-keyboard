@@ -182,15 +182,15 @@ val LocalNavController = compositionLocalOf<NavHostController?> {
 
 private val UixLocaleFollowsSubtypeLocale = true
 
-// The one-handed control's container. It holds two 48dp targets whose meanings
-// are very different -- one nudges the keyboard across, the other leaves
-// one-handed mode -- so they are given room between them rather than being
-// stacked flush.
 // One density for every scrim the keyboard raises. The dialog used 66% and the
 // action editor 25%, over the same keys, so the same gesture dimmed by two
 // different amounts depending on what it opened.
 const val SCRIM_ALPHA = 0.5f
 
+// The one-handed control's container. It holds two 48dp targets whose meanings
+// are very different -- one nudges the keyboard across, the other leaves
+// one-handed mode -- so they are given room between them rather than being
+// stacked flush.
 private val CONTROL_RADIUS = 24.dp
 private val CONTROL_PADDING = 12.dp
 private val CONTROL_GAP = 20.dp

@@ -107,9 +107,10 @@ fun ThemePreview(colors: KeyboardColorScheme, name: String, loading: Boolean, is
         Dp.Hairline
     }
 
-    // primary, not inversePrimary: neither the keyboard presets nor the settings
-    // app's palette defines that role, so the border marking the theme in use came
-    // out Material's baseline purple on every one of them.
+    // primary, not inversePrimary: the settings app's palette leaves that role
+    // unset, and the static presets did too until ColorScheme.kt began filling it,
+    // so the border marking the theme in use came out Material's baseline purple on
+    // both surfaces this is drawn on.
     val borderColor = if (isSelected) {
         currColors.primary
     } else {

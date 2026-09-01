@@ -1084,8 +1084,9 @@ private fun CandidateItem(modifier: Modifier, it: SuggestedWordInfo, listener: S
     val textStyle =
         suggestionStylePrimary.copy(color = color).withCustomFont()
     // onSurfaceVariant at full strength rather than onSurface at half. This is 8sp,
-    // so it is held to the 4.5:1 text threshold, and halving the alpha halved
-    // whatever ratio the theme had achieved -- which is what the TODO here asked
+    // so it is held to the 4.5:1 text threshold, and halving the alpha cut whatever
+    // ratio the theme had achieved to about a quarter of it -- 11.5 to 3.0 on
+    // Sunflower, 15.6 to 3.3 on Snowfall -- which is what the TODO here asked
     // about. The variant role is the palette's own answer to "quieter than the
     // text beside it".
     val descTextStyle =
