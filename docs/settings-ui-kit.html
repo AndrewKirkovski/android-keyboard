@@ -282,6 +282,30 @@ table.num td.names { color: var(--muted); }
 .tpanel .tk.on { background: var(--kbacc); color: #fff; }
 .tpanel .tk.none { background: transparent; color: var(--kbfg); }
 
+/* ---------------------------------------------------------------
+   This file is a fragment: it carries no doctype, and every consumer
+   supplies one -- publish_kit.py wraps it for the fork's docs copy,
+   and the artifact host wraps it for the published page. That puts
+   the rendered kit in standards mode while the file itself, opened
+   directly, is in quirks mode. Two inherited metrics differ between
+   the two, and the design was settled on the quirks-mode ones. These
+   four rules make standards mode match, so all three copies agree:
+
+     1. Tables inherit the body line-height in standards mode, which
+        loosens every row (+198px over the document).
+     2. A line box holding only inline children gains the parent's
+        strut leading -- 6px under each section tag, 4px on the
+        language specimen card, and a 2px shift of the code chip in
+        the measurement tables.
+
+   Do not open this file without a doctype and expect it to match the
+   published page; the fragment is the source, not a preview.
+   --------------------------------------------------------------- */
+table.num, table.num th, table.num td { line-height: normal; }
+.tag { display: block; width: max-content; }
+.lang .hd .n span { display: block; }
+table.num td > code:only-child { display: block; width: max-content; }
+
 
 .prov { max-width: 62ch; margin: var(--s3) 0 0; padding-top: var(--s3);
         border-top: 1px solid var(--rule); font-size: 14px; color: var(--muted); }
