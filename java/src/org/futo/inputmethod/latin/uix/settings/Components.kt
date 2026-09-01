@@ -1020,10 +1020,10 @@ fun ScrollableList(modifier: Modifier = Modifier, spacing: Dp = 0.dp, horizontal
         // Only a screen title registers itself, and only screens have one -- the panels
         // that render inside the keyboard call SettingSectionHeader directly, which does
         // not. So this appears on settings screens and nowhere else -- but not on all of
-        // them: this is the only provider of the anchor, so the six screens that build
-        // their own LazyColumn or Column rather than scrolling through here (Languages,
-        // settings search, Add language, the personal dictionary's word list, Edit
-        // actions and Theme settings) keep the 28sp title and get no collapsed bar.
+        // them. This is the only provider of the anchor, so a screen gets the bar only
+        // if it both scrolls through here and titles itself with ScreenTitle. Several
+        // build their own LazyColumn or Column, or draw their title as a bare Text, and
+        // keep the 28sp title with nothing to replace it on scroll.
         AnimatedVisibility(
             visible = anchor.scrolledAway,
             enter = fadeIn(),
