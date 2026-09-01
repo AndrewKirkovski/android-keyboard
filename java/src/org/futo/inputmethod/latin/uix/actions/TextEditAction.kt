@@ -105,7 +105,7 @@ fun TogglableKey(
         shape = RoundedCornerShape(8.dp),
         color = key.fill
     ) {
-        contents(if (isPressed) key.contentPressed else key.content)
+        contents(key.content)
     }
 
 }
@@ -169,16 +169,22 @@ fun Modifier.repeatablyClickableAction(
  * The three styles the panel uses are the three it is made of: an ordinary key, a
  * functional key, and the one the keyboard puts on a latched modifier --
  * KeyVisualStyle.StickyOn, which is secondary rather than the enter key's primary.
- * Key borders need no handling here: the provider already drops these fills to
- * transparent, and their shadows with them, when borders are off.
+ * Key borders need no handling here, whatever the provider does with them: an
+ * ordinary or functional key goes transparent and loses its shadow, a latched one
+ * keeps its fill, and the panel matches the keyboard in both cases because it is
+ * asking the same question.
+ *
+ * What it does not ask about is a per-key background image, which an imported theme
+ * can set and the keyboard resolves ahead of the style. A panel key takes the style
+ * either way, so on such a theme it follows the keyboard's colours and not its
+ * bitmaps.
  */
 private class PanelKey(
     val background: Drawable?,
     val backgroundPressed: Drawable?,
-    /** Stands in for [background] where there is none to read, which means a preview. */
+    /** Stands in for [background] where there is none: a preview, or a style with none. */
     val fill: Color,
-    val content: Color,
-    val contentPressed: Color
+    val content: Color
 )
 
 @Composable
@@ -188,7 +194,6 @@ private fun panelKey(style: KeyVisualStyle): PanelKey {
     if (LocalInspectionMode.current) {
         val scheme = LocalKeyboardScheme.current
         val latched = style == KeyVisualStyle.StickyOn
-        val content = if (latched) scheme.onSecondary else scheme.onKeyboardContainer
         return PanelKey(
             background = null,
             backgroundPressed = null,
@@ -197,18 +202,27 @@ private fun panelKey(style: KeyVisualStyle): PanelKey {
                 style == KeyVisualStyle.Functional -> scheme.keyboardContainerVariant
                 else -> scheme.keyboardContainer
             },
-            content = content,
-            contentPressed = content
+            content = if (latched) scheme.onSecondary else scheme.onKeyboardContainer
         )
     }
 
-    val key = LocalThemeProvider.current.getKeyStyleDescriptor(style)
+    val provider = LocalThemeProvider.current
+    val key = provider.getKeyStyleDescriptor(style)
     return PanelKey(
         background = key.backgroundDrawable,
         backgroundPressed = key.backgroundDrawablePressed,
         fill = Color.Transparent,
-        content = Color(key.foregroundColor),
-        contentPressed = Color(key.foregroundColorPressed)
+        // The background is the key's; the icon colour is not. A style's
+        // foregroundColor is emptied by touch typing mode, which hides the letters
+        // so their positions have to be learned -- a rule about labels, and the
+        // provider does not apply it to the action bar's icons. The panel is icons
+        // too, so it takes the same colour they do. A latched key keeps the style's,
+        // which is onSecondary and is not something that mode touches.
+        content = if (style == KeyVisualStyle.StickyOn) {
+            Color(key.foregroundColor)
+        } else {
+            Color(provider.onKeyColor)
+        }
     )
 }
 
@@ -232,7 +246,10 @@ private fun Modifier.keyBackground(drawable: Drawable?): Modifier =
         val width = size.width.roundToInt() + spill.left + spill.right
         val height = size.height.roundToInt() + spill.top + spill.bottom
 
-        val image = if (width > 0 && height > 0) {
+        // The key's own size, not the grown one: a shadow's spill is non-zero, so a
+        // node measured to nothing still gives a positive width here and would paint
+        // a smudge of shadow with no key inside it.
+        val image = if (size.width >= 1f && size.height >= 1f) {
             Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also {
                 drawable.setBounds(0, 0, width, height)
                 drawable.draw(android.graphics.Canvas(it))

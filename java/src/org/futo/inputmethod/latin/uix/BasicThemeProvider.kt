@@ -156,6 +156,7 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
     override val keyboardColor: Int
     override val actionBarColor: Color
     override val keyColor: Int
+    override val onKeyColor: Int
 
     override val keyboardBackground: Drawable
     override val keyBackground: Drawable
@@ -434,6 +435,8 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
         } else {
             onBackground
         }
+
+        this.onKeyColor = onKeyColor
 
         val onKeyColorHalf = Color(onKeyColor).copy(alpha = 0.5f).toArgb()
         val onKeyColorThird = Color(onKeyColor).copy(alpha = 0.33f).toArgb()

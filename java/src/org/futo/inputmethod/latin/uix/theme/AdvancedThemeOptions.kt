@@ -27,9 +27,11 @@ data class KeyIcon(
  * as it did before.
  *
  * Which keys that covers is BasicThemeProvider's to decide, and it is narrower than
- * "the filled ones": a latched modifier and the enter key are both filled and cast
- * nothing, a pressed key drops the shadow it had, and turning key borders off drops
- * it along with the fill.
+ * "the filled ones". A latched modifier, the enter key and the spacebar are filled
+ * and cast nothing; a pressed key drops the shadow it had; and turning key borders
+ * off drops the shadow from the keys that then lose their fill, which is not all of
+ * them -- the spacebar and a latched modifier stay filled and go on casting
+ * nothing.
  *
  * The shadow is drawn into the gap that already exists between keys rather than
  * widening it, because that gap also feeds hit testing, KeyDetector and gesture
