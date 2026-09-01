@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.translate
@@ -88,14 +89,14 @@ fun TogglableKey(
     Surface(
         modifier = modifier
             .padding(4.dp)
+            .keyShadow(if (toggled) 0.dp else keys.elevation, keys.shadowColor)
             .clickable(
                 interactionSource = interactionSource,
                 indication = LocalIndication.current,
                 onClick = { }
             ),
         shape = RoundedCornerShape(8.dp),
-        color = if(toggled) { keys.accent } else { keys.functionalKey },
-        shadowElevation = keys.elevation
+        color = if(toggled) { keys.accent } else { keys.functionalKey }
     ) {
         contents(if(toggled) { keys.onAccent } else { keys.onKey })
     }
@@ -158,7 +159,8 @@ private class PanelKeyColors(
     val onKey: Color,
     val accent: Color,
     val onAccent: Color,
-    val elevation: Dp
+    val elevation: Dp,
+    val shadowColor: Color
 )
 
 @Composable
@@ -175,17 +177,39 @@ private fun panelKeyColors(): PanelKeyColors {
         onAccent = scheme.onSecondary,
         // A theme that gives its keys a shadow has to give the panel's the same
         // one, or a panel of keys sits on the keyboard looking like a different
-        // material. BasicThemeProvider draws that shadow into the key's own
-        // drawable, which this cannot reuse, so the blur radius the theme asks
-        // for becomes the Surface's elevation. Suppressed with borders off,
-        // where the fill is transparent and a shadow would hang under nothing.
+        // material. BasicThemeProvider bakes that shadow into the key's own
+        // drawable and this does not reuse it, so the blur radius the theme asks
+        // for becomes an elevation and the colour is carried across separately --
+        // Compose would otherwise substitute its own, and the two Samsung themes
+        // differ only in shadow colour, sharing a radius.
+        //
+        // Suppressed with borders off to match BasicThemeProvider, which drops
+        // the shadow with them: "only a key that draws a background can cast a
+        // shadow".
         elevation = if (borders) {
             scheme.advancedThemeOptions.keyShadow?.radius ?: 0.dp
         } else {
             0.dp
-        }
+        },
+        shadowColor = Color(scheme.advancedThemeOptions.keyShadow?.color ?: 0)
     )
 }
+
+/**
+ * The key shadow the theme asks for, in the theme's own colour.
+ *
+ * A latched key passes 0: BasicThemeProvider builds KeyVisualStyle.StickyOn with no
+ * shadow, so a shift-locked key on the keyboard casts none and one in a panel must
+ * not either.
+ */
+private fun Modifier.keyShadow(elevation: Dp, color: Color): Modifier =
+    if (elevation <= 0.dp) this else this.shadow(
+        elevation = elevation,
+        shape = RoundedCornerShape(8.dp),
+        clip = false,
+        ambientColor = color,
+        spotColor = color
+    )
 
 @Composable
 fun ActionKey(
@@ -195,16 +219,17 @@ fun ActionKey(
     color: Color = panelKeyColors().key,
     contents: @Composable () -> Unit
 ) {
+    val keys = panelKeyColors()
     Surface(
         modifier = modifier
             .padding(4.dp)
+            .keyShadow(keys.elevation, keys.shadowColor)
             .repeatablyClickableAction(
                 repeatable = repeatable,
                 onTrigger = { onTrigger() }
             ),
         shape = RoundedCornerShape(8.dp),
-        color = color,
-        shadowElevation = panelKeyColors().elevation
+        color = color
     ) {
         contents()
     }
