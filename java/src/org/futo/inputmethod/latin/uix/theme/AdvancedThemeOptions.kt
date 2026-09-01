@@ -22,14 +22,20 @@ data class KeyIcon(
 )
 
 /**
- * A drop shadow cast by every key. Opt-in: a theme that leaves
- * [AdvancedThemeOptions.keyShadow] null renders exactly as it did before.
+ * A drop shadow for a key that draws a background, on a theme with key borders on.
+ * Opt-in: a theme that leaves [AdvancedThemeOptions.keyShadow] null renders exactly
+ * as it did before.
  *
- * The shadow is drawn into the gap that already exists between keys rather than widening it,
- * because that gap -- KeyboardLayoutSet's 4dp, doubled vertically by LayoutEngine -- also
- * feeds hit testing,
- * KeyDetector and gesture typing. Keeping radius + offsetY within roughly 3dp stays inside
- * that budget and leaves hit targets untouched.
+ * Which keys that covers is BasicThemeProvider's to decide, and it is narrower than
+ * "the filled ones": a latched modifier and the enter key are both filled and cast
+ * nothing, a pressed key drops the shadow it had, and turning key borders off drops
+ * it along with the fill.
+ *
+ * The shadow is drawn into the gap that already exists between keys rather than
+ * widening it, because that gap also feeds hit testing, KeyDetector and gesture
+ * typing. [radius] is what spreads it sideways, [radius] plus [offsetY] what spreads
+ * it down, so the two axes have separate budgets -- the gap on that axis. Past it the
+ * shadow lands on the next key instead of between them, and hit targets are what pay.
  */
 data class KeyShadow(
     val radius: Dp = 3.dp,
