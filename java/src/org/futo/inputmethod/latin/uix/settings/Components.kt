@@ -100,7 +100,6 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -109,7 +108,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.futo.inputmethod.latin.R
@@ -483,39 +481,6 @@ fun SpacedColumn(gap: Dp, modifier: Modifier = Modifier, horizontalAlignment: Al
         content()
     }
 }
-
-/**
- * A short piece of text standing in a row's leading slot, for a setting whose
- * subject is a character rather than a thing. Nothing calls it: its one call site
- * was the number row's "123", and that screen is gone.
- *
- * It was previously plain body text, which put a paragraph's letterform in a
- * column of 24dp stroked line art and read as a stray word. Boxing it to the
- * icon's own size and setting it tight and semi-bold makes it a token: it takes
- * the same space, the same tint and the same optical weight as an icon.
- *
- * Decorative by definition -- the row's title says what the setting is -- so the
- * semantics are cleared rather than left to a screen reader to spell out.
- */
-@Composable
-fun GlyphIcon(glyph: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.size(24.dp).clearAndSetSemantics { },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            glyph,
-            color = LocalContentColor.current,
-            style = MaterialTheme.typography.labelLarge.copy(
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = (-0.02).em
-            ),
-            maxLines = 1,
-            softWrap = false
-        )
-    }
-}
-
 
 @Composable
 fun SettingItem(

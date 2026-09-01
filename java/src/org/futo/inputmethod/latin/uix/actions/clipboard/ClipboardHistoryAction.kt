@@ -289,7 +289,7 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
     // role order, and the builders now map surfaceContainer to keyboardContainer, so
     // it would match -- handing back onSurface, which is not onKeyboardContainer on
     // Classic Material Light or Catppuccin Mocha, or, on Snowfall, Cotton Candy and
-    // Deep Sea Light, matching secondaryContainer five roles earlier and handing back
+    // Deep Sea Light, matching secondaryContainer seven roles earlier and handing back
     // onSecondaryContainer, which is not it either.
     val onColor = if(clipboardEntry.pinned) {
         scheme.onPrimaryContainer

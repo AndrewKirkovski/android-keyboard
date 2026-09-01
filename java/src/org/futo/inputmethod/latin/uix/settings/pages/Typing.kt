@@ -533,9 +533,9 @@ val LongPressMenu = UserSettingsMenu(
     title = R.string.settings_row_longpress,
     navPath = "longPress", registerNavPath = true,
     settings = listOf(
-        // The "Keys & layout" row that opens this screen promises "configure
-        // long-press duration", so the duration is the first thing on it rather
-        // than the last. The first card carries no header, as on most screens --
+        // The "Long-Press Keys & Spacebar" row that opens this screen promises
+        // "configure long-press duration", so the duration is the first thing on
+        // it rather than the last. The first card carries no header, as on most screens --
         // Home, Feedback and Text & corrections are the three that open with one.
         UserSetting(
             name = R.string.settings_row_longpress_duration,
