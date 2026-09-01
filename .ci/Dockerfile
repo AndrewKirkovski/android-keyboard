@@ -5,8 +5,8 @@ USER root
 ENV CLI_URL="https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip" \
     ANDROID_HOME="/root/Android/Sdk" \
     ANDROID_SDK_ROOT="/root/Android/Sdk" \
-    ANDROID_VERSION=35 \
-    ANDROID_BUILD_TOOLS_VERSION=35.0.0
+    ANDROID_VERSION=36 \
+    ANDROID_BUILD_TOOLS_VERSION=36.0.0
 
 RUN mkdir -p "$ANDROID_HOME" .android \
     && cd "$ANDROID_HOME" \
