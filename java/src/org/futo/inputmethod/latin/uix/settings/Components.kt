@@ -550,8 +550,8 @@ fun SettingItem(
             if (icon != null) {
                 // The slot is the icon, 24dp, not a 48dp column holding a 40dp circle
                 // holding the icon. That column was reserved only for a row that passed
-                // one, so titles started at 20dp on some rows and 80dp on others --
-                // most of the 14 different left edges came from here.
+                // one, so titles started at 20dp on some rows and 80dp on others: two
+                // left edges where one row shape should give one.
                 //
                 // On a row with a subtitle the slot pins to the top, beside the title
                 // it labels, rather than floating against the middle of the text block.

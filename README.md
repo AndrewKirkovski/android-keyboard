@@ -66,7 +66,7 @@ other theme renders exactly as before.
 
 The settings screens used to render in whichever *keyboard* theme was selected —
 a palette tuned for a 360dp strip over someone else's app, asked to carry a
-full-screen scrolling surface. Dark mode was not a mode but eighteen arbitrary
+full-screen scrolling surface. Dark mode was not a mode but nineteen arbitrary
 palettes recoloured.
 
 They now follow the system light/dark setting like any other app, with the
