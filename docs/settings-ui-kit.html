@@ -370,7 +370,7 @@ table.num td.names { color: var(--muted); }
 </div>
 
 <h2 class="sec">App bar</h2>
-<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement across 53&nbsp;call sites. <code>LargeTopAppBar</code> is used zero times today.</p>
+<p class="lede">One&nbsp;UI&rsquo;s signature, and the thing <code>ScreenTitle</code> + <code>CollapsedScreenTitle</code> already hand-reimplement on every settings screen. <code>LargeTopAppBar</code> is used zero times today.</p>
 
 <div class="item">
   <div class="pair">
@@ -398,7 +398,7 @@ table.num td.names { color: var(--muted); }
     <h3>Large collapsing title</h3>
     <p>Expanded: 28&nbsp;sp, with 16&nbsp;dp of space above it and 16 below. The generous space is the point &mdash; it puts the title where a thumb is not, and the content where it is.</p>
     <p>Collapsed: the row title at 16&nbsp;sp with the back arrow, 49&nbsp;dp tall &mdash; 12&nbsp;dp above and below a 24&nbsp;dp icon, and a hairline beneath. It appears on scroll, which the app already does; what it does not do is use a real app bar to do it.</p>
-    <p><b>Compose:</b> <code>Scaffold</code> + <code>LargeTopAppBar</code> with <code>enterAlwaysScrollBehavior</code> &mdash; asked for, not built. <code>ScreenTitle</code> keeps its 28&nbsp;<code>showBack = true</code> call sites and hands the title to <code>CollapsedScreenTitle</code> through a scroll anchor instead. The other 25&nbsp;call sites are section headers and become the component below.</p>
+    <p><b>Compose:</b> <code>Scaffold</code> + <code>LargeTopAppBar</code> with <code>enterAlwaysScrollBehavior</code> &mdash; asked for, not built. <code>ScreenTitle</code> keeps its <code>showBack = true</code> call sites and hands the title to <code>CollapsedScreenTitle</code> through a scroll anchor instead. The rest are section headers and become the component below.</p>
   </div>
 </div>
 
@@ -788,7 +788,7 @@ table.num td.names { color: var(--muted); }
     <p><b>Compose:</b> <code>ActionItem</code> and <code>MoreActionsView</code> in <code>actions/MoreActions.kt</code>; <code>ActionWindowBar</code> in <code>ActionBar.kt</code>. The grid moves from <code>GridCells.Adaptive(98.dp)</code> to <code>GridCells.Fixed(4)</code>, and the <code>OutlinedButton</code> in <code>MoreActionsAction.WindowTitleBar</code> becomes a <code>TextButton</code>. <code>ActionsEditor</code> takes the same grid so the editor and the panel stay the same shape.</p>
     <table class="num">
       <tr><th>Metric</th><th>Measured today</th><th>Kit</th></tr>
-      <tr><td>Tile</td><td class="was">121 &times; 92&nbsp;dp</td><td>84&nbsp;dp tall as built; 92.75 wide in the editor, 88.75 on the panel, 80 one&#8209;handed</td></tr>
+      <tr><td>Tile</td><td class="was">121 &times; 92&nbsp;dp</td><td>84&nbsp;dp tall as built; 92.75 wide in the editor, 91.75 on the panel, 80 one&#8209;handed</td></tr>
       <tr><td>Columns</td><td class="was">adaptive, 3</td><td>fixed, 4</td></tr>
       <tr><td>Gutter</td><td class="was">16&nbsp;dp</td><td>8&nbsp;dp</td></tr>
       <tr><td>Outer margin</td><td class="was">46 / 13&nbsp;dp</td><td>16&nbsp;dp &mdash; tried, reverted, costs the label 4&nbsp;dp</td></tr>
