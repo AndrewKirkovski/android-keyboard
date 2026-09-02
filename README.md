@@ -81,6 +81,23 @@ carrying the measurement they replace.
 
 ### The keyboard's own panels
 
+![Four panels on Samsung Light and on Dark Mode](docs/img/panels.png)
+
+The same four panels twice: Samsung Light with key borders on above, Dark Mode
+with them off below. The second row is the point of the section. The text
+editor's keys lose their fill exactly as the keyboard's do, because the panel
+asks the provider for the key's drawable instead of rebuilding one out of
+colour-scheme roles — and the latched-modifier treatment and the one-handed
+control follow the same theme rather than a palette of their own.
+
+This picture has no upstream equivalent, which is why the issues and PRs filed
+there describe the behaviour instead of showing it. Both Samsung presets are
+added in this fork, and the shadow their keys carry needs
+`ShadowedRoundRectDrawable`, which is too, so an upstream build has no such theme
+to select and no shadow for a key to cast. The panels would not answer it either:
+there they draw from scheme roles, which is the thing this section changes. Every
+frame here is of the fork because the behaviour is.
+
 The settings redesign stopped at the app boundary. Everything the keyboard draws
 over someone else's app — all actions, emoji, clipboard, themes, keyboard modes,
 the one-handed control — had never been looked at. Each of the below was found by
