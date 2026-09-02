@@ -168,7 +168,8 @@ fun Modifier.repeatablyClickableAction(
  *
  * The three styles the panel uses are the three it is made of: an ordinary key, a
  * functional key, and the one the keyboard puts on a latched modifier --
- * KeyVisualStyle.StickyOn, which is secondary rather than the enter key's primary.
+ * KeyVisualStyle.StickyOn, which is secondary rather than the primary the enter key
+ * takes outside touch typing mode.
  * Key borders need no handling here, whatever the provider does with them: an
  * ordinary or functional key goes transparent and loses its shadow, a latched one
  * keeps its fill, and the panel matches the keyboard in both cases because it is

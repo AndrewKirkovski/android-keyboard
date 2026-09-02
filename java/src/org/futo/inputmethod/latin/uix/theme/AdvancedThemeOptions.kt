@@ -42,7 +42,10 @@ data class KeyIcon(
  * widening it, because that gap also feeds hit testing, KeyDetector and gesture
  * typing. [radius] is what spreads it sideways, [radius] plus [offsetY] what spreads
  * it down, so the two axes have separate budgets -- the gap on that axis. Past it the
- * shadow lands on the next key instead of between them, and hit targets are what pay.
+ * shadow lands on the next key rather than between them, and appearance is all that
+ * pays: Key.hitBox is built from the layout and never reads a drawable's padding.
+ * The hit targets are what widening the gap would have cost, which is why the budget
+ * is the gap rather than something the shadow is allowed to grow.
  */
 data class KeyShadow(
     val radius: Dp = 3.dp,
