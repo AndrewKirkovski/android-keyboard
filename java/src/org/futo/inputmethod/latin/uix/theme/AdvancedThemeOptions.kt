@@ -35,8 +35,8 @@ data class KeyIcon(
  *
  * Key borders off nulls the shadow before any style is built, so none of the four
  * casts. That is not the same as losing the fill, and the two do not line up: the
- * keys that go transparent lose both, while the spacebar and a latched modifier keep
- * a fill and simply stop casting.
+ * keys that go transparent lose both, while the spacebar keeps a fill and simply
+ * stops casting.
  *
  * The shadow is drawn into the gap that already exists between keys rather than
  * widening it, because that gap also feeds hit testing, KeyDetector and gesture

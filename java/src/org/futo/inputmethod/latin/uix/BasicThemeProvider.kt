@@ -244,8 +244,11 @@ class BasicThemeProvider(val context: Context, val colorScheme: KeyboardColorSch
      * KeyboardView runs on a hardware layer, where setShadowLayer and BlurMaskFilter are
      * ignored on many API levels, so the shadow cannot be painted straight onto the target
      * canvas. It is rendered once into a software bitmap and blitted instead, which a hardware
-     * layer handles fine. The bitmap is rebuilt only when the bounds change, so every key of a
-     * given size reuses one render.
+     * layer handles fine. The bitmap is rebuilt only when the bounds change, so keys of one
+     * size drawn in a run share a render. A style need not be one size, though: the Functional
+     * style covers both the keys built from FunctionalAttributes, which take a functional
+     * width, and a bottom row's, which do not, and two sizes taking turns throw away each
+     * other's render.
      *
      * getPadding reports the shadow inset. KeyboardView.onDrawKeyBackground already expands
      * bgWidth/bgHeight by that padding and offsets by -padding, which is what lets the shadow

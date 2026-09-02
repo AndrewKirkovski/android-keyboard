@@ -157,7 +157,7 @@ fun Modifier.repeatablyClickableAction(
 /**
  * The keyboard's own drawing of a key, for a panel that is built out of keys.
  *
- * [BasicThemeProvider] gives each key style a drawable rather than a colour, because a
+ * [BasicThemeProvider] gives a key style a drawable rather than a colour, because a
  * theme can put more on a key than a fill: a corner radius, and a shadow drawn through
  * Paint.setShadowLayer. The panel used to rebuild that out of colour-scheme roles and
  * reproduce the rest, and the shadow is what showed the cost of reproducing it --
