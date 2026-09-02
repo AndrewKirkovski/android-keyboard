@@ -182,7 +182,10 @@ fun Modifier.repeatablyClickableAction(
 private class PanelKey(
     val background: Drawable?,
     val backgroundPressed: Drawable?,
-    /** Stands in for [background] where there is none: a preview, or a style with none. */
+    /**
+     * Stands in for [background] in a preview, which has no provider to read one
+     * from. Outside a preview this is transparent and the drawable paints the key.
+     */
     val fill: Color,
     val content: Color
 )
@@ -213,11 +216,12 @@ private fun panelKey(style: KeyVisualStyle): PanelKey {
         backgroundPressed = key.backgroundDrawablePressed,
         fill = Color.Transparent,
         // The background is the key's; the icon colour is not. A style's
-        // foregroundColor is emptied by touch typing mode, which hides the letters
-        // so their positions have to be learned -- a rule about labels, and the
-        // provider does not apply it to the action bar's icons. The panel is icons
-        // too, so it takes the same colour they do. A latched key keeps the style's,
-        // which is onSecondary and is not something that mode touches.
+        // foregroundColor is emptied by touch typing mode on an ordinary key, which
+        // hides the letters so their positions have to be learned -- a rule about
+        // labels. onKeyColor is computed before that mode is applied and survives it,
+        // and a panel of arrows has no letter whose position anyone learns, so it
+        // takes that instead. A latched key keeps the style's, which is onSecondary
+        // and is not something that mode touches.
         content = if (style == KeyVisualStyle.StickyOn) {
             Color(key.foregroundColor)
         } else {

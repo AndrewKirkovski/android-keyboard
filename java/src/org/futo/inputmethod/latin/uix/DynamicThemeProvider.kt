@@ -46,8 +46,10 @@ interface DynamicThemeProvider {
      * The colour a key's label or icon takes.
      *
      * Not the same as a key style's foregroundColor, which touch typing mode empties
-     * so that letters are hidden and their positions have to be learned. That is a
-     * rule about labels: the action bar's icons are tinted with this and stay visible.
+     * on an ordinary key so that letters are hidden and their positions have to be
+     * learned, and fades on several others. That is a rule about labels. This colour
+     * is computed before that mode is applied and is left alone by it, so a surface
+     * drawing icons rather than letters can take it and stay visible.
      */
     val onKeyColor: Int
 
