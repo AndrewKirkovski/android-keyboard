@@ -82,9 +82,10 @@ final def translationsWithoutEngValues = { final String path ->
     final def destDir = file("$buildDir/generated/res-translations-filtered/${taskNameSuffix}")
 
     // Two product flavours can legitimately reference the same translations
-    // directory -- `unstable` and `kirkouski` both use translations/devbuild.
-    // tasks.register() throws on a duplicate name, so reuse the existing task
-    // and just hand back the same destDir.
+    // directory. Nothing does today -- `kirkouski` stopped using
+    // translations/devbuild when it took its own name -- but tasks.register()
+    // throws on a duplicate name, and that crash is what upstream issue #2267
+    // is. Reuse the existing task and hand back the same destDir.
     if (tasks.names.contains("prepareResFilter${taskNameSuffix}")) {
         return destDir
     }
@@ -151,6 +152,67 @@ final def translationsWithoutEngValues = { final String path ->
 
     // Ensure it runs before build
     preBuild.dependsOn("prepareResFilter${taskNameSuffix}")
+
+    destDir
+}
+
+// The fork ships under its own name, and a name has to hold in every language.
+// `english_ime_name` and the three names beside it are translated in 38 locales
+// of translations/core, so overriding only the default `values/` would still
+// leave a German phone calling this "FUTO Tastatur". They are generated here
+// for `values` and for every locale that carries one.
+//
+// The dev flavour's resources come along for the launcher icon and dev styling,
+// minus its own appname file -- two files defining one string in one source set
+// is a merge error, not an override.
+final def forkAppRes = { final String appName ->
+    final def destDir = file("$buildDir/generated/res-fork-appname")
+    final def devRes = file('java/unstable/res')
+    final def localeSources = ['translations/core', 'translations/devbuild'].collect { file(it) }
+
+    tasks.register('prepareForkAppRes') {
+        inputs.dir(devRes)
+        localeSources.each { inputs.dir(it).withPathSensitivity(PathSensitivity.RELATIVE) }
+        inputs.property('appName', appName)
+        outputs.dir(destDir)
+
+        doLast {
+            delete destDir
+            copy {
+                from(devRes) { exclude '**/strings-appname.xml' }
+                into destDir
+            }
+
+            final def strings = [
+                    'english_ime_name'              : appName,
+                    'spell_checker_service_name'    : "$appName Spell Checker",
+                    'english_ime_settings'          : "$appName Settings",
+                    'android_spell_checker_settings': "$appName Spell Checker Settings",
+            ]
+            final def body = strings.collect { name, value ->
+                "    <string name=\"$name\">$value</string>"
+            }.join('\n')
+
+            final def dirs = ['values'] as SortedSet
+            localeSources.each { src ->
+                src.listFiles()?.each { d ->
+                    if (d.directory && d.name.startsWith('values-') && new File(d, 'strings-appname.xml').exists()) {
+                        dirs << d.name
+                    }
+                }
+            }
+
+            dirs.each { d ->
+                final def out = new File(destDir, d)
+                out.mkdirs()
+                new File(out, 'strings-appname.xml').setText(
+                        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n$body\n</resources>\n", 'UTF-8')
+            }
+            println "Wrote \"$appName\" app name into ${dirs.size()} resource directories"
+        }
+    }
+
+    preBuild.dependsOn('prepareForkAppRes')
 
     destDir
 }
@@ -385,7 +447,9 @@ android {
         kirkouski {
             java.srcDirs = ['common/src', 'java/src', 'java/stable/java']
             manifest.srcFile 'java/stable/AndroidManifest.xml'
-            res.srcDirs = ['java/unstable/res', translationsWithoutEngValues('translations/devbuild')]
+            // Not translations/devbuild: its per-locale files name this "[Dev Build]",
+            // and forkAppRes already covers every locale that has one.
+            res.srcDirs = [forkAppRes('Futo Mod')]
         }
 
         androidTest {

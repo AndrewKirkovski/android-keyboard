@@ -4,10 +4,10 @@ A personal fork of [futo-org/android-keyboard](https://github.com/futo-org/andro
 carrying Polish and Cyrillic typographic layouts, a Samsung-style theme, and a
 handful of upstream fixes that have not landed yet.
 
-It installs alongside a released FUTO Keyboard rather than replacing it: the
-`kirkouski` flavor has its own applicationId, and update checking is off, because
-an "update" would swap this build for an upstream release and drop every patch
-below.
+It installs as **Futo Mod**, alongside a released FUTO Keyboard rather than
+replacing it: the `kirkouski` flavor has its own applicationId, and update
+checking is off, because an "update" would swap this build for an upstream
+release and drop every patch below.
 
 Upstream's own README follows [under the divider](#futo-keyboard).
 
@@ -109,11 +109,23 @@ APKs are attached to this fork's
 install alongside an official FUTO Keyboard rather than replacing it.
 
 They are **not** signed with FUTO's key, and the fingerprints under
-[APK signing](#apk-signing) are FUTO's — they will not match anything here. This
-fork has no release key of its own, so its APKs carry the Android SDK's debug
-certificate (`CN=Android`, SHA-256 `28:BB:FE:4A:7B:97:E7:46:…`). Every SDK
-install ships that key's private half, so the signature makes an APK installable
-and tells you nothing about who built it. Build it yourself if that matters.
+[APK signing](#apk-signing) are FUTO's — they will not match anything here. From
+`0.1.30-kirkouski.3` on, this fork signs with its own key:
+
+```
+CN=Futo Mod, OU=Kirkouski Fork, O=Andrei Kirkouski, C=PL
+SHA-256: 89:CF:20:B5:7C:D0:4F:0E:DA:48:A6:EF:91:D9:3D:FE:03:45:47:62:2A:D6:FF:55:C0:00:73:71:2B:9F:D9:ED
+```
+
+Check it with `apksigner verify --print-certs <apk>`. It says the APK came from
+whoever holds that key and has not been altered since; it is self-signed, so it
+vouches for continuity between releases, not for an identity anyone else has
+verified. Build it yourself if that matters.
+
+Releases up to `0.1.30-kirkouski.2` carried the Android SDK's debug certificate
+(`CN=Android`), whose private half ships with every SDK install and identifies
+nobody. **Android will not upgrade across that change**: uninstall an earlier
+build before installing `.3`, which loses this keyboard's settings.
 
 ### Building this fork
 
