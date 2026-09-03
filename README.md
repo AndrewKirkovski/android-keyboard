@@ -62,18 +62,38 @@ gap also feeds `Key.hitBox`, `KeyDetector` and gesture typing.
 Opt-in throughout: `AdvancedThemeOptions.keyShadow` defaults to null and every
 other theme renders exactly as before.
 
-### Settings that follow the system theme
+### The settings app, rebuilt
 
-The settings screens used to render in whichever *keyboard* theme was selected —
-a palette tuned for a 360dp strip over someone else's app, asked to carry a
-full-screen scrolling surface. Dark mode was not a mode but nineteen arbitrary
-palettes recoloured.
+![FUTO Keyboard 0.1.30 above, this fork below](docs/img/settings.png)
+
+The same four screens twice — Home, Languages, Text & corrections, Theme — on the
+same phone, at the same routes, each app's update notice dismissed first so
+neither row is padded by a banner the other does not have. The shipped 0.1.30
+above, this fork below.
+
+The screens used to render in whichever *keyboard* theme was selected: a palette
+tuned for a 360dp strip over someone else's app, asked to carry a full-screen
+scrolling surface. That is why the top row is cyan — it is showing a keyboard
+theme, not a light mode. Dark mode was not a mode but nineteen arbitrary palettes
+recoloured, and the system setting did nothing at all. Capture 0.1.30's settings
+with the system in light and again in dark and the two images are pixel-identical.
 
 They now follow the system light/dark setting like any other app, with the
 product's own palette. The keyboard theme stays where it belongs: on the
 keyboard, and on the previews of it that settings screens show.
 
-A fuller redesign is in progress. Its component kit lives at
+The rest is structure. Rows group into cards under section headers instead of
+running as one flat list. Each row carries the state it controls as a subtitle, so
+Languages reads "English (UK), русский (Россия)" without being opened and Swipe
+typing reads "On". Labels are sentence case. The leading icon is gone: a circled
+glyph per row has to be invented once per row and read past every time, and it was
+carrying no information the label did not.
+
+The developer screens are deliberately untouched, and still draw as loose rows on
+the background — scripted transformation of hand-written Compose broke them three
+times, and they sit behind a developer toggle.
+
+The component kit lives at
 [`docs/settings-ui-kit.html`](docs/settings-ui-kit.html) — open it in a browser
 beside the app. It is the target the Compose work is measured against, in both
 light and dark, with every entry naming the composable and file it maps to, and most
