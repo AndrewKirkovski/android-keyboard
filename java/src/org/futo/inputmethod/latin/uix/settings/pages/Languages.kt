@@ -216,6 +216,7 @@ fun LanguageSurface(
     isOnlyLanguage: Boolean = false,
     onConfigurableSelected: (FileKind) -> Unit,
     onLayoutRemoved: (InputMethodSubtype) -> Unit,
+    onLayoutEdited: (InputMethodSubtype) -> Unit,
     onLayoutAdditionRequested: () -> Unit,
     onLanguageRemoved: () -> Unit,
     onToggleMultilingualBucket: (Boolean) -> Unit
@@ -288,14 +289,40 @@ fun LanguageSurface(
                 stringResource(R.string.language_settings_layouts_of_this_language)
             )
             item.layouts.forEach { (subtype, layoutName) ->
-                SettingItem(title = layoutName) {
-                    // A language must keep one layout, so the last one has no remove.
-                    if (item.layouts.size > 1) {
-                        IconButton(onClick = { onLayoutRemoved(subtype) }) {
+                // Only a custom layout has an editor to open. A built-in one --
+                // QWERTY, East Slavic, the typographic layouts -- is a file in the
+                // layouts repository, and DevLayoutEdit takes an index into the
+                // custom list, so there is nothing for a tap to reach. Such a row
+                // stays unclickable rather than clickable and inert.
+                val editable = subtype.layoutSetName.startsWith("custom")
+                SettingItem(
+                    title = layoutName,
+                    onClick = if (editable) ({ onLayoutEdited(subtype) }) else null
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Editing used to be the trash button, which navigated to the
+                        // editor instead of deleting when the name began with "custom".
+                        // That hid it behind the remove rule below, so a language with
+                        // a single custom layout could not open it at all -- and the
+                        // one control meant two different things depending on a name.
+                        if (editable) {
                             Icon(
-                                painterResource(id = R.drawable.trash),
-                                contentDescription = null
+                                painterResource(id = R.drawable.edit_text),
+                                contentDescription = stringResource(
+                                    R.string.language_settings_edit_layout
+                                )
                             )
+                        }
+                        // A language must keep one layout, so the last one has no remove.
+                        if (item.layouts.size > 1) {
+                            IconButton(onClick = { onLayoutRemoved(subtype) }) {
+                                Icon(
+                                    painterResource(id = R.drawable.trash),
+                                    contentDescription = stringResource(
+                                        R.string.language_settings_remove_layout
+                                    )
+                                )
+                            }
                         }
                     }
                 }
@@ -374,7 +401,8 @@ fun LanguageSurfacePreview() {
                 ),
                 inMultilingualBucket = true
             ),
-            onLanguageRemoved = { }, onLayoutRemoved = { }, onConfigurableSelected = { },
+            onLanguageRemoved = { }, onLayoutRemoved = { }, onLayoutEdited = { },
+            onConfigurableSelected = { },
             onLayoutAdditionRequested = { }, onToggleMultilingualBucket = { })
     }
 }
@@ -733,14 +761,14 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
                     languageDeleteInfo.value = locale
                 },
                 onLayoutRemoved = { subtype ->
-                    val layoutSetName = subtype.layoutSetName
-                    if(layoutSetName.startsWith("custom")) {
-                        val i = layoutSetName.substring("custom".length).toIntOrNull()
-                        if(i != null) {
-                            navController.navigate(Route.DevLayoutEdit(i))
-                        }
-                    } else {
-                        Subtypes.removeLanguage(context, subtype)
+                    Subtypes.removeLanguage(context, subtype)
+                },
+                onLayoutEdited = { subtype ->
+                    val i = subtype.layoutSetName
+                        .removePrefix("custom")
+                        .toIntOrNull()
+                    if (i != null) {
+                        navController.navigate(Route.DevLayoutEdit(i))
                     }
                 },
                 onConfigurableSelected = { kind ->
