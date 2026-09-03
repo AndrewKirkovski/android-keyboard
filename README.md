@@ -102,6 +102,19 @@ Filed upstream, merged here rather than waited on.
 | [#2267](https://github.com/futo-org/android-keyboard/issues/2267) | Adding a second product flavor failed Gradle configuration. |
 | [#2268](https://github.com/futo-org/android-keyboard/issues/2268) | Every Cyrillic layout failed to load on every locale but `ru`. |
 
+### Installing a build
+
+APKs are attached to this fork's
+[releases](https://github.com/AndrewKirkovski/android-keyboard/releases). They
+install alongside an official FUTO Keyboard rather than replacing it.
+
+They are **not** signed with FUTO's key, and the fingerprints under
+[APK signing](#apk-signing) are FUTO's — they will not match anything here. This
+fork has no release key of its own, so its APKs carry the Android SDK's debug
+certificate (`CN=Android`, SHA-256 `28:BB:FE:4A:7B:97:E7:46:…`). Every SDK
+install ships that key's private half, so the signature makes an APK installable
+and tells you nothing about who built it. Build it yourself if that matters.
+
 ### Building this fork
 
 As upstream, but the flavor is `kirkouski`:
