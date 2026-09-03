@@ -13,7 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import org.futo.inputmethod.latin.uix.LocalNavController
 import org.futo.inputmethod.latin.uix.THEME_KEY
-import org.futo.inputmethod.latin.uix.theme.ThemeOptions
+import androidx.compose.ui.platform.LocalContext
+import org.futo.inputmethod.latin.uix.theme.getThemeOption
+import org.futo.inputmethod.latin.uix.theme.orDefault
 import org.futo.inputmethod.latin.uix.settings.NavigationItem
 import org.futo.inputmethod.latin.uix.settings.UserSetting
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
@@ -42,11 +44,18 @@ val AppearanceMenu = UserSettingsMenu(
             name = R.string.theme_settings_title
         ) {
             val navController = LocalNavController.current
+            val context = LocalContext.current
             val key = useDataStoreValue(THEME_KEY)
-            val option = remember(key) { ThemeOptions[key] }
+            // Through getThemeOption, not the preset map. THEME_KEY defaults to ""
+            // and nothing writes it until a theme is picked, so ThemeOptions[key] is
+            // null on a fresh install -- and null again for an imported theme, whose
+            // key resolves only through the zip branch. The row that exists to name
+            // the active theme named it for neither.
+            val option = remember(key) { getThemeOption(context, key).orDefault(context) }
             NavigationItem(
                 title = stringResource(R.string.theme_settings_title),
-                subtitle = option?.name?.let { stringResource(it) },
+                // A zip theme carries name == 0; stringResource(0) throws.
+                subtitle = option.name.takeIf { it != 0 }?.let { stringResource(it) },
                 style = NavigationItemStyle.Misc,
                 navigate = { navController!!.navigate("themes") }
             )

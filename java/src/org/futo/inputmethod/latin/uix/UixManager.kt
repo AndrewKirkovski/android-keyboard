@@ -858,12 +858,17 @@ class UixManager(private val latinIME: LatinIME) {
                     || windowImpl.showTitleBarAboveKeyboard) {
                     ActionWindowBar(
                         onBack = { closeActionWindow(true) },
-                        // Not for a panel that is only ever drawn above the keys.
+                        // Not for a panel whose position the user may not manage.
                         // The control's icon and its talkback string both say
                         // "show keyboard", and on a panel that never hid it the
                         // one thing it can do is take the keyboard away -- from
                         // the theme picker, whose whole job is previewing a theme
                         // against the keys underneath it.
+                        //
+                        // positionIsUserManagable defaults to the opposite of
+                        // onlyShowAboveKeyboard, so the two usually coincide, but a
+                        // panel drawn above the keys can still opt in: Debug info
+                        // sets both, and does get the control.
                         canExpand = currWindowAction.value!!.canShowKeyboard
                                 && windowImpl.positionIsUserManagable,
                         onExpand = { toggleExpandAction() },
@@ -1113,7 +1118,7 @@ class UixManager(private val latinIME: LatinIME) {
             }, Modifier.align(Alignment.CenterEnd)) {
                 Icon(
                     painterResource(R.drawable.keyboard_gear),
-                    contentDescription = stringResource(R.string.settings_action_keyboard_modes),
+                    contentDescription = stringResource(R.string.action_keyboard_modes_title),
                     tint = LocalKeyboardScheme.current.onSurfaceVariant
                 )
             }

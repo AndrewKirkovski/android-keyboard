@@ -36,6 +36,13 @@ data class UserSetting(
      * are not rows and would look wrong inside a card of them.
      */
     val breaksCardGroup: Boolean = false,
+    /**
+     * Whether this entry is a section header, which exists to label the run of rows
+     * under it and is dropped when that run is empty. Not true of the other
+     * decorations: a tip or a warning says something on its own, and one can stand
+     * at the end of a screen with nothing after it.
+     */
+    val isSectionHeader: Boolean = false,
     val component: @Composable () -> Unit,
 )
 
@@ -145,7 +152,8 @@ fun userSettingSection(
     name = title,
     component = { SettingSectionHeader(stringResource(title)) },
     appearsInSearch = false,
-    breaksCardGroup = true
+    breaksCardGroup = true,
+    isSectionHeader = true
 )
 
 @Composable
@@ -171,7 +179,15 @@ fun UserSettingsMenu.render(showBack: Boolean = true, showTitle: Boolean = true)
     while (index < visible.size) {
         val setting = visible[index]
         if (setting.breaksCardGroup) {
-            setting.component()
+            // A section header labels the run under it, so it goes when that run is
+            // empty. Only the rows carry visibility checks -- the header built by
+            // userSettingSection has none -- so a section whose every row is hidden
+            // used to leave the header behind with nothing beneath it. Turning
+            // "Disable built-in voice input" on did that to three headers on Voice
+            // input and one on Feedback.
+            val labelsNothing = setting.isSectionHeader &&
+                visible.drop(index + 1).takeWhile { !it.breaksCardGroup }.isEmpty()
+            if (!labelsNothing) setting.component()
             index++
         } else {
             val run = ArrayList<UserSetting>()

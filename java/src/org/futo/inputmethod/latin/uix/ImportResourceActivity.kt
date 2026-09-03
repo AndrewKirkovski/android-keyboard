@@ -126,7 +126,13 @@ fun SettingsImportScreen(
 ) {
     val importing = remember { mutableStateOf(false) }
     ScrollableList {
-        ScreenTitle(title = stringResource(R.string.resource_importer_import_title, stringResource(R.string.file_kind_cfg_backup)))
+        ScreenTitle(
+            title = stringResource(
+                R.string.resource_importer_import_title,
+                stringResource(R.string.file_kind_cfg_backup)
+            ),
+            isScreenTitle = true
+        )
 
         if(importing.value) {
             Box(modifier = Modifier

@@ -25,7 +25,7 @@ internal val visibilityCheckNotSystemVoiceInput = @Composable {
 }
 
 val VoiceInputMenu = UserSettingsMenu(
-    title = R.string.settings_title_voice,
+    title = R.string.voice_input_settings_title,
     navPath = "voiceInput", registerNavPath = true,
     settings = listOf(
         userSettingToggleDataStore(
@@ -52,13 +52,13 @@ val VoiceInputMenu = UserSettingsMenu(
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
         userSettingToggleDataStore(
-            title = R.string.settings_row_bluetooth_mic,
+            title = R.string.voice_input_settings_use_bluetooth_mic,
             subtitle = R.string.settings_sub_bluetooth_mic,
             setting = PREFER_BLUETOOTH
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
         userSettingToggleDataStore(
-            title = R.string.settings_row_audio_focus,
+            title = R.string.voice_input_settings_audio_focus,
             subtitle = R.string.voice_input_settings_audio_focus_subtitle,
             setting = AUDIO_FOCUS
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),

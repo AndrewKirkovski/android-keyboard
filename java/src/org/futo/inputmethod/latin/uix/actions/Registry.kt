@@ -115,10 +115,10 @@ enum class ActionCategory {
 
 fun ActionCategory.name(resources: Resources): String {
     return resources.getString(when(this) {
-        ActionCategory.ActionKey -> R.string.settings_action_kind_action_key
+        ActionCategory.ActionKey -> R.string.action_kind_action_key
         ActionCategory.PinnedKey -> R.string.settings_action_kind_pinned
         ActionCategory.Favorites -> R.string.settings_action_kind_favorites
-        ActionCategory.More -> R.string.settings_action_kind_more
+        ActionCategory.More -> R.string.action_kind_more
         ActionCategory.Disabled -> R.string.settings_action_kind_hidden
     })
 }

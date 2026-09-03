@@ -15,7 +15,7 @@ import org.futo.inputmethod.latin.uix.theme.selector.ThemePicker
 
 val ThemeAction = Action(
     icon = R.drawable.themes,
-    name = R.string.settings_action_theme_switcher,
+    name = R.string.action_theme_switcher_title,
     simplePressImpl = null,
     canShowKeyboard = true,
     windowImpl = { manager, _ ->
@@ -36,7 +36,7 @@ val ThemeAction = Action(
 
             @Composable
             override fun windowName(): String {
-                return stringResource(R.string.settings_action_theme_switcher)
+                return stringResource(R.string.action_theme_switcher_title)
             }
 
             @Composable

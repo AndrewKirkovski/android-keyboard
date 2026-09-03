@@ -21,7 +21,7 @@ import org.futo.inputmethod.latin.xlm.BinaryDictTransformerWeightSetting
 fun AdvancedParametersScreen(navController: NavHostController = rememberNavController()) {
     val resources = LocalResources.current
     ScrollableList {
-        ScreenTitle(stringResource(R.string.settings_title_advanced_params), showBack = true, navController)
+        ScreenTitle(stringResource(R.string.prediction_settings_transformer_advanced_params), showBack = true, navController)
 
         Tip(stringResource(R.string.prediction_settings_transformer_advanced_params_experimental_notice))
 
@@ -63,7 +63,7 @@ fun AdvancedParametersScreen(navController: NavHostController = rememberNavContr
         )
         }, {
         SettingSlider(
-            title = stringResource(R.string.settings_row_autocorrect_threshold),
+            title = stringResource(R.string.prediction_settings_transformer_advanced_params_autocorrect_threshold),
             subtitle = stringResource(R.string.settings_sub_autocorrect_threshold),
             setting = AutocorrectThresholdSetting,
             range = 0.0f .. 25.0f,

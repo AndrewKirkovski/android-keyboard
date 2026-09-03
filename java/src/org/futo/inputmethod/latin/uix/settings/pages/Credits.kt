@@ -192,7 +192,7 @@ fun CreditCategorySection(
 }
 
 val CreditsScreenLite = UserSettingsMenu(
-    title = R.string.settings_title_credits,
+    title = R.string.credits_menu_title,
     navPath = "credits", registerNavPath = false,
     settings = listOf(
         userSettingNavigationItem(
@@ -222,7 +222,7 @@ val CreditsScreenLite = UserSettingsMenu(
 fun CreditsScreen(navController: NavHostController = rememberNavController()) {
     val context = LocalContext.current
     ScrollableList {
-        ScreenTitle(stringResource(R.string.settings_title_credits), showBack = true, navController)
+        ScreenTitle(stringResource(R.string.credits_menu_title), showBack = true, navController)
 
         Column(Modifier.fillMaxWidth()) {
             Text(

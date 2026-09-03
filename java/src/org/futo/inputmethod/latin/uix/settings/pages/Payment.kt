@@ -297,7 +297,8 @@ fun PaymentThankYouScreen(onExit: () -> Unit = { }) {
             } else {
                 stringResource(R.string.payment_screen_aftersales_title)
             },
-            showBack = false
+            showBack = false,
+            isScreenTitle = true
         )
 
         PaymentSurface(isPrimary = true) {
@@ -333,7 +334,11 @@ fun PaymentFailedScreen(onExit: () -> Unit = { }) {
     val context = LocalContext.current
 
     ScrollableList {
-        ScreenTitle(stringResource(R.string.payment_screen_payment_failed_title), showBack = false)
+        ScreenTitle(
+            stringResource(R.string.payment_screen_payment_failed_title),
+            showBack = false,
+            isScreenTitle = true
+        )
 
         @Suppress("KotlinConstantConditions")
         (ParagraphText(

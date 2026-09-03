@@ -172,9 +172,10 @@ fun KASROZMenu() {
     ScrollableList(horizontalAlignment = Alignment.CenterHorizontally) {
         ScreenTitle(stringResource(R.string.swipe_settings_kasroz), showBack = true)
 
-        // In a card, like every other toggle in the app. This screen drew all
-        // three of its controls straight onto the background, each at its own
-        // left edge.
+        // In a card, like the toggles on every settings menu. This screen drew all
+        // three of its controls straight onto the background, each at its own left
+        // edge. Not a rule for the whole app: the theme grid's key-borders toggle and
+        // the developer editors' rows are drawn bare on purpose.
         SettingsCard {
             SettingToggleRaw(
                 "Enable KASROZ layout",

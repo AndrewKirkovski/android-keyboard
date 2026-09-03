@@ -203,11 +203,12 @@ private fun PresentChip(text: String) {
  * on top. Removal moves into the overflow: a full-width filled red button was the
  * loudest thing on the screen and it is the action wanted least often.
  *
- * When this is the only language installed, two of its controls have nothing to act on:
- * the language cannot be removed, and multilingual typing needs a second language before
- * it means anything. The card says so, rather than offering controls that quietly do
- * nothing. Layout removal is gated separately, on the layout count, because a language
- * must keep one whether or not it has company.
+ * When this is the only language installed, two of its controls have nothing to act on,
+ * and they are handled differently. Multilingual typing says why it is off, because a
+ * row that vanished would read as a missing feature. Removal is withheld instead: the
+ * overflow holds nothing else, so an empty menu would be worse than no menu. Neither
+ * offers a control that quietly does nothing. Layout removal is gated separately, on
+ * the layout count, because a language must keep one whether or not it has company.
  */
 @Composable
 fun LanguageSurface(
@@ -597,7 +598,7 @@ val LanguageSettingsBottom = listOf(
 )
 
 val LanguageSettingsLite = UserSettingsMenu(
-    title = R.string.settings_title_languages,
+    title = R.string.language_settings_title,
     navPath = "languages", registerNavPath = false,
     settings = LanguageSettingsTop + listOf(
         userSettingNavigationItem(
@@ -684,7 +685,7 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
         item {
             ScreenTitle(
-                stringResource(R.string.settings_title_languages),
+                stringResource(R.string.language_settings_title),
                 showBack = true,
                 navController,
                 actionLabel = stringResource(R.string.settings_action_add),

@@ -374,15 +374,21 @@ fun ClipboardEntryView(modifier: Modifier, clipboardEntry: ClipboardEntry, onPas
                         tint = if(clipboardEntry.pinned) {
                             onColor
                         } else {
-                            // Full strength. At 16dp this is a non-text
-                            // element against a 3:1 threshold. What was here --
-                            // contentColorFor(surfaceContainer) at half alpha over
-                            // Material's baseline lilac -- came out 2.96 to 3.29
+                            // The card's own paired foreground, at full strength. At
+                            // 16dp this is a non-text element against a 3:1
+                            // threshold, and what was here -- contentColorFor of a
+                            // surface role at half alpha -- came out 2.96 to 3.29
                             // across the light presets and failed Classic Material
-                            // Light. Half of onSurfaceVariant over keyboardContainer
-                            // would be worse still: 2.27 to 2.68, clearing on none
-                            // of the seven.
-                            scheme.onSurfaceVariant
+                            // Light.
+                            //
+                            // It has to be the pair of the colour actually under it.
+                            // The card is keyboardContainer, so a surface role is a
+                            // different pair, and the two diverge: High Contrast
+                            // Yellow sets onSurfaceVariant white and keyboardContainer
+                            // yellow, which drew a white pin on a yellow card at about
+                            // 1.07:1, two icons along from a black remove glyph on the
+                            // same card.
+                            scheme.onKeyboardContainer
                         },
                         modifier = Modifier.size(16.dp).rotate(
                             if(clipboardEntry.pinned) { 0f } else { 45f }
@@ -1107,7 +1113,7 @@ fun String.toFNV1aHash(): Long {
 @OptIn(ExperimentalFoundationApi::class)
 val ClipboardHistoryAction = Action(
     icon = R.drawable.clipboard_manager,
-    name = R.string.settings_row_clipboard_manager,
+    name = R.string.action_clipboard_manager_title,
     simplePressImpl = null,
     canShowKeyboard = true,
     persistentState = { manager ->
@@ -1125,7 +1131,7 @@ val ClipboardHistoryAction = Action(
         object : ActionWindow() {
             @Composable
             override fun windowName(): String {
-                return stringResource(R.string.settings_row_clipboard_manager)
+                return stringResource(R.string.action_clipboard_manager_title)
             }
 
             @Composable
@@ -1431,7 +1437,7 @@ val ClipboardHistoryAction = Action(
     },
 
     settingsMenu = UserSettingsMenu(
-        title = R.string.settings_row_clipboard_manager,
+        title = R.string.action_clipboard_manager_title,
         navPath = "actions/clipboard_history",
         registerNavPath = true,
         settings = listOf(
@@ -1441,7 +1447,7 @@ val ClipboardHistoryAction = Action(
             ),
 
             userSettingToggleDataStore(
-                title = R.string.settings_row_clipboard_history,
+                title = R.string.typing_settings_enable_clipboard_history,
                 setting = ClipboardHistoryEnabled
             ).copy(searchTags = R.string.typing_settings_enable_clipboard_history_tags),
 

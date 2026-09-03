@@ -90,7 +90,7 @@ fun throwIfDebug(ex: Exception) {
 
 val BugViewerAction = Action(
     icon = R.drawable.code,
-    name = R.string.settings_action_bug_viewer,
+    name = R.string.action_bug_viewer_title,
     simplePressImpl = null,
     canShowKeyboard = true,
     windowImpl = { manager, _ ->
@@ -98,7 +98,7 @@ val BugViewerAction = Action(
         object : ActionWindow() {
             @Composable
             override fun windowName(): String {
-                return stringResource(R.string.settings_action_bug_viewer)
+                return stringResource(R.string.action_bug_viewer_title)
             }
 
             @Composable

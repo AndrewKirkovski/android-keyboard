@@ -153,13 +153,13 @@ val ActionsScreen = UserSettingsMenu(
         // TODO: Add a "Show voice input button" toggle
 
         userSettingNavigationItem(
-            title = R.string.settings_row_edit_actions,
+            title = R.string.action_editor_title,
             subtitle = R.string.settings_sub_edit_actions,
             style = NavigationItemStyle.Misc,
             navigateTo = "actionEdit"
         ),
 
-        userSettingSection(R.string.settings_section_action_settings)
+        userSettingSection(R.string.action_settings_action_settings)
     ) + AllActionsMap.mapNotNull { v ->
         v.value.settingsMenu?.let {
             userSettingNavigationItem(
@@ -175,7 +175,7 @@ val ActionsScreen = UserSettingsMenu(
 @Composable
 fun ActionEditorScreen(navController: NavHostController = rememberNavController()) {
     Column {
-        ScreenTitle(stringResource(R.string.settings_row_edit_actions), showBack = true, navController)
+        ScreenTitle(stringResource(R.string.action_editor_title), showBack = true, navController)
         ActionsEditor { }
     }
 }

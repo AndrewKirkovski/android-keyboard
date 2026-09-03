@@ -32,7 +32,7 @@ internal fun Context.copyToClipboard(text: CharSequence, label: String = "Copied
 }
 
 val HelpMenu = UserSettingsMenu(
-    title = R.string.settings_title_help,
+    title = R.string.help_menu_title,
     navPath = "help", registerNavPath = true,
     settings = listOf(
         UserSetting(
@@ -90,7 +90,7 @@ val HelpMenu = UserSettingsMenu(
         },
 
         userSettingNavigationItem(
-            title = R.string.settings_row_futo_website,
+            title = R.string.help_menu_website,
             subtitle = R.string.settings_sub_website,
             style = NavigationItemStyle.Misc,
             navigate = { nav ->

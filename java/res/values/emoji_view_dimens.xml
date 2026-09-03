@@ -38,8 +38,15 @@
          the glyph to fill whatever is left. So this, and not the text size, is what
          sets how large an emoji appears. The cell is 42dp (EmojiAction.emojiWidth):
          at 2dp the glyph was 40dp, 95% of its cell, with nothing between one emoji
-         and the next. At 12dp it is 30dp, a little over two thirds of the cell,
-         with air around it in both directions.
+         and the next. At 12dp it is 30dp, a little over two thirds of the cell.
+
+         It shrinks the view, not the glyph inside a fixed view, and the grid row
+         takes its height from the measured child, so the rows close up behind it
+         and the vertical gap does not appear. What is gained is horizontal, and
+         GridLayoutManager lays each child against the left of its span, so that
+         slack falls to the right of the emoji rather than around it. Real gap would
+         need an ItemDecoration. The hit target follows the view down too: 42dp to
+         30dp.
 
          EMOJI_DRAW_TEXT_SIZE_DP is not the lever. It sizes the offscreen bitmap the
          glyph is rendered into, which draw() then scales to the view; lowering it

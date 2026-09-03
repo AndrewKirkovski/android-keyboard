@@ -340,13 +340,13 @@ fun ActionEditor() {
 
 val MoreActionsAction = Action(
     icon = R.drawable.more_horizontal,
-    name = R.string.settings_action_all_actions,
+    name = R.string.action_more_actions_title,
     simplePressImpl = null,
     shownInEditor = false,
     windowImpl = { manager, _ ->
         object : ActionWindow() {
             @Composable
-            override fun windowName(): String = stringResource(id = R.string.settings_action_all_actions)
+            override fun windowName(): String = stringResource(id = R.string.action_more_actions_title)
 
             @Composable
             override fun WindowContents(keyboardShown: Boolean) {

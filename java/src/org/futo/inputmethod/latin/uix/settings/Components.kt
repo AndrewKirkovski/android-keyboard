@@ -272,10 +272,21 @@ fun ScreenTitle(
     showBack: Boolean = false,
     navController: NavHostController? = LocalNavController.current ?: rememberNavController(),
     actionLabel: String? = null,
-    onAction: (() -> Unit)? = null
+    onAction: (() -> Unit)? = null,
+    /**
+     * Whether this is the screen's own title rather than an in-page section header.
+     *
+     * Defaults to [showBack] because a screen reached from another one has both, but
+     * the two are different questions and a screen can have a title with nowhere to
+     * go back to: the payment thank-you and failure screens leave through their own
+     * button, and the settings importer is launched into. Deriving the role from
+     * [showBack] rendered those three as a small accent caption, so they had no
+     * visible title at all.
+     */
+    isScreenTitle: Boolean = showBack
 ) {
-    // Only the arrow and the title navigate back. Making the whole row clickable would
-    // put the action inside the back target.
+    // Everything left of the action button navigates back; the button sits outside the
+    // back target, which is why this goes on the weighted row rather than the whole Row.
     val backModifier = if(showBack) {
         Modifier.clickable(onClickLabel = "Navigate back") {
             navController!!.navigateUp()
@@ -283,9 +294,7 @@ fun ScreenTitle(
     } else {
         Modifier
     }
-    // showBack splits this in two: with a back arrow it is the screen's title, and
-    // without one it is an in-page section header, which is now its own composable.
-    if (!showBack) {
+    if (!isScreenTitle) {
         SettingSectionHeader(title)
         return
     }
@@ -297,7 +306,7 @@ fun ScreenTitle(
         anchor.titleBottom = it.positionInRoot().y + it.size.height
     }
     if (anchor != null) {
-        val nav = navController
+        val nav = if (showBack) navController else null
         LaunchedEffect(title, nav) {
             anchor.title = title
             anchor.onBack = nav?.let { { it.navigateUp(); Unit } }
@@ -313,8 +322,12 @@ fun ScreenTitle(
             verticalAlignment = CenterVertically
         ) {
             Spacer(modifier = Modifier.width(16.dp))
-            Icon(Icons.Default.ArrowBack, contentDescription = null)
-            Spacer(modifier = Modifier.width(18.dp))
+            // No arrow on a screen with nowhere to go back to, or it is a control
+            // that does nothing.
+            if (showBack) {
+                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                Spacer(modifier = Modifier.width(18.dp))
+            }
             Text(
                 title,
                 style = MaterialTheme.typography.headlineMedium,
@@ -347,8 +360,14 @@ private fun CollapsedScreenTitle(title: String, onBack: (() -> Unit)?) {
                 .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
             verticalAlignment = CenterVertically
         ) {
-            Icon(Icons.Default.ArrowBack, contentDescription = null)
-            Spacer(Modifier.width(18.dp))
+            // Same rule as the full title: no arrow without somewhere to go. A screen
+            // can register here with no back destination -- the payment results and
+            // the settings importer do -- and the row's clickable is already gated on
+            // that, so an arrow would be the one part of the bar that does nothing.
+            if (onBack != null) {
+                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                Spacer(Modifier.width(18.dp))
+            }
             Text(
                 title,
                 style = MaterialTheme.typography.bodyLarge,
@@ -1021,10 +1040,14 @@ fun ScrollableList(modifier: Modifier = Modifier, spacing: Dp = 0.dp, horizontal
         // that render inside the keyboard call SettingSectionHeader directly, which does
         // not. So this appears on settings screens and nowhere else -- but not on all of
         // them. This is the only provider of the anchor, and ScreenTitle registers with
-        // it only when it draws a back arrow: without one it returns a section header
-        // instead. So a screen gets the bar only if it scrolls through here and titles
-        // itself with a back arrow, and a screen failing either half keeps whatever
-        // title it drew with nothing to replace it on scroll.
+        // it when isScreenTitle is true: otherwise it returns a section header instead.
+        // So a screen gets the bar only if it scrolls through here and titles itself,
+        // and one that does neither keeps whatever title it drew with nothing to
+        // replace it on scroll.
+        //
+        // A registered title need not have a back destination -- the payment results
+        // and the settings importer have none -- so the bar takes a null onBack and
+        // drops its arrow when it gets one.
         AnimatedVisibility(
             visible = anchor.scrolledAway,
             enter = fadeIn(),

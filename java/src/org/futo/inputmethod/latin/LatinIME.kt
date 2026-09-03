@@ -579,12 +579,14 @@ class LatinIME : InputMethodServiceCompose(), LatinIMELegacy.SuggestionStripCont
             }
         }.safeKeyboardPadding()
 
-        // KeyboardSwitcher creates this view and hands it over through
-        // updateLegacyView, so there is a window where the IME is composing and
-        // the view does not exist yet -- reachable by navigating between screens
-        // at about two a second, which threw here on the !!. There is nothing to
-        // draw until there is a view, and the state read brings this back when
-        // there is one.
+        // legacyInputView is empty until onCreateInputView fills it, so composition
+        // that runs before that first assignment has no view -- reachable by
+        // navigating between screens at about two a second, which threw here on the
+        // !!. There is nothing to draw until there is a view, and the state read
+        // brings this back when there is one.
+        //
+        // Not updateLegacyView: that takes a non-null View and only ever swaps one
+        // live view for another, so it cannot open this window.
         val legacyInputView = legacyInputView.value ?: return
         key(legacyInputView) {
             AndroidView(factory = {

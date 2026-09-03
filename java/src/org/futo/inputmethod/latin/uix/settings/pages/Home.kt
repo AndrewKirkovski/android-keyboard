@@ -37,6 +37,9 @@ import org.futo.inputmethod.latin.uix.USE_SYSTEM_VOICE_INPUT
 import org.futo.inputmethod.latin.uix.settings.NavigationItem
 import org.futo.inputmethod.latin.uix.settings.NavigationItemStyle
 import org.futo.inputmethod.latin.uix.settings.UserSetting
+import org.futo.inputmethod.latin.uix.THEME_KEY
+import org.futo.inputmethod.latin.uix.theme.getThemeOption
+import org.futo.inputmethod.latin.uix.theme.orDefault
 import org.futo.inputmethod.latin.uix.settings.UserSettingsMenu
 import org.futo.inputmethod.latin.uix.settings.render
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
@@ -60,7 +63,7 @@ val HomeScreenLite = UserSettingsMenu(
         // behind it without being opened: which languages, whether swipe is on, which
         // theme. A destination name alone repeats the title.
         UserSetting(
-            name = R.string.settings_title_languages
+            name = R.string.language_settings_title
         ) {
             val navController = LocalNavController.current
             val subtypes = useDataStoreValue(SubtypesSetting)
@@ -70,7 +73,7 @@ val HomeScreenLite = UserSettingsMenu(
                     .distinct()
             }
             NavigationItem(
-                title = stringResource(R.string.settings_title_languages),
+                title = stringResource(R.string.language_settings_title),
                 subtitle = names.takeIf { it.isNotEmpty() }?.joinToString(", "),
                 style = NavigationItemStyle.HomePrimary,
                 navigate = { navController!!.navigate("languages") }
@@ -102,11 +105,11 @@ val HomeScreenLite = UserSettingsMenu(
         },
 
         UserSetting(
-            name = R.string.settings_title_voice
+            name = R.string.voice_input_settings_title
         ) {
             val navController = LocalNavController.current
             NavigationItem(
-                title = stringResource(R.string.settings_title_voice),
+                title = stringResource(R.string.voice_input_settings_title),
                 style = NavigationItemStyle.HomePrimary,
                 subtitle = if(useDataStoreValue(USE_SYSTEM_VOICE_INPUT)) {
                     stringResource(R.string.voice_input_settings_builtin_disabled_notice)
@@ -115,7 +118,7 @@ val HomeScreenLite = UserSettingsMenu(
             )
         },
 
-        userSettingSection(R.string.home_section_keyboard),
+        userSettingSection(R.string.keyboard_settings_title),
 
         userSettingNavigationItem(
             title = R.string.keys_layout_settings_title,
@@ -124,11 +127,25 @@ val HomeScreenLite = UserSettingsMenu(
             navigateTo = KeyboardSettingsMenu.navPath
         ),
 
-        userSettingNavigationItem(
-            title = AppearanceMenu.title,
-            style = NavigationItemStyle.HomeSecondary,
-            navigateTo = AppearanceMenu.navPath
-        ),
+        // The active theme, resolved the way the Appearance screen resolves it rather
+        // than out of the preset map: THEME_KEY is empty until a theme is picked, and
+        // an imported one is not in that map at all, so the map alone leaves this blank
+        // for exactly the users who never chose.
+        UserSetting(
+            name = AppearanceMenu.title
+        ) {
+            val navController = LocalNavController.current
+            val context = LocalContext.current
+            val key = useDataStoreValue(THEME_KEY)
+            val option = remember(key) { getThemeOption(context, key).orDefault(context) }
+            NavigationItem(
+                title = stringResource(AppearanceMenu.title),
+                // A zip theme carries name == 0; stringResource(0) throws.
+                subtitle = option.name.takeIf { it != 0 }?.let { stringResource(it) },
+                style = NavigationItemStyle.HomeSecondary,
+                navigate = { navController!!.navigate(AppearanceMenu.navPath) }
+            )
+        },
 
         userSettingNavigationItem(
             title = FeedbackMenu.title,
@@ -156,7 +173,7 @@ val HomeScreenLite = UserSettingsMenu(
         //}
 
         userSettingNavigationItem(
-            title = R.string.settings_title_help,
+            title = R.string.help_menu_title,
             subtitle = R.string.home_subtitle_help,
             style = NavigationItemStyle.HomeSecondary,
             navigateTo = "help"
@@ -171,7 +188,7 @@ val HomeScreenLite = UserSettingsMenu(
         ),
 
         userSettingNavigationItem(
-            title = R.string.settings_title_credits,
+            title = R.string.credits_menu_title,
             style = NavigationItemStyle.MiscNoArrow,
             navigateTo = "credits"
         ),

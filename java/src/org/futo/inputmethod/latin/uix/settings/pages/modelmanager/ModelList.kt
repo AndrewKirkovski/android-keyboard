@@ -66,7 +66,7 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
 
     ScrollableList {
         ScreenTitle(
-            stringResource(R.string.settings_title_models),
+            stringResource(R.string.prediction_settings_transformer_models),
             showBack = true,
             navController,
             actionLabel = stringResource(R.string.settings_action_import),

@@ -82,7 +82,7 @@ fun SelectLanguageScreen(navController: NavHostController = rememberNavControlle
 
     LazyColumn {
         item(key=0) {
-            ScreenTitle(stringResource(R.string.settings_row_add_language), showBack = true, navController)
+            ScreenTitle(stringResource(R.string.language_settings_add_language_button), showBack = true, navController)
             Box(Modifier.padding(8.dp)) {
                 SettingsTextEdit(textFieldValue, icon = {
                     Icon(

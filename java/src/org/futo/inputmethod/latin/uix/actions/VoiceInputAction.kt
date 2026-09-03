@@ -63,7 +63,7 @@ import java.util.Locale
 
 val SystemVoiceInputAction = Action(
     icon = R.drawable.mic_fill,
-    name = R.string.settings_action_voice_system,
+    name = R.string.action_system_voice_input_title,
     simplePressImpl = { it, _ ->
         it.triggerSystemVoiceInput()
     },
@@ -202,7 +202,7 @@ private class VoiceInputActionWindow(
 
     @Composable
     override fun windowName(): String {
-        return stringResource(R.string.settings_action_voice_input)
+        return stringResource(R.string.action_voice_input_title)
     }
 
     @Composable
@@ -292,7 +292,7 @@ private class VoiceInputActionWindow(
 private class VoiceInputNoModelWindow(val locale: Locale) : ActionWindow() {
     @Composable
     override fun windowName(): String {
-        return stringResource(R.string.settings_action_voice_input)
+        return stringResource(R.string.action_voice_input_title)
     }
 
     @Composable
@@ -302,7 +302,7 @@ private class VoiceInputNoModelWindow(val locale: Locale) : ActionWindow() {
 }
 
 val VoiceInputAction = Action(icon = R.drawable.mic_fill,
-    name = R.string.settings_action_voice_input,
+    name = R.string.action_voice_input_title,
     simplePressImpl = null,
     keepScreenAwake = true,
     persistentState = { VoiceInputPersistentState(it) },

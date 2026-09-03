@@ -535,7 +535,7 @@ fun TextEditScreen(
 
 val TextEditAction = Action(
     icon = R.drawable.edit_text,
-    name = R.string.settings_action_text_editor,
+    name = R.string.action_text_editor_title,
     simplePressImpl = null,
     persistentState = null,
     canShowKeyboard = true,
@@ -543,7 +543,7 @@ val TextEditAction = Action(
         object : ActionWindow() {
             @Composable
             override fun windowName(): String {
-                return stringResource(R.string.settings_action_text_editor)
+                return stringResource(R.string.action_text_editor_title)
             }
 
             @Composable

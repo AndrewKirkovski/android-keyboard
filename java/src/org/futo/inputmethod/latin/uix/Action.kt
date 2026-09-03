@@ -126,9 +126,12 @@ abstract class ActionWindow {
     /**
      * Draw the shared title bar even while the keyboard stays visible.
      *
-     * That bar is what gives a panel its back arrow and its name, and it is otherwise
-     * only drawn once the keyboard is hidden -- which is how a panel that keeps the
-     * keyboard up ends up as a screen that never says what it is. Two did: the theme
+     * That bar is what gives a panel its back arrow and its name. Without this it is
+     * drawn only once the keyboard is hidden, or once a panel has taken over the input
+     * connection -- which is why tapping the emoji or clipboard search field raises it
+     * with the keys still up. A panel that keeps the keyboard and does not take over
+     * input has neither, and reads as a screen that never says what it is. Two did:
+     * the theme
      * switcher and Debug info, both of which set this. Off by default, because a panel
      * that builds its own header row would then have two, which is the keyboard-modes
      * panel's case.

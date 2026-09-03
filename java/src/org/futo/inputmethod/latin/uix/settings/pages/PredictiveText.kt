@@ -97,7 +97,7 @@ val PredictiveTextMenu = UserSettingsMenu(
 
         //if(!transformerLmEnabled) {
         userSettingToggleDataStore(
-            title = R.string.settings_row_emoji_suggestions,
+            title = R.string.typing_settings_suggest_emojis,
             subtitle = R.string.typing_settings_suggest_emojis_subtitle,
             setting = SHOW_EMOJI_SUGGESTIONS
         ),
@@ -109,7 +109,7 @@ val PredictiveTextMenu = UserSettingsMenu(
             }
         ),
         userSettingNavigationItem(
-            title = R.string.settings_title_blacklist,
+            title = R.string.prediction_settings_word_blacklist,
             style = NavigationItemStyle.HomeSecondary,
             navigateTo = "blacklist"
         ),
@@ -129,7 +129,7 @@ val PredictiveTextMenu = UserSettingsMenu(
         //    setting = USE_TRANSFORMER_FINETUNING
         //).copy(visibilityCheck = visibilityCheckLMEnabled),
         userSettingNavigationItem(
-            title = R.string.settings_title_models,
+            title = R.string.prediction_settings_transformer_models,
             style = NavigationItemStyle.HomeTertiary,
             navigateTo = "models"
         ).copy(visibilityCheck = visibilityCheckLMEnabled),

@@ -4,7 +4,6 @@ import android.content.Context
 import android.media.AudioManager
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,20 +30,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
@@ -75,7 +67,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.core.graphics.drawable.toBitmap
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
@@ -173,7 +164,7 @@ val HideOneHandedExitButtonSetting = SettingsKey(
 )
 
 val ResizeMenuLite = UserSettingsMenu(
-    title = R.string.settings_title_resize,
+    title = R.string.size_settings_title,
     navPath = "resize", registerNavPath = false,
     settings = listOf(
         // An accent action row, not a navigation row: this resets every size and
@@ -225,7 +216,7 @@ fun ResizeScreen(navController: NavHostController = rememberNavController()) {
 
     Box {
         ScrollableList {
-            ScreenTitle(stringResource(R.string.settings_title_resize), showBack = true, navController)
+            ScreenTitle(stringResource(R.string.size_settings_title), showBack = true, navController)
 
             Tip {
                 Text(
@@ -264,7 +255,7 @@ fun ResizeScreen(navController: NavHostController = rememberNavController()) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPressKey, Int) -> Unit, disable: (LongPressKey) -> Unit, dragIcon: @Composable () -> Unit, limits: IntRange) {
+private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPressKey, Int) -> Unit, disable: (LongPressKey) -> Unit, limits: IntRange) {
     val context = LocalContext.current
     val resources = LocalResources.current
     val talkBackOn = remember {
@@ -335,54 +326,45 @@ private fun DraggableSettingItem(idx: Int, item: LongPressKey, moveItem: (LongPr
         }
     }
 
-    val dragging = remember { mutableStateOf(false) }
-    val offset = remember { mutableFloatStateOf(0.0f) }
-    val height = remember { mutableIntStateOf(1) }
-
-    val pendingOffsetDiff = remember { mutableFloatStateOf(0.0f) }
-    LaunchedEffect(idx, pendingOffsetDiff.floatValue) {
-        if(pendingOffsetDiff.floatValue != 0.0f) {
-            offset.floatValue += pendingOffsetDiff.floatValue
-            pendingOffsetDiff.floatValue = 0.0f
-        }
-    }
-
-    val shouldClampLower = (idx - 1) < limits.first
-    val shouldClampUpper = (idx + 1) > limits.last
-
+    // No zebra striping. It alternated two alphas of surfaceTint, which in this palette
+    // is the crimson accent, so a list of five items got pink bands across it -- and the
+    // bands said nothing the numbers in the titles do not already say.
     SettingItem(
         title = "${idx+1}. " + item.name(resources),
         subtitle = item.description(resources),
         modifier = semantics
-            .onSizeChanged { size -> height.intValue = size.height }
-            .let { modifier ->
-                if (!dragging.value) {
-                    // No zebra striping. It alternated two alphas of surfaceTint, which
-                    // in this palette is the crimson accent, so a list of five items got
-                    // pink bands across it -- and the bands said nothing the numbers in
-                    // the titles do not already say.
-                    modifier
-                } else {
-                    modifier
-                        .zIndex(10.0f)
-                        .graphicsLayer {
-                            clip = false
-                            translationX = 0.0f
-                            translationY = offset.floatValue.let {
-                                if (shouldClampLower && it < 0.0f) 0.0f
-                                else if (shouldClampUpper && it > 0.0f) 0.0f
-                                else it
-                            }
-                        }
-                        .background(
-                            MaterialTheme.colorScheme.surfaceTint.copy(alpha = 0.2f)
-                                .compositeOver(MaterialTheme.colorScheme.background)
-                        )
-                }
-            }
     ) {
-        IconButton(onClick = { disable(item) }) {
-            Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.morekey_settings_disable))
+        // Move buttons rather than a drag handle. The drag state this row used to carry
+        // was never driven: nothing set `dragging`, no pointerInput was attached, and
+        // the handle was built by the caller and never rendered. With TalkBack off the
+        // order could then only be changed by disabling every kind below the target and
+        // re-adding them, because enable() appends to the end. TalkBack had the move
+        // actions all along; these are the same two, for everyone else.
+        Row(verticalAlignment = CenterVertically) {
+            IconButton(
+                onClick = { moveItem(item, -1) },
+                enabled = idx > limits.first
+            ) {
+                Icon(
+                    Icons.Default.KeyboardArrowUp,
+                    contentDescription = stringResource(R.string.morekey_settings_move_kind_up)
+                )
+            }
+            IconButton(
+                onClick = { moveItem(item, 1) },
+                enabled = idx < limits.last
+            ) {
+                Icon(
+                    Icons.Default.KeyboardArrowDown,
+                    contentDescription = stringResource(R.string.morekey_settings_move_kind_down)
+                )
+            }
+            IconButton(onClick = { disable(item) }) {
+                Icon(
+                    Icons.Default.Clear,
+                    contentDescription = stringResource(R.string.morekey_settings_disable)
+                )
+            }
         }
     }
 }
@@ -411,10 +393,6 @@ private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<St
         }
     }
 
-
-    val dragIcon: @Composable () -> Unit = {
-        Icon(Icons.Default.Menu, contentDescription = null, tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
-    }
 
     val items = setting.value.toLongPressKeyLayoutItems()
 
@@ -475,7 +453,6 @@ private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<St
                             item = v,
                             moveItem = moveItem,
                             disable = disable,
-                            dragIcon = dragIcon,
                             limits = items.indices
                         )
                     }
@@ -530,7 +507,7 @@ private fun LongPressKeyLayoutEditor(context: Context, setting: DataStoreItem<St
 }
 
 val LongPressMenu = UserSettingsMenu(
-    title = R.string.settings_row_longpress,
+    title = R.string.morekey_settings_title,
     navPath = "longPress", registerNavPath = true,
     settings = listOf(
         // The "Long-Press Keys & Spacebar" row that opens this screen promises
@@ -538,12 +515,12 @@ val LongPressMenu = UserSettingsMenu(
         // it rather than the last. The first card carries no header, as on most screens --
         // Home, Feedback and Text & corrections are the three that open with one.
         UserSetting(
-            name = R.string.settings_row_longpress_duration,
+            name = R.string.morekey_settings_duration,
             subtitle = R.string.settings_sub_longpress_duration,
         ) {
             val resources = LocalResources.current
             SettingSliderSharedPrefsInt(
-                title = stringResource(R.string.settings_row_longpress_duration),
+                title = stringResource(R.string.morekey_settings_duration),
                 subtitle = stringResource(R.string.settings_sub_longpress_duration),
                 key = Settings.PREF_KEY_LONGPRESS_TIMEOUT,
                 default = 300,
@@ -687,14 +664,14 @@ val KeyboardSettingsMenu = UserSettingsMenu(
     navPath = "keyboard", registerNavPath = true,
     settings = listOf(
         userSettingNavigationItem(
-            title = R.string.settings_title_resize,
+            title = R.string.size_settings_title,
             subtitle = R.string.size_settings_subtitle2,
             style = NavigationItemStyle.Misc,
             navigateTo = "resize"
         ),
         userSettingSection(R.string.keyboard_settings_rows_section),
         userSettingToggleSharedPrefs(
-            title = R.string.settings_row_number_row,
+            title = R.string.keyboard_settings_show_number_row,
             subtitle = R.string.keyboard_settings_show_number_row_subtitle,
             key = Settings.PREF_ENABLE_NUMBER_ROW,
             default = {false}
@@ -791,7 +768,7 @@ val KeyboardSettingsMenu = UserSettingsMenu(
             )
         },
         userSettingToggleSharedPrefs(
-            title = R.string.settings_row_arrow_keys,
+            title = R.string.keyboard_settings_show_arrow_row,
             subtitle = R.string.keyboard_settings_show_arrow_row_subtitle,
             key = Settings.PREF_ENABLE_ARROW_ROW,
             default = {false}
