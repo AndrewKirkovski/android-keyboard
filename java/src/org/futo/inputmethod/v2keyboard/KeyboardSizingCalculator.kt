@@ -72,6 +72,18 @@ val OneHandedDirection.opposite: OneHandedDirection
         OneHandedDirection.Right -> OneHandedDirection.Left
     }
 
+// The one-handed control -- exit above, switch-hands below -- is drawn by
+// UixManager.OneHandedOptions in the gutter the keyboard leaves free, pinned to
+// the screen edge opposite the keys. Its width is fixed, so the gutter has to be
+// at least that wide or the control is drawn over the first column of keys.
+//
+// The limit used to be nine tenths of the display, which leaves a gutter of one
+// tenth: 41dp on a 411dp phone, and less than the control on anything narrower or
+// at any display-size zoom above the default. A Galaxy S26 Ultra draws it over
+// the keys; so does an S10 at 450dpi. The keyboard gives up those few dp instead.
+val OneHandedControlWidth = 40.dp
+val OneHandedControlLane = OneHandedControlWidth + 8.dp
+
 class OneHandedKeyboardSize(
     width: Int, height: Int, padding: Rect, singleRowHeight: Int = height / 4,
     val layoutWidth: Int, val direction: OneHandedDirection
@@ -541,7 +553,7 @@ class KeyboardSizingCalculator(val context: Context, val uixManager: UixManager)
                     singleRowHeight = singularRowHeight.roundToInt(),
                     padding = padding,
                     layoutWidth = dp(savedSettings.oneHandedRectDp.width)
-                        .coerceInLoosely(dp(48), displayWidth * 9 / 10),
+                        .coerceInLoosely(dp(48), displayWidth - dp(OneHandedControlLane)),
                     direction = savedSettings.oneHandedDirection
                 )
 

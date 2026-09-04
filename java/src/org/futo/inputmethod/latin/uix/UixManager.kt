@@ -156,6 +156,7 @@ import org.futo.inputmethod.v2keyboard.ComputedKeyboardSize
 import org.futo.inputmethod.v2keyboard.getPrimaryLayoutOverride
 import org.futo.inputmethod.v2keyboard.FloatingKeyboardSize
 import org.futo.inputmethod.v2keyboard.KeyboardSizingCalculator
+import org.futo.inputmethod.v2keyboard.OneHandedControlWidth
 import org.futo.inputmethod.v2keyboard.OneHandedDirection
 import org.futo.inputmethod.v2keyboard.OneHandedKeyboardSize
 import org.futo.inputmethod.v2keyboard.RegularKeyboardSize
@@ -194,7 +195,7 @@ const val SCRIM_ALPHA = 0.5f
 private val CONTROL_RADIUS = 24.dp
 private val CONTROL_PADDING = 12.dp
 private val CONTROL_GAP = 20.dp
-private val CONTROL_WIDTH = 40.dp
+private val CONTROL_WIDTH = OneHandedControlWidth
 
 @Composable
 fun navBarHeight(): Dp = with(LocalDensity.current) {
@@ -1247,6 +1248,12 @@ class UixManager(private val latinIME: LatinIME) {
                         // so padding only grows this node without moving either
                         // edge. The height stays 48dp, and the misclick this
                         // started from was vertical anyway.
+                        //
+                        // That the gutter is wide enough is not this file's to
+                        // assume: KeyboardSizingCalculator caps the one-handed
+                        // width at the display less OneHandedControlLane, which
+                        // is this width plus air. It did not always -- see the
+                        // comment there.
                         .width(CONTROL_WIDTH)
                         // Square against the screen edge it sits on and rounded
                         // on the inner side only, so it reads as attached to the
